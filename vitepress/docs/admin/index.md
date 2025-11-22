@@ -39,110 +39,19 @@ Um mit der Administration des Servers zu beginnen:
 2. **Repository klonen:** Klone das [GitHub Repository](https://github.com/timonrieger/family-server) für Zugriff auf Ansible Playbooks
 3. **Server konfigurieren:** Führe die [Server Einrichtung](/admin/server-einrichtung) durch oder aktualisiere bestehende Konfigurationen
 
-## Wichtige Befehle
-
-### SSH Zugriff
-```bash
-ssh <username>@beelink
-```
-
-### Docker Container verwalten
-```bash
-# Status aller Container prüfen
-docker ps -a
-
-# Container starten/stoppen
-docker compose up -d
-docker compose down
-
-# Logs anzeigen
-docker compose logs -f
-```
-
-### Backups prüfen
-```bash
-# Backup Status
-sudo -u restic restic -r <repository> snapshots
-
-# Letztes Backup prüfen
-sudo -u restic restic -r <repository> snapshots --last
-```
-
-### System Updates
-```bash
-# System aktualisieren
-sudo apt update && sudo apt upgrade -y
-
-# Docker Images aktualisieren
-cd /srv/docker/<service>
-docker compose pull
-docker compose up -d
-```
-
 ## Wartung
 
-### Regelmäßige Aufgaben
-
 **Täglich (automatisiert):**
-- Backups werden automatisch um 02:00 Uhr ausgeführt
+- Backups werden automatisch täglich ausgeführt
 - Backup-Status wird auf healthchecks.io gemeldet
 
 **Wöchentlich:**
-- System Updates prüfen und installieren
-- Speicherplatz prüfen (`df -h`)
-- Docker Container Status prüfen (`docker ps -a`)
+- Docker Container Status prüfen (`ds`)
 
 **Monatlich:**
-- Backup-Integrität testen
-- Log-Dateien prüfen und bereinigen
-- Nicht verwendete Docker Images entfernen (`docker system prune`)
-
-### Monitoring
-
-**Backup Status:**
-- [Healthchecks Dashboard](https://healthchecks.io/checks/) - Backup-Monitoring
-- Badge oben auf dieser Seite zeigt aktuellen Status
-
-**System Status:**
-```bash
-# System-Ressourcen
-htop
-
-# Festplatten-Auslastung
-df -h
-
-# Docker Container Status
-docker stats
-```
-
-## Sicherheit
-
-### Best Practices
-
-1. **SSH-Keys verwenden:** Authentifizierung über SSH-Keys statt Passwörter
-2. **Regelmäßige Updates:** System und Docker Images aktuell halten
-3. **Zugriffskontrolle:** [Berechtigungen](/admin/zugriffskontrolle) regelmäßig prüfen
-4. **Backups testen:** Regelmäßig Restore-Tests durchführen
-5. **Tailscale:** Server nur über Tailscale erreichbar, keine Port-Forwarding
-
-### Wichtige Dateien
-
-**Auf dem Server:**
-- `/srv/docker/` - Docker Compose Konfigurationen
-- `/srv/media/` - Media-Dateien und Datenbanken
-- `/etc/samba/smb.conf` - Samba Konfiguration
-- `/home/<user>/.config/rclone/rclone.conf` - Rclone Konfiguration
-- `/usr/local/bin/backup.sh` - Backup Script
-
-**Im Repository:**
-- `ansible/` - Ansible Playbooks und Konfiguration
-- `docker/` - Docker Compose Templates
-- `vitepress/` - Diese Dokumentation
-
-## Support & Ressourcen
-
-- **GitHub Repository:** [timonrieger/family-server](https://github.com/timonrieger/family-server)
-- **Immich Dokumentation:** [immich.app/docs](https://immich.app/docs)
-- **Jellyfin Dokumentation:** [jellyfin.org/docs](https://jellyfin.org/docs)
-- **Tailscale Dokumentation:** [tailscale.com/kb](https://tailscale.com/kb)
+- Speicherplatz prüfen (`df -h`)
+- [Backup-Integrität](./backups#überwachung) testen
+- Anwendungen auf neueste Versionen aktualisieren
+  - Docker: `docker compose pull && docker compose up -d`
+  - Apt: `sudo apt update && sudo apt upgrade -y`
 
