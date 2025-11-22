@@ -1,0 +1,115 @@
+---
+- name: Configure user folders and shared media access
+  hosts: all
+  become: true
+  vars:
+    # List of Immich users
+    immich_users:
+      - timon
+      - linus
+      - martin
+      - birgit
+      - family
+
+    # List of Linux users
+    linux_users:
+      - timon
+      - linus
+      - martin
+      - birgit
+
+    # Base path for user media
+    immich_base: /srv/media/immich
+
+    # Shared folder path
+    family_share: /srv/media/family
+
+    # Set to true if you want to enable login for all users
+    enable_login: false
+
+  tasks:
+    - name: Ensure 'family' group exists
+      ansible.builtin.group:
+        name: family
+        state: present
+
+    - name: Ensure Linux users exist and belong to 'family' group
+      ansible.builtin.user:
+        name: "{{ item }}"
+        create_home: true
+        shell: "{{ '/bin/bash' if enable_login else '/usr/sbin/nologin' }}"
+        groups: family
+        append: true # append group to user
+        state: present
+      loop: "{{ linux_users }}"
+
+    - name: Ensure /srv directory ownership and permissions
+      ansible.builtin.file:
+        path: /srv
+        state: directory
+        owner: timon
+        group: timon
+        mode: '0750'
+
+    - name: Ensure /srv/docker directory ownership and permissions
+      ansible.builtin.file:
+        path: /srv/docker
+        state: directory
+        owner: timon
+        group: timon
+        mode: '0750'
+
+    - name: Ensure Immich base directory exists
+      ansible.builtin.file:
+        path: "{{ immich_base }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Ensure each Immich user folder exists and is private, besides family uploads
+      ansible.builtin.file:
+        path: "{{ immich_base }}/library/library/{{ item }}"
+        state: directory
+        owner: "{{ item if item != 'family' else 'timon' }}"
+        group: "{{ item if item != 'family' else 'family' }}"
+        mode: "{{ '0700' if item != 'family' else '2750' }}"
+      loop: "{{ immich_users }}"
+
+    - name: Ensure shared family folder exists
+      ansible.builtin.file:
+        path: "{{ family_share }}"
+        state: directory
+        owner: timon
+        group: family
+        mode: '2750'
+
+    - name: Recursively apply permissions to shared family folder
+      ansible.builtin.file:
+        path: "{{ family_share }}"
+        recurse: yes
+        owner: timon
+        group: family
+        mode: '2750'
+
+    - name: Copy Samba configuration file
+      ansible.builtin.copy:
+        src: files/smb.conf
+        dest: /etc/samba/smb.conf
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
+      notify: Restart Samba
+
+    - name: Restart Samba service
+      ansible.builtin.systemd:
+        name: smbd
+        state: restarted
+        enabled: yes
+
+  handlers:
+    - name: Restart Samba
+      ansible.builtin.systemd:
+        name: smbd
+        state: restarted

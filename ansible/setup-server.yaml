@@ -1,0 +1,135 @@
+- name: Provision beelink
+  hosts: beelink
+  become: true
+  vars:
+    user: timon
+  tasks:
+    # - name: Ensure prerequisite apt packages are present
+    #   ansible.builtin.apt:
+    #     name:
+    #       - ca-certificates
+    #       - curl
+    #       - gnupg
+    #     state: present
+    #     update_cache: true
+
+    # - name: Import Tailscale GPG key
+    #   ansible.builtin.get_url:
+    #     url: https://pkgs.tailscale.com/stable/debian/trixie.noarmor.gpg
+    #     dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
+    #     mode: '0644'
+    #   when: ansible_check_mode == false
+
+    # - name: Add Tailscale repository
+    #   ansible.builtin.get_url:
+    #     url: https://pkgs.tailscale.com/stable/debian/trixie.tailscale-keyring.list
+    #     dest: /etc/apt/sources.list.d/tailscale.list
+    #     mode: '0644'
+    #   when: ansible_check_mode == false
+
+    # - name: Install Tailscale
+    #   ansible.builtin.apt:
+    #     name: tailscale
+    #     state: present
+    #     update_cache: true
+
+    # - name: Import Fish Shell GPG key
+    #   ansible.builtin.shell: |
+    #     curl -fsSL https://download.opensuse.org/repositories/shells:fish:release:4/Debian_13/Release.key | gpg --dearmor -o /etc/apt/trusted.gpg.d/shells_fish_release_4.gpg
+    #   args:
+    #     creates: /etc/apt/trusted.gpg.d/shells_fish_release_4.gpg
+    #   when: ansible_check_mode == false
+
+    # - name: Add Fish Shell repository
+    #   ansible.builtin.apt_repository:
+    #     repo: "deb http://download.opensuse.org/repositories/shells:/fish:/release:/4/Debian_13/ /"
+    #     state: present
+    #     filename: shells:fish:release:4
+
+    # - name: Install Fish Shell
+    #   ansible.builtin.apt:
+    #     name: fish
+    #     state: present
+    #     update_cache: true
+
+    - name: Set default shell to fish
+      ansible.builtin.user:
+        name: "{{ user }}"
+        shell: /usr/bin/fish
+
+    # - name: Check if Docker is already installed
+    #   ansible.builtin.command: which docker
+    #   register: docker_check
+    #   failed_when: false
+    #   changed_when: false
+
+    # - name: Download Docker convenience script
+    #   get_url:
+    #     url: https://get.docker.com
+    #     dest: /tmp/get-docker.sh
+    #     mode: '0755'
+    #   when: docker_check.rc != 0
+
+    # - name: Run Docker convenience script
+    #   command: /tmp/get-docker.sh
+    #   args:
+    #     creates: /usr/bin/docker
+    #   when: docker_check.rc != 0
+
+    # - name: Check if Docker service exists
+    #   command: systemctl list-unit-files | grep docker
+    #   register: docker_service_check
+    #   failed_when: false
+    #   changed_when: false
+
+    # - name: Start and enable Docker service
+    #   systemd:
+    #     name: docker
+    #     state: started
+    #     enabled: true
+    #   when: 
+    #     - not ansible_check_mode
+    #     - "'docker.service' in docker_service_check.stdout"
+
+    # - name: Verify Docker is running
+    #   command: docker --version
+    #   register: docker_version
+    #   changed_when: false
+
+    # - name: Check if docker group exists
+    #   command: getent group docker
+    #   register: docker_group_check
+    #   failed_when: false
+    #   changed_when: false
+
+    # - name: Add user to docker group
+    #   user:
+    #     name: "{{ user }}"
+    #     groups: docker
+    #     append: true
+    #   when: 
+    #     - not ansible_check_mode
+    #     - docker_group_check.rc == 0
+
+    # - name: Clean up Docker script
+    #   file:
+    #     path: /tmp/get-docker.sh
+    #     state: absent
+    #   when: docker_check.rc != 0
+        
+    # - name: Ensure fish config directory exists
+    #   ansible.builtin.file:
+    #     path: /home/{{ user }}/.config/fish
+    #     state: directory
+    #     mode: "0755"
+    #     owner: "{{ user }}"
+    #     group: "{{ user }}"
+
+    # - name: Copy fish config file
+    #   ansible.builtin.copy:
+    #     src: files/config.fish
+    #     dest: /home/{{ user }}/.config/fish/config.fish
+    #     mode: "0644"
+    #     owner: "{{ user }}"
+    #     group: "{{ user }}"
+    #     force: true

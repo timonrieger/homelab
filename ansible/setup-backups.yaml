@@ -1,0 +1,101 @@
+---
+- name: Setup Restic Backup
+  hosts: beelink
+  become: true
+  vars:
+    restic_user: restic
+    restic_home: "/home/restic"
+    backup_script_src: "files/backup.sh"
+    rclone_config_src: "files/rclone.conf"
+    backup_log: "/home/restic/backup.log"
+    backup_cron_hour: 3
+    backup_cron_minute: 0
+
+  tasks:
+    - name: Ensure prerequisite apt packages are present
+      ansible.builtin.apt:
+        name:
+          - restic
+          - ca-certificates
+          - curl
+          - gnupg
+        state: present
+        update_cache: true
+
+    - name: Check if rclone is already installed
+      ansible.builtin.command: which rclone
+      register: rclone_check
+      changed_when: false
+      failed_when: false
+
+    - name: Install rclone using official install script
+      ansible.builtin.shell: curl https://rclone.org/install.sh | sudo bash
+      when: rclone_check.rc != 0
+      args:
+        creates: /usr/bin/rclone
+
+    - name: Create restic system user
+      ansible.builtin.user:
+        name: "{{ restic_user }}"
+        system: true
+        create_home: true
+        shell: /usr/sbin/nologin
+        state: present
+
+    - name: Lock down restic binary
+      ansible.builtin.file:
+        path: /usr/bin/restic
+        owner: root
+        group: "{{ restic_user }}"
+        mode: '0750'
+
+    - name: Add DAC_READ_SEARCH capability to restic binary
+      ansible.builtin.command: setcap cap_dac_read_search=+ep /usr/bin/restic
+
+    - name: Ensure restic cache directory exists
+      ansible.builtin.file:
+        path: "{{ restic_home }}/.cache/restic"
+        state: directory
+        owner: "{{ restic_user }}"
+        group: "{{ restic_user }}"
+        mode: '0700'
+
+    - name: Copy restic backup script
+      ansible.builtin.copy:
+        src: "{{ backup_script_src }}"
+        dest: "{{ restic_home }}/backup.sh"
+        owner: "{{ restic_user }}"
+        group: "{{ restic_user }}"
+        mode: '0700'
+
+    - name: Ensure rclone config directory exists
+      ansible.builtin.file:
+        path: "{{ restic_home }}/.config/rclone"
+        state: directory
+        owner: "{{ restic_user }}"
+        group: "{{ restic_user }}"
+        mode: '0700'
+
+    - name: Copy rclone config for restic user
+      ansible.builtin.copy:
+        src: "{{ rclone_config_src }}"
+        dest: "{{ restic_home }}/.config/rclone/rclone.conf"
+        owner: "{{ restic_user }}"
+        group: "{{ restic_user }}"
+        mode: '0600'
+
+    - name: Ensure backup log file exists
+      ansible.builtin.file:
+        path: "{{ backup_log }}"
+        state: touch
+        owner: "{{ restic_user }}"
+        group: "{{ restic_user }}"
+        mode: '0644'
+
+    - name: Set cronjob for restic backup
+      ansible.builtin.cron:
+        name: "restic system backup"
+        user: root
+        minute: "{{ backup_cron_minute }}"
+        hour: "{{ backup_cron_hour }}"
+        job: "sudo -u {{ restic_user }} {{ restic_home }}/backup.sh >> {{ backup_log }} 2>&1"

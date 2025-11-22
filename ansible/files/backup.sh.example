@@ -1,0 +1,20 @@
+#!/usr/bin/env fish
+
+cd /home/restic
+
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Stopping Docker containers..."
+docker stop jellyfin
+
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Running restic backup..."
+set -x RESTIC_PASSWORD REPLACE-ME
+# run backup directly as restic (no sudo)
+restic -r rclone:storj:beelink-backup backup / --exclude={/dev,/media,/mnt,/proc,/run,/sys,/tmp,/var/tmp} --pack-size=60
+
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Backup completed."
+
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Healthchecks..."
+curl -X GET https://hc-ping.com/YOUR-PROJECT-ID
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Heartbeat sent."
+
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Starting Docker containers..."
+docker start jellyfin

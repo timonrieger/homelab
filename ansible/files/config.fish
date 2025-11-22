@@ -1,0 +1,1 @@
+alias ds "docker ps -a --format 'table {{.ID}}\t{{.Status}}\t{{.Names}}\t{{.Ports}}'"

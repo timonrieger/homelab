@@ -1,0 +1,11 @@
+(cloudflare) {
+  tls {
+    dns cloudflare REPLACE-ME
+  }
+}
+
+# immich
+immich.srv.timonrieger.de {
+  reverse_proxy beelink:2283
+  import cloudflare
+}
