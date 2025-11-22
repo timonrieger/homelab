@@ -3,3 +3,11 @@ repos:
     rev: v8.29.1
     hooks:
       - id: gitleaks
+
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: v0.13.0
+    hooks:
+      - id: markdownlint
+        files: \.(md|mdown|markdown)$
+
+      
