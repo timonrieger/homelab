@@ -37,11 +37,11 @@ Die Standardberechtigung für den neu erstellten Ordner ist `0777 - 0022 (unmask
 
 ## Einrichtung der Freigaben
 
-Alle Einstellungen für Dateifreigaben werden in der `setup-permissions.yaml` Datei gespeichert. Diese Datei wird von Ansible ausgeführt, um die Berechtigungen und Freigaben zu konfigurieren. Dabei werden auch Nutzerprofile
+Alle Einstellungen für Dateifreigaben werden in der `setup-permissions.yaml` Datei gespeichert. Diese Datei wird von Ansible ausgeführt, um die Berechtigungen und Freigaben zu konfigurieren. Dabei werden auch Nutzerprofile für Samba erstellt.
 
-```bash
-ansible-playbook -i inventory.ini setup-permissions.yaml --ask-become-pass
-```
+:::info
+Die Berechtigungen werden in der [Server Einrichtung](server-einrichtung.md#8-berechtigungen-einrichten) ausgeführt.
+:::
 
 ## FAQ
 

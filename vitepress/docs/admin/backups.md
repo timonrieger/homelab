@@ -80,8 +80,7 @@ Falls der Server komplett neu aufgesetzt werden muss oder einzelne Daten wiederh
 1. Neuen [Server einrichten](/admin/server-einrichtung)
 2. Rclone konfigurieren (aus `ansible/files/rclone.conf`)
 3. Mit Restic das Repository verbinden und Daten wiederherstellen
-4. Berechtigungen mit Ansible Playbook setzen: `ansible-playbook -i inventory.ini setup-permissions.yaml --ask-become-pass`
-5. Docker Container starten
+4. Docker Container starten
 
 ### Einzelne Services wiederherstellen
 
