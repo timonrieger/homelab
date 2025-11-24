@@ -13,7 +13,7 @@ restic -r rclone:storj:beelink-backup backup /srv /home /mnt/hdd/time_machine --
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Backup completed."
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Healthchecks..."
-curl -X GET https://hc-ping.com/YOUR-PROJECT-ID
+curl -m 10 --retry 5 https://hc-ping.com/REPLACE-ME
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Heartbeat sent."
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Starting Docker containers..."
