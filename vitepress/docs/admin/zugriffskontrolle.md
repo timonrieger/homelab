@@ -20,6 +20,14 @@ Die erste Ziffer bezieht sich auf dein Eigentümer, die zweite auf die Gruppe un
 770 bedeuted, dass der Eigentümer und die Gruppe des Verzeichnisses, vollen Zugriff haben, alle anderen haben gar keinen Zugriff
 :::
 
+:::info Drive Structure
+The following directories are on the HDD at `/mnt/hdd/`:
+- /srv/media/family/
+- /srv/media/immich/library/library/
+
+All other directories are on the SSD.
+:::
+
 ## Berechtigungen
 
 |**Action**|**Value**|**Meaning**|

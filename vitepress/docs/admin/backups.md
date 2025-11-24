@@ -10,7 +10,9 @@ Das Backup-System basiert auf drei Komponenten:
 
 **Was wird gesichert:**
 
-- Der gesamte Server, bis auf die System-Dateien
+- /srv/ # alle Medien und Konfigurationsdateien
+- /home/ # alle Benutzerdaten
+- /mnt/hdd/time_machine/ # Time Machine Backups
 
 **Was wird NICHT gesichert:**
 
@@ -51,10 +53,10 @@ Die Rclone-Konfiguration liegt unter:
 
 Das Restic-Repository wird über Rclone auf Storj gespeichert.
 
-**Repository initialisieren (nur beim ersten Mal):**
+**Repository initialisieren (einmalig):**
 
 ```bash
-sudo -u restic restic -r rclone:storj:bucket-name/restic init
+sudo -u restic restic -r rclone:storj:beelink-backup init
 ```
 
 Das Passwort wird abgefragt und sollte sicher im Password Manager gespeichert werden.
@@ -73,7 +75,7 @@ sudo -u restic tail -f /home/restic/backup.log
 
 ## Wiederherstellung
 
-Falls der Server komplett neu aufgesetzt werden muss oder einzelne Daten wiederhergestellt werden müssen:
+Falls der Server komplett neu aufgesetzt werden muss oder einzelne Daten wiederhergestellt werden müssen.
 
 ### Komplette Wiederherstellung
 
@@ -98,6 +100,6 @@ Detaillierte Restic-Befehle für Restore-Operationen: [Restic Restore Dokumentat
 1. **Regelmäßige Tests:** Teste Restores mindestens monatlich
 2. **Monitoring prüfen:** Checke wöchentlich das [Healthchecks-Dashboard](https://healthchecks.io/)
 3. **Repository-Check:** Führe monatlich `restic check` aus (siehe [Restic Dokumentation](https://restic.readthedocs.io/en/latest/045_working_with_repos.html))
-4. **Kosten überwachen:** Prüfe regelmäßig Storj-Kosten im [Storj Dashboard](https://eu1.storj.io/)
+4. **Kosten überwachen:** Prüfe regelmäßig Kosten im [Storj Dashboard](https://eu1.storj.io/)
 5. **Passwort-Sicherheit:** Halte das Restic-Passwort sicher im Password Manager
 6. **Backup-Logs prüfen:** Kontrolliere gelegentlich `/home/restic/backup.log` auf Fehler
