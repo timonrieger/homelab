@@ -2,6 +2,8 @@
 
 Diese Dokumentation hilft dir dabei, alle Services unseres Familienservers zu nutzen. Hier findest du Anleitungen für den Zugriff auf Fotos, Filme und Dateien.
 
+[Server Status →](https://status.fam.timonrieger.de)
+
 ## Verfügbare Services
 
 ### 📸 Immich - Fotos & Videos
@@ -35,3 +37,5 @@ Falls du Tailscale noch nicht eingerichtet hast, beginne mit der [Tailscale Anle
 ## Hilfe benötigt?
 
 Falls du Probleme hast oder Fragen zur Nutzung der Services hast, wende dich an einen Administrator.
+
+Du kannst den [Server Status](https://status.fam.timonrieger.de) überprüfen, um zu sehen, ob alle Services erreichbar sind.

@@ -10,5 +10,5 @@ run = ["mise install", "uvx pre-commit install"]
 description = "Setup the project"
 
 [tasks.docs]
-run = ["cd vitepress", "pnpm install", "pnpm dev"]
+run = ["cd vitepress && pnpm install && pnpm dev"]
 description = "Start the development server for the documentation"

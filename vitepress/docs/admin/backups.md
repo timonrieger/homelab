@@ -23,11 +23,6 @@ Das Backup-System basiert auf drei Komponenten:
 - Täglich um 00:00 Uhr (automatisch via Cron)
 - Retention: unbegrenzt
 
-**Monitoring:**
-
-- [Healthchecks.io](https://healthchecks.io/) überwacht Backup-Erfolg
-- Badge auf [Admin-Übersicht](/admin/index) zeigt Status
-
 :::tip Restic Dokumentation
 Für detaillierte Restic-Befehle siehe die [offizielle Restic-Dokumentation](https://restic.readthedocs.io/). Diese Seite enthält nur serverspezifische Konfigurationen.
 :::
@@ -62,12 +57,6 @@ sudo -u restic restic -r rclone:storj:beelink-backup init
 Das Passwort wird abgefragt und sollte sicher im Password Manager gespeichert werden.
 
 ## Überwachung
-
-### Healthchecks.io
-
-[Healthchecks.io](https://healthchecks.io/) überwacht, ob Backups erfolgreich durchlaufen und sendet eine E-Mail an den Administrator.
-
-### Logs überwachen
 
 ```bash
 sudo -u restic tail -f /home/restic/backup.log

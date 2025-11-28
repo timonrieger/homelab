@@ -4,8 +4,42 @@
   }
 }
 
-# immich
-immich.srv.timonrieger.de {
+########################
+# Immich (Photos)
+########################
+immich.fam.timonrieger.de {
   reverse_proxy beelink:2283
+  import cloudflare
+}
+
+########################
+# Jellyfin (Media)
+########################
+jellyfin.fam.timonrieger.de {
+  reverse_proxy beelink:8096
+  import cloudflare
+}
+
+########################
+# Gitea (Git)
+########################
+git.fam.timonrieger.de {
+  reverse_proxy beelink:3000
+  import cloudflare
+}
+
+########################
+# Gitea Mirror
+########################
+git-mirror.fam.timonrieger.de {
+  reverse_proxy beelink:4321
+  import cloudflare
+}
+
+########################
+# Uptime Kuma (Status)
+########################
+status.fam.timonrieger.de {
+  reverse_proxy beelink:3001
   import cloudflare
 }

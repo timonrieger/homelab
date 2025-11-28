@@ -1,5 +1,7 @@
 # Immich - Fotos & Videos
 
+![Immich](https://status.fam.timonrieger.de/api/badge/2/status)
+
 [Immich](https://immich.app) ist unsere Lösung für Foto- und Videoverwaltung. Du kannst damit automatische Backups von deinem Smartphone erstellen, Fotos mit der Familie teilen und von überall auf deine Bilder zugreifen.
 
 ## Zugriff auf Immich
@@ -10,6 +12,7 @@ Du musst mit [Tailscale verbunden](/anwender/tailscale) sein, um auf Immich zugr
 
 **Im Browser:**
 
+- [https://immich.fam.timonrieger.de](https://immich.fam.timonrieger.de) (empfohlen)
 - [http://beelink:2283](http://beelink:2283)
 - [http://beelink.tail12bab0.ts.net:2283](http://beelink.tail12bab0.ts.net:2283)
 
@@ -18,7 +21,7 @@ oder nutze die [Immich App](https://immich.app/download).
 ## Anmelden
 
 1. Öffne Immich im Browser oder in der App
-2. Gib die Server-URL ein: `http://beelink:2283`
+2. Gib eine der oben genannten Server-URLs ein
 3. Melde dich mit deinen Zugangsdaten an
 
 :::info Zugangsdaten

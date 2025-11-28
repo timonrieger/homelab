@@ -4,6 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "Family Server",
   description: "Unser privater Familienserver für Fotos, Filme und Dateien. Sicher. Überall erreichbar.",
+  lastUpdated: true,
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
@@ -12,7 +13,6 @@ export default defineConfig({
     search: {
       provider: "local"
     },
-
     sidebar: [
       {
         text: 'Für Anwender',
@@ -41,8 +41,10 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/timonrieger/family-server' },
-      { icon: 'immich', link: 'http://beelink.tail12bab0.ts.net:2283/' },
-      { icon: 'jellyfin', link: 'http://beelink.tail12bab0.ts.net:8096' },
+      { icon: 'immich', link: 'https://immich.fam.timonrieger.de' },
+      { icon: 'jellyfin', link: 'https://jellyfin.fam.timonrieger.de' },
+      { icon: 'gitea', link: 'https://git.fam.timonrieger.de' },
+      { icon: 'uptimekuma', link: 'https://status.fam.timonrieger.de' },
     ]
   }
 })

@@ -11,9 +11,8 @@ set -x RESTIC_PASSWORD REPLACE-ME
 restic -r rclone:storj:beelink-backup backup /srv /home /mnt/hdd/time_machine --pack-size=60
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Backup completed."
-
-echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Healthchecks..."
-curl -m 10 --retry 5 https://hc-ping.com/REPLACE-ME
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Uptime Kuma..."
+curl -m 10 --retry 5 "http://beelink:3001/api/push/REPLACE-ME?status=up&msg=OK&ping="
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Heartbeat sent."
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Starting Docker containers..."

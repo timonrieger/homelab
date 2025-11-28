@@ -1,7 +1,5 @@
 # Admin Überblick
 
-![Backup](https://healthchecks.io/b/2/5ded10ce-57ba-47ef-8914-21c5bc581992.svg)
-
 Diese Sektion dokumentiert die technische Infrastruktur, Einrichtung und Administration unseres Familienservers. Hier findest du alle Informationen für die Verwaltung, Wartung und Konfiguration des Systems.
 
 ## Tech Stack
@@ -12,12 +10,16 @@ Diese Sektion dokumentiert die technische Infrastruktur, Einrichtung und Adminis
 - **Virtualisierung:** [Docker](https://www.docker.com/)
 - **Backups:** [Restic](https://restic.net/) (Backup Software) + [Rclone](https://rclone.org/) (Cloud Schnittstelle) + [Storj](https://storj.io/) (Cloud Provider)
 - **Speicher:** [WD RED HDD 4TB](https://www.westerndigital.com/products/internal-drives/wd-red-plus-sata-3-5-hdd?sku=WD40EFZZ)
+- **Monitoring:** [Uptime Kuma](https://uptime.kuma.pet/)
+- **Reverse Proxy:** [Caddy](https://caddyserver.com/)
+- **DNS:** [Cloudflare](https://cloudflare.com)
 - **Server Konfiguration:** [Ansible](https://www.ansible.com/)
+- **Dateifreigabe:** [Samba](https://www.samba.org/)
 - **Anwendungen:**
   - [Immich](https://immich.app/) (Fotos)
   - [Jellyfin](https://jellyfin.org/) (Filme, Serien, Musik)
-  - [Samba](https://www.samba.org/) (Dateifreigabe)
-
+  - [Gitea](https://gitea.com) (Git Repository)
+  - [Gitea Mirror](https://github.com/RayLabsHQ/gitea-mirror) (Gitea Mirror Tool)
 
 ## Schnellstart
 
@@ -32,7 +34,6 @@ Um mit der Administration des Servers zu beginnen:
 **Täglich (automatisiert):**
 
 - Backups werden automatisch täglich ausgeführt
-- Backup-Status wird auf healthchecks.io gemeldet
 
 **Wöchentlich:**
 

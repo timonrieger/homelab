@@ -10,6 +10,7 @@ Du musst mit [Tailscale verbunden](/anwender/tailscale) sein, um auf Jellyfin zu
 
 **Im Browser:**
 
+- [https://jellyfin.fam.timonrieger.de](https://jellyfin.fam.timonrieger.de) (empfohlen)
 - [http://beelink:8096](http://beelink:8096)
 - [http://beelink.tail12bab0.ts.net:8096](http://beelink.tail12bab0.ts.net:8096)
 
@@ -18,7 +19,7 @@ oder nutze die [Jellyfin App](https://jellyfin.org/downloads/clients).
 ## Anmelden
 
 1. Öffne Jellyfin im Browser oder in der App
-2. Gib die Server-URL ein: `http://beelink:8096`
+2. Gib eine der oben genannten Server-URLs ein
 3. Melde dich mit deinen Zugangsdaten an
 
 :::info Zugangsdaten
