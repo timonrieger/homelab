@@ -2,9 +2,6 @@
 
 cd /home/restic
 
-echo "["(date "+%Y-%m-%d %H:%M:%S")"] Stopping Docker containers..."
-docker stop jellyfin
-
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Running restic backup..."
 set -x RESTIC_PASSWORD REPLACE-ME
 # run backup directly as restic (no sudo)
@@ -14,6 +11,3 @@ echo "["(date "+%Y-%m-%d %H:%M:%S")"] Backup completed."
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Uptime Kuma..."
 curl -m 10 --retry 5 "http://beelink:3001/api/push/REPLACE-ME?status=up&msg=OK&ping="
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Heartbeat sent."
-
-echo "["(date "+%Y-%m-%d %H:%M:%S")"] Starting Docker containers..."
-docker start jellyfin
