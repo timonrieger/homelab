@@ -5,9 +5,23 @@ cd /home/restic
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Running restic backup..."
 set -x RESTIC_PASSWORD REPLACE-ME
 # run backup directly as restic (no sudo)
-restic -r rclone:storj:beelink-backup backup /srv /home /mnt/hdd/time_machine --pack-size=60
+timeout 5h restic -r rclone:storj:beelink-backup backup /srv /home /mnt/hdd/time_machine --pack-size=60
+set EXIT_CODE $status
 
-echo "["(date "+%Y-%m-%d %H:%M:%S")"] Backup completed."
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Backup finished with exit code $EXIT_CODE."
+
+# Determine heartbeat status
+if test $EXIT_CODE -eq 0
+    set STATUS "up"
+    set MSG "Backup completed successfully"
+else if test $EXIT_CODE -eq 124
+    set STATUS "down"
+    set MSG "Backup timed out"
+else
+    set STATUS "down"
+    set MSG "Backup failed (code $EXIT_CODE)"
+end
+
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Uptime Kuma..."
-curl -m 10 --retry 5 "http://beelink:3001/api/push/REPLACE-ME?status=up&msg=OK&ping="
+curl -m 10 --retry 5 "http://beelink:3001/api/push/REPLACE-ME?status=$STATUS&msg=$MSG&ping="
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Heartbeat sent."
