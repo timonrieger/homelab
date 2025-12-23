@@ -21,7 +21,7 @@ Das Backup-System basiert auf drei Komponenten:
 **Backup-Zeitplan:**
 
 - Täglich um 00:00 Uhr (automatisch via Cron)
-- Timeout: 5 Stunden (um Netzwerküberlastung während des Tages zu vermeiden)
+- Retention: unbegrenzt
 
 :::tip Restic Dokumentation
 Für detaillierte Restic-Befehle siehe die [offizielle Restic-Dokumentation](https://restic.readthedocs.io/). Diese Seite enthält nur serverspezifische Konfigurationen.
@@ -61,10 +61,6 @@ Das Passwort wird abgefragt und sollte sicher im Password Manager gespeichert we
 ```bash
 sudo -u restic tail -f /home/restic/backup.log
 ```
-
-:::info Heartbeat
-Das Backup-Script sendet einen Heartbeat mit dem Status des Backups an das Status Dashboard.
-:::
 
 ## Wiederherstellung
 
