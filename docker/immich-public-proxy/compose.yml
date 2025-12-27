@@ -6,7 +6,7 @@ services:
     ports:
       - "3002:3000"
     environment:
-      PUBLIC_BASE_URL: https://immich.fam.timonrieger.de
+      PUBLIC_BASE_URL: https://immich-share.timonrieger.de
       IMMICH_URL: http://beelink:2283
     healthcheck:
       test: curl -s http://localhost:3000/share/healthcheck -o /dev/null || exit 1

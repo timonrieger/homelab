@@ -122,14 +122,14 @@
         group: root
         mode: preserve
         directory_mode: "0755"
-      when: cloudflared_user_dir_stat.stat.isdir
+      when: cloudflared_user_dir_stat.stat.isdir | default(false)
       notify: Reload systemd and restart cloudflared
 
     - name: Remove ~/.cloudflared directory from user after copying
       ansible.builtin.file:
         path: /home/{{ user }}/.cloudflared
         state: absent
-      when: cloudflared_user_dir_stat.stat.isdir
+      when: cloudflared_user_dir_stat.stat.isdir | default(false)
 
     - name: Copy cloudflared config.yml to /etc/cloudflared (authoritative)
       ansible.builtin.copy:

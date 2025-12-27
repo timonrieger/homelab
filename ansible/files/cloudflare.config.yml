@@ -2,6 +2,6 @@ tunnel: b6cad4cb-bfc4-4cb0-b0e6-2073891d169b
 credentials-file: /etc/cloudflared/b6cad4cb-bfc4-4cb0-b0e6-2073891d169b.json
 
 ingress:
-  - hostname: share.immich.fam.timonrieger.de
+  - hostname: immich-share.timonrieger.de
     service: http://localhost:3002   # immich-public-proxy
   - service: http_status:404
