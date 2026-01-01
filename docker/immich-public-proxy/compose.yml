@@ -12,3 +12,5 @@ services:
       test: curl -s http://localhost:3000/share/healthcheck -o /dev/null || exit 1
       start_period: 10s
       timeout: 5s
+    volumes:
+      - ./config.json:/app/config.json:ro
