@@ -35,14 +35,10 @@ Um mit der Administration des Servers zu beginnen:
 
 - Backups werden automatisch täglich ausgeführt
 
-**Wöchentlich:**
-
-- Docker Container Status prüfen (`ds`)
-
 **Monatlich:**
 
 - Speicherplatz prüfen (`df -h`)
 - [Backup-Integrität](./backups#überwachung) testen
 - Docker Clean up (`docker system prune -a`)
-- Anwendungen auf neueste Versionen aktualisieren (über Docker Image Tags)
+- Anwendungen auf neueste Versionen aktualisieren (Renovate Bot)
 - System Update (`sudo apt update && sudo apt upgrade -y`)
