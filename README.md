@@ -1,6 +1,6 @@
-# Family Server
+# Homelab
 
-This repository contains the infrastructure and documentation for a self-hosted family server.
+This repository contains the infrastructure and documentation for a self-hosted homelab.
 
 ## Setup
 

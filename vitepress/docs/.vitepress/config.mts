@@ -2,8 +2,8 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "Family Server",
-  description: "Unser privater Familienserver für Fotos, Filme und Dateien. Sicher. Überall erreichbar.",
+  title: "Homelab",
+  description: "Homelab für Fotos, Filme und Dateien. Sicher. Überall erreichbar.",
   lastUpdated: true,
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
@@ -40,7 +40,7 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/timonrieger/family-server' },
+      { icon: 'github', link: 'https://github.com/timonrieger/homelab' },
       { icon: 'immich', link: 'https://immich.fam.timonrieger.de' },
       { icon: 'jellyfin', link: 'https://jellyfin.fam.timonrieger.de' },
       { icon: 'gitea', link: 'https://git.fam.timonrieger.de' },

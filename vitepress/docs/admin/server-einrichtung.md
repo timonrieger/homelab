@@ -61,8 +61,8 @@ systemctl is-enabled sleep.target suspend.target hibernate.target hybrid-sleep.t
 ### 1. Repository klonen
 
 ```bash
-git clone https://github.com/timonrieger/family-server.git
-cd family-server
+git clone https://github.com/timonrieger/homelab.git
+cd homelab
 ```
 
 ### 2. Konfigurationsdateien vorbereiten

@@ -26,7 +26,7 @@ Diese Sektion dokumentiert die technische Infrastruktur, Einrichtung und Adminis
 Um mit der Administration des Servers zu beginnen:
 
 1. **Zugriff einrichten:** Stelle sicher, dass [Tailscale auf dem Server installiert](/admin/tailscale) ist und du SSH-Zugriff hast
-2. **Repository klonen:** Klone das [GitHub Repository](https://github.com/timonrieger/family-server) für Zugriff auf Ansible Playbooks
+2. **Repository klonen:** Klone das [GitHub Repository](https://github.com/timonrieger/homelab) für Zugriff auf Ansible Playbooks
 3. **Server konfigurieren:** Führe die [Server Einrichtung](/admin/server-einrichtung) durch oder aktualisiere bestehende Konfigurationen
 
 ## Wartung

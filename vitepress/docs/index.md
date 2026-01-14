@@ -3,8 +3,8 @@
 layout: home
 
 hero:
-  name: "Family Server"
-  tagline: Unser privater Familienserver für Fotos, Filme und Dateien. Sicher. Überall erreichbar.
+  name: "Homelab"
+  tagline: Homelab für Fotos, Filme und Dateien. Sicher. Überall erreichbar.
   actions:
     - theme: brand
       text: Für Anwender
