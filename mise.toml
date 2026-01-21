@@ -13,3 +13,17 @@ description = "Setup the project"
 dir = "vitepress"
 run = ["pnpm install", "pnpm dev"]
 description = "Start the development server for the documentation"
+
+[tasks."ansible:setup-server"]
+dir = "ansible"
+run = ["ansible-playbook -i inventory.ini setup-server.yaml --ask-become-pass"]
+description = "Setup the server"
+
+[tasks."ansible:setup-backups"]
+dir = "ansible"
+run = ["ansible-playbook -i inventory.ini setup-backups.yaml --ask-become-pass"]
+description = "Setup the backups"
+
+[tasks."ansible:setup-permissions"]
+run = ["ansible-playbook -i inventory.ini setup-permissions.yaml --ask-become-pass"]
+description = "Setup the permissions"
