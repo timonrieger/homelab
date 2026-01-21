@@ -27,3 +27,8 @@ description = "Setup the backups"
 [tasks."ansible:setup-permissions"]
 run = ["ansible-playbook -i inventory.ini setup-permissions.yaml --ask-become-pass"]
 description = "Setup the permissions"
+
+[tasks."ansible:restart-containers"]
+dir = "ansible"
+run = ["ansible-playbook -i inventory.ini restart-containers.yaml --ask-become-pass"]
+description = "Restart docker containers"
