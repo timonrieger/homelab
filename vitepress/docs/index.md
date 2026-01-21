@@ -27,4 +27,3 @@ features:
     details: Sicherer und privater Zugang über unser Tailscale Netzwerk auf der ganzen Welt.
     link: /anwender/tailscale
 ---
-

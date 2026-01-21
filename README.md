@@ -20,4 +20,4 @@ The documentation is provided with VitePress. How to start the local development
 mise docs
 ```
 
-The documentation can then be accessed at http://localhost:5173.
+The documentation can then be accessed at <http://localhost:5173>.

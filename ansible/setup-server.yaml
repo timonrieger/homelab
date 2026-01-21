@@ -196,7 +196,7 @@
         name: docker
         state: started
         enabled: true
-      when: 
+      when:
         - not ansible_check_mode
         - "'docker.service' in docker_service_check.stdout"
 
@@ -216,7 +216,7 @@
         name: "{{ user }}"
         groups: docker
         append: true
-      when: 
+      when:
         - not ansible_check_mode
         - docker_group_check.rc == 0
 
@@ -225,7 +225,7 @@
         path: /tmp/get-docker.sh
         state: absent
       when: docker_check.rc != 0
-        
+
     - name: Ensure fish config directory exists
       ansible.builtin.file:
         path: /home/{{ user }}/.config/fish
