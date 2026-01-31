@@ -42,3 +42,4 @@ Um mit der Administration des Servers zu beginnen:
 - Docker Clean up (`docker system prune -a`)
 - Anwendungen auf neueste Versionen aktualisieren (Renovate Bot)
 - System Update (`sudo apt update && sudo apt upgrade -y`)
+- [Backups aufräumen](/admin/backups#aufräumen)

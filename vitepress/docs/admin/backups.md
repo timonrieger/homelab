@@ -83,6 +83,12 @@ Falls der Server komplett neu aufgesetzt werden muss oder einzelne Daten wiederh
 
 Detaillierte Restic-Befehle für Restore-Operationen: [Restic Restore Dokumentation](https://restic.readthedocs.io/en/latest/050_restore.html)
 
+## Aufräumen
+
+```bash
+sudo -u restic restic -r rclone:storj:beelink-backup forget --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --keep-yearly 2 --prune
+```
+
 ## Best Practices
 
 1. **Regelmäßige Tests:** Teste Restores mindestens monatlich
