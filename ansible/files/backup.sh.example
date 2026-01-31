@@ -5,7 +5,7 @@ cd /home/restic
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Running restic backup..."
 set -x RESTIC_PASSWORD REPLACE-ME
 # run backup directly as restic (no sudo)
-timeout 5h restic -r rclone:storj:beelink-backup backup /srv /home /mnt/hdd/time_machine --pack-size=60
+timeout 5h restic -r rclone:storj:beelink-backup backup /srv /home --pack-size=60
 set EXIT_CODE $status
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Backup finished with exit code $EXIT_CODE."

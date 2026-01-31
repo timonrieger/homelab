@@ -12,7 +12,6 @@ Das Backup-System basiert auf drei Komponenten:
 
 - /srv/ (Medien und Docker-Konfigurationsdateien)
 - /home/ (Benutzerdaten)
-- /mnt/hdd/time_machine/ (Time Machine Backups)
 
 **Was wird NICHT gesichert:**
 
