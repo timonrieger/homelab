@@ -35,6 +35,7 @@ export default defineConfig({
           { text: 'Immich Setup', link: '/admin/immich-setup' },
           { text: 'Jellyfin Setup', link: '/admin/jellyfin-setup' },
           { text: 'Samba Setup', link: '/admin/samba-setup' },
+          { text: 'Fehlerbehebung', link: '/admin/fehlerbehebung' },
         ]
       }
     ],
