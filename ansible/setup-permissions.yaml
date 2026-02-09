@@ -11,9 +11,12 @@
       - birgit
       - family
 
-    # List of Linux users
-    linux_users:
+    # List of login users (can log in with shell)
+    login_users:
       - timon
+
+    # List of service users (system accounts, no login)
+    service_users:
       - linus
       - martin
       - birgit
@@ -24,24 +27,31 @@
     # Shared folder path
     family_share: /srv/media/family
 
-    # Set to true if you want to enable login for all users
-    enable_login: false
-
   tasks:
     - name: Ensure 'family' group exists
       ansible.builtin.group:
         name: family
         state: present
 
-    - name: Ensure Linux users exist and belong to 'family' group
+    - name: Create login users
       ansible.builtin.user:
         name: "{{ item }}"
         create_home: true
-        shell: "{{ '/bin/bash' if enable_login else '/usr/sbin/nologin' }}"
+        shell: /usr/bin/fish
         groups: family
-        append: true # append group to user
+        append: true
         state: present
-      loop: "{{ linux_users }}"
+      loop: "{{ login_users }}"
+
+    - name: Create service users
+      ansible.builtin.user:
+        name: "{{ item }}"
+        shell: /usr/sbin/nologin
+        system: true
+        groups: family
+        append: true
+        state: present
+      loop: "{{ service_users }}"
 
     - name: Ensure /srv directory ownership and permissions
       ansible.builtin.file:
