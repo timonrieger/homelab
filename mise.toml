@@ -1,5 +1,6 @@
 [tools]
 uv = "0.10.0"
+ansible-base = { version = "latest", uvx = true, postinstall = "ansible-galaxy collection install ansible.posix" }
 
 [tasks.lint]
 run = "uvx pre-commit run --all-files"
