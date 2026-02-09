@@ -39,7 +39,7 @@ Um mit der Administration des Servers zu beginnen:
 
 - Speicherplatz prüfen (`df -h`)
 - [Backup-Integrität](./backups#überwachung) testen
-- Docker Clean up (`docker system prune -a`)
+- Docker Clean up (`mise run ansible:cleanup-docker`)
 - Anwendungen auf neueste Versionen aktualisieren (Renovate Bot)
-- System Update (`sudo apt update && sudo apt upgrade -y`)
+- System Update (`mise run ansible:update-deps`)
 - [Backups aufräumen](/admin/backups#aufräumen)

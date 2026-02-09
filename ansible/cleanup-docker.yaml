@@ -1,0 +1,14 @@
+---
+- name: Clean up Docker system
+  hosts: beelink
+  become: true
+
+  tasks:
+    - name: Run Docker system prune
+      ansible.builtin.command: docker system prune -a -f
+      register: docker_prune_result
+      changed_when: true
+
+    - name: Display Docker prune results
+      ansible.builtin.debug:
+        var: docker_prune_result.stdout_lines

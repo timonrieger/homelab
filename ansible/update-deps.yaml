@@ -1,0 +1,31 @@
+---
+- name: Update system dependencies
+  hosts: beelink
+  become: true
+
+  tasks:
+    - name: Update apt package cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Get list of upgradable packages
+      ansible.builtin.command: apt list --upgradable
+      register: upgradable_packages
+      changed_when: false
+
+    - name: Display upgradable packages
+      ansible.builtin.debug:
+        msg: "{{ upgradable_packages.stdout_lines[1:] }}"
+      when: upgradable_packages.stdout_lines | length > 1
+
+    - name: No packages to upgrade
+      ansible.builtin.debug:
+        msg: "All packages are up to date."
+      when: upgradable_packages.stdout_lines | length <= 1
+
+    - name: Upgrade all packages
+      ansible.builtin.apt:
+        upgrade: dist
+        autoremove: true
+        autoclean: true

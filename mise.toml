@@ -33,3 +33,13 @@ description = "Setup the permissions"
 dir = "ansible"
 run = ["ansible-playbook -i inventory.ini restart-containers.yaml --ask-become-pass"]
 description = "Restart docker containers"
+
+[tasks."ansible:update-deps"]
+dir = "ansible"
+run = ["ansible-playbook -i inventory.ini update-deps.yaml --ask-become-pass"]
+description = "Update system dependencies (apt update && apt upgrade -y)"
+
+[tasks."ansible:cleanup-docker"]
+dir = "ansible"
+run = ["ansible-playbook -i inventory.ini cleanup-docker.yaml --ask-become-pass"]
+description = "Clean up Docker system (docker system prune -a -f)"
