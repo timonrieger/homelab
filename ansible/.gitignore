@@ -2,3 +2,4 @@
 .ansible/
 files/rclone.conf
 files/backup.sh
+files/fstab

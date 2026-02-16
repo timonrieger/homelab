@@ -250,6 +250,15 @@
         group: "{{ user }}"
         mode: "0750"
 
+    - name: Copy fstab to /etc/fstab
+      ansible.builtin.copy:
+        src: files/fstab
+        dest: /etc/fstab
+        owner: root
+        group: root
+        mode: "0644"
+        backup: true
+
     - name: Synchronize Docker configurations to /srv/docker
       ansible.posix.synchronize:
         src: ../docker/
