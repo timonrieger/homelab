@@ -1,6 +1,6 @@
 services:
   immich-public-proxy:
-    image: alangrainger/immich-public-proxy:1.15.1@sha256:b27b14e301856ec1354acee365c42e233c558ceae2de5257d3af68544c442fa5
+    image: alangrainger/immich-public-proxy:1.15.1@sha256:51834a31586c61817917586c8830d2c964f5e5f2e6430dc506a6b10a1d91edb8
     container_name: immich-public-proxy
     restart: unless-stopped
     ports:
