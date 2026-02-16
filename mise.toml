@@ -34,10 +34,10 @@ dir = "ansible"
 run = ["ansible-playbook -i inventory.ini restart-containers.yaml --ask-become-pass"]
 description = "Restart docker containers"
 
-[tasks."ansible:update-deps"]
+[tasks."ansible:update-system"]
 dir = "ansible"
-run = ["ansible-playbook -i inventory.ini update-deps.yaml --ask-become-pass"]
-description = "Update system dependencies (apt update && apt upgrade -y)"
+run = ["ansible-playbook -i inventory.ini update-system.yaml --ask-become-pass"]
+description = "Update system"
 
 [tasks."ansible:cleanup-docker"]
 dir = "ansible"
