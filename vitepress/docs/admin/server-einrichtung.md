@@ -67,7 +67,15 @@ git clone https://github.com/timonrieger/homelab.git
 cd homelab
 ```
 
-### 2. Konfigurationsdateien vorbereiten
+### 2. Mise installieren
+
+Installiere [mise](https://mise.jdx.dev) und richte das Projekt ein:
+
+```bash
+mise run setup
+```
+
+### 3. Konfigurationsdateien vorbereiten
 
 ```bash
 # Alle Beispieldateien zu Konfigurationsdateien kopieren
@@ -79,11 +87,11 @@ done
 
 Passe alle `REPLACE-ME` Platzhalter in den kopierten Dateien mit den richtigen Werten an.
 
-### 3. Tailscale einrichten
+### 4. Tailscale einrichten
 
 Richte [Tailscale auf dem Server](/admin/tailscale) ein, sodass du über Tailscale SSH auf den Server zugreifen kannst.
 
-### 4. Inventory konfigurieren
+### 5. Inventory konfigurieren
 
 Passe die `inventory.ini` Datei mit deinem eingerichteten Benutzernamen an:
 
@@ -92,29 +100,28 @@ Passe die `inventory.ini` Datei mit deinem eingerichteten Benutzernamen an:
 beelink ansible_user=<dein-username>
 ```
 
-### 5. Verbindung testen
+### 6. Verbindung testen
 
 ```bash
-cd ansible
-ansible beelink -m ping -i inventory.ini
+mise run ansible:ping
 ```
 
-### 6. Server einrichten
+### 7. Server einrichten
 
 ```bash
-ansible-playbook -i inventory.ini setup-server.yaml --ask-become-pass
+mise run ansible:setup-server
 ```
 
-### 7. Backups konfigurieren
+### 8. Backups konfigurieren
 
 ```bash
-ansible-playbook -i inventory.ini setup-backups.yaml --ask-become-pass
+mise run ansible:setup-backups
 ```
 
-### 8. Berechtigungen einrichten
+### 9. Berechtigungen einrichten
 
 ```bash
-ansible-playbook -i inventory.ini setup-permissions.yaml --ask-become-pass
+mise run ansible:setup-permissions
 ```
 
 Mehr Details: [Zugriffskontrolle](/admin/zugriffskontrolle)

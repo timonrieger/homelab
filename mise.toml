@@ -15,6 +15,11 @@ dir = "vitepress"
 run = ["pnpm install", "pnpm dev"]
 description = "Start the development server for the documentation"
 
+[tasks."ansible:ping"]
+dir = "ansible"
+run = ["ansible beelink -m ping -i inventory.ini"]
+description = "Ping the server"
+
 [tasks."ansible:setup-server"]
 dir = "ansible"
 run = ["ansible-playbook -i inventory.ini setup-server.yaml --ask-become-pass"]
