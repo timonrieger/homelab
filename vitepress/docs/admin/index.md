@@ -5,7 +5,7 @@ Diese Sektion dokumentiert die technische Infrastruktur, Einrichtung und Adminis
 ## Tech Stack
 
 - **Hardware:** [Beelink S12 Mini-PC](https://amzn.eu/d/fh4H9aP)
-- **Betriebssystem:** Linux mit [Debian 13.1.0 (Trixie)](https://cdimage.debian.org/cdimage/release/13.1.0/amd64/iso-cd/)
+- **Betriebssystem:** Linux mit Debian 13 (Trixie)
 - **Netzwerk:** [Tailscale](https://tailscale.com/)
 - **Virtualisierung:** [Docker](https://www.docker.com/)
 - **Backups:** [Restic](https://restic.net/) (Backup Software) + [Rclone](https://rclone.org/) (Cloud Schnittstelle) + [Storj](https://storj.io/) (Cloud Provider)

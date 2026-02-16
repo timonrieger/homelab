@@ -88,12 +88,3 @@ Detaillierte Restic-Befehle für Restore-Operationen: [Restic Restore Dokumentat
 ```bash
 sudo -u restic restic -r rclone:storj:beelink-backup forget --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --keep-yearly 2 --prune
 ```
-
-## Best Practices
-
-1. **Regelmäßige Tests:** Teste Restores mindestens monatlich
-2. **Monitoring prüfen:** Checke wöchentlich das [Status Dashboard](https://status.fam.timonrieger.de)
-3. **Repository-Check:** Führe monatlich `restic check` aus (siehe [Restic Dokumentation](https://restic.readthedocs.io/en/latest/045_working_with_repos.html))
-4. **Kosten überwachen:** Prüfe regelmäßig Kosten im [Storj Dashboard](https://eu1.storj.io/)
-5. **Passwort-Sicherheit:** Halte das Restic-Passwort sicher im Password Manager
-6. **Backup-Logs prüfen:** Kontrolliere gelegentlich `/home/restic/backup.log` auf Fehler
