@@ -1,5 +1,5 @@
 [tools]
-uv = "0.10.2"
+uv = "0.10.4"
 ansible-base = { version = "latest", uvx = true, postinstall = "ansible-galaxy collection install ansible.posix" }
 
 [tasks.lint]
