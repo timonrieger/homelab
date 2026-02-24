@@ -8,16 +8,8 @@ services:
     volumes:
       - ./config:/config
       - ./cache:/cache
-      - type: bind
-        source: /srv/media/family/movies/
-        target: /media/movies
-      - type: bind
-        source: /srv/media/family/music/
-        target: /media/music
-      # - type: bind
-      #   source: /path/to/media2
-      #   target: /media2
-      #   read_only: true
+      - /srv/media/family/movies:/media/movies:ro
+      - /srv/media/family/music:/media/music:ro
       # Optional - extra fonts to be used during transcoding with subtitle burn-in
       # - type: bind
       #   source: /path/to/fonts
