@@ -31,6 +31,7 @@ run = ["ansible-playbook -i inventory.ini setup-backups.yaml --ask-become-pass"]
 description = "Setup the backups"
 
 [tasks."ansible:setup-permissions"]
+dir = "ansible"
 run = ["ansible-playbook -i inventory.ini setup-permissions.yaml --ask-become-pass"]
 description = "Setup the permissions"
 

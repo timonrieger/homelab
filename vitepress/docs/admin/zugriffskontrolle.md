@@ -33,9 +33,9 @@ All other directories are on the SSD.
 
 |**Action**|**Value**|**Meaning**|
 |---|---|---|
-|Lesen (r)|4|kann Dateien anzeigen/auflisten
+|Lesen (r)|4|kann Dateien anzeigen/auflisten|
 |Schreiben (w)|2|kann ändern/hinzufügen/entfernen|
-|Ausführen (x)|1|kann Verzeichnis betreten oder Dateien ausführen
+|Ausführen (x)|1|kann Verzeichnis betreten oder Dateien ausführen|
 
 :::info
 Verwende root:root, wenn das Verzeichnis Teil der Systemstruktur ist, die Sie abschalten wollen.
