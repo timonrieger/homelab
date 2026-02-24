@@ -77,7 +77,7 @@
         group: root
         mode: '0755'
 
-    - name: Ensure each Immich user folder exists and is private, besides family uploads
+    - name: Ensure each Immich user folder exists and is private, except family
       ansible.builtin.file:
         path: "{{ immich_base }}/library/library/{{ item }}"
         state: directory
@@ -85,6 +85,12 @@
         group: "{{ item if item != 'family' else 'family' }}"
         mode: "{{ '0700' if item != 'family' else '2750' }}"
       loop: "{{ immich_users }}"
+
+    - name: Ensure default ACLs on user folders
+      ansible.builtin.command: >
+        setfacl -d -m u:{{ item }}:rwx,g::---,m::rwx,o::--- "{{ immich_base }}/library/library/{{ item }}"
+      loop: "{{ immich_users }}"
+      when: item != 'family'
 
     - name: Ensure shared family folder exists
       ansible.builtin.file:
@@ -94,13 +100,9 @@
         group: family
         mode: '2750'
 
-    - name: Recursively apply permissions to shared family folder
-      ansible.builtin.file:
-        path: "{{ family_share }}"
-        recurse: yes
-        owner: timon
-        group: family
-        mode: '2750'
+    - name: Set default ACLs on shared family folder
+      ansible.builtin.command: >
+        setfacl -d -m u:timon:rwx,g:family:rx,m::rx,o::--- "{{ family_share }}"
 
     - name: Copy Samba configuration file
       ansible.builtin.copy:
