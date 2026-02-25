@@ -8,8 +8,10 @@ services:
     volumes:
       - ./config:/config
       - ./cache:/cache
-      - /srv/media/family/movies:/media/movies:ro
-      - /srv/media/family/music:/media/music:ro
+      - /srv/media/family/movies:/media/family/movies:ro
+      - /srv/media/family/music:/media/family/music:ro
+      - /srv/media/jellyfin/movies:/media/movies:ro
+      - /srv/media/jellyfin/music:/media/music:ro
       # Optional - extra fonts to be used during transcoding with subtitle burn-in
       # - type: bind
       #   source: /path/to/fonts

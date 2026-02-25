@@ -21,8 +21,11 @@
       - martin
       - birgit
 
-    # Base path for user media
+    # Base path for immich media
     immich_base: /srv/media/immich
+
+    # Base path for Jellyfin media
+    jellyfin_base: /srv/media/jellyfin
 
     # Shared folder path
     family_share: /srv/media/family
@@ -76,6 +79,18 @@
         owner: root
         group: root
         mode: '0755'
+
+    - name: Ensure Jellyfin base directory exists
+      ansible.builtin.file:
+        path: "{{ jellyfin_base }}"
+        state: directory
+        owner: timon
+        group: family
+        mode: '2750'
+
+    - name: Set default ACLs on Jellyfin base directory
+      ansible.builtin.command: >
+        setfacl -d -m u:timon:rwx,g:family:rx,m::rx,o::--- "{{ jellyfin_base }}"
 
     - name: Ensure each Immich user folder exists and is private, except family
       ansible.builtin.file:

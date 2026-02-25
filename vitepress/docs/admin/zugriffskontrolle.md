@@ -24,6 +24,7 @@ Die erste Ziffer bezieht sich auf dein Eigentümer, die zweite auf die Gruppe un
 The following directories are on the HDD at `/mnt/hdd/`:
 
 - /srv/media/family/
+- /srv/media/jellyfin/
 - /srv/media/immich/library/library/
 
 All other directories are on the SSD.
