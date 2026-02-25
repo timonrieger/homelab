@@ -70,6 +70,12 @@
         name: "{{ user }}"
         shell: /usr/bin/fish
 
+    - name: Install Neovim
+      ansible.builtin.apt:
+        name: neovim
+        state: present
+        update_cache: true
+
     - name: Check if cloudflared is installed
       ansible.builtin.command: which cloudflared
       register: cloudflared_check
@@ -258,6 +264,11 @@
         group: root
         mode: "0644"
         backup: true
+      register: fstab_copy_result
+
+    - name: Apply fstab mounts
+      ansible.builtin.command: mount -a
+      when: fstab_copy_result.changed
 
     - name: Synchronize Docker configurations to /srv/docker
       ansible.posix.synchronize:
