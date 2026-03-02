@@ -1,4 +1,4 @@
-FROM caddy:2-builder@sha256:d77a8c16fa27ac2ca567b3952480dd1bb21133fb543f7ad38d8e6b389c786d72 AS builder
+FROM caddy:2-builder@sha256:9780b126deae015b2c262fa9f4f1f951577e1f6a5fe4d88c0573aeb622071b2d AS builder
 
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
