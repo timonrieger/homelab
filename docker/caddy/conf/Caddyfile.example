@@ -47,3 +47,11 @@ status.fam.timonrieger.de {
   reverse_proxy beelink:3001
   import cloudflare
 }
+
+########################
+# Mealie (Recipes)
+########################
+mealie.fam.timonrieger.de {
+  reverse_proxy beelink:9925
+  import cloudflare
+}
