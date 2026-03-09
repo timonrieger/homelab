@@ -20,7 +20,6 @@ export default defineConfig({
           { text: 'Überblick', link: '/anwender/' },
           { text: 'Tailscale', link: '/anwender/tailscale' },
           { text: 'Immich', link: '/anwender/immich' },
-          { text: 'Jellyfin', link: '/anwender/jellyfin' },
           { text: 'Samba', link: '/anwender/samba' },
         ]
       },
@@ -46,6 +45,7 @@ export default defineConfig({
       { icon: 'jellyfin', link: 'https://jellyfin.fam.timonrieger.de' },
       { icon: 'gitea', link: 'https://git.fam.timonrieger.de' },
       { icon: 'uptimekuma', link: 'https://status.fam.timonrieger.de' },
+      { icon: 'mealie', link: 'https://mealie.fam.timonrieger.de' },
     ]
   }
 })

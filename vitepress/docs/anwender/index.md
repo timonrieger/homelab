@@ -1,41 +1,29 @@
 # Willkommen
 
-Diese Dokumentation hilft dir dabei, alle Services unseres Familienservers zu nutzen. Hier findest du Anleitungen für den Zugriff auf Fotos, Filme und Dateien.
+Hier findest du kurze Anleitungen, wie du die Dienste unseres Familienservers nutzt.
 
-[Server Status →](https://status.fam.timonrieger.de)
+Den aktuellen Status des Servers findest du unter [Server Status](https://status.fam.timonrieger.de). Dort sind auch Links zu den einzelnen Anwendungen.
 
-## Verfügbare Services
+## Guides
 
-### 📸 Immich - Fotos & Videos
+Wähle einfach den Dienst aus, den du verwenden möchtest:
 
-Deine persönliche Fotobibliothek mit automatischen Backups von deinem Smartphone. Teile Fotos mit der Familie und greife von überall darauf zu.
+[Immich – Fotos & Videos →](/anwender/immich)
 
-[Zur Anleitung →](/anwender/immich)
-
-### 🎬 Jellyfin - Filme & Serien
-
-Streame Filme, Serien und Musik auf allen deinen Geräten - wie dein eigenes Netflix.
-
-[Zur Anleitung →](/anwender/jellyfin)
-
-### 📁 Samba - Dateifreigabe
-
-Greife auf gemeinsame Dateien zu, als wären sie lokal auf deinem Gerät gespeichert.
-
-[Zur Anleitung →](/anwender/samba)
+[Samba – Dateifreigabe →](/anwender/samba)
 
 ## Voraussetzungen
 
-Um alle Services nutzen zu können, musst du zunächst Tailscale auf deinem Gerät installieren und dich mit unserem Netzwerk verbinden.
+Damit alles funktioniert, musst du vorher Tailscale einrichten und deinem Gerät Zugriff auf unser Netzwerk geben.
 
 [Tailscale einrichten →](/anwender/tailscale)
 
-:::tip Erste Schritte
-Falls du Tailscale noch nicht eingerichtet hast, beginne mit der [Tailscale Anleitung](/anwender/tailscale). Danach kannst du alle anderen Services nutzen.
-:::
+::::tip Erste Schritte
+Starte mit der [Tailscale Anleitung](/anwender/tailscale). Danach kannst du alle anderen Services problemlos nutzen.
+::::
 
-## Hilfe benötigt?
+## Hilfe
 
-Falls du Probleme hast oder Fragen zur Nutzung der Services hast, wende dich an einen Administrator.
+Wenn etwas nicht klappt oder du Fragen hast, melde dich bei einem Administrator.
 
-Du kannst den [Server Status](https://status.fam.timonrieger.de) überprüfen, um zu sehen, ob alle Services erreichbar sind.
+Außerdem kannst du im [Server Status](https://status.fam.timonrieger.de) nachsehen, ob alle Services online sind.

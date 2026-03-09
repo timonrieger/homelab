@@ -17,9 +17,12 @@ Diese Sektion dokumentiert die technische Infrastruktur, Einrichtung und Adminis
 - **Dateifreigabe:** [Samba](https://www.samba.org/)
 - **Anwendungen:**
   - [Immich](https://immich.app/) (Fotos)
+  - [Immich Frame](https://github.com/immich-app/immich-frame) (Fotos Slideshow)
   - [Jellyfin](https://jellyfin.org/) (Filme, Serien, Musik)
   - [Gitea](https://gitea.com) (Code Hosting)
   - [Gitea Mirror](https://github.com/RayLabsHQ/gitea-mirror) (Git Repository Mirror Tool)
+  - [Mealie](https://docs.mealie.io/) (Rezepte)
+  - [Uptime Kuma](https://uptime.kuma.pet/) (Statusseite)
 
 ## Schnellstart
 
