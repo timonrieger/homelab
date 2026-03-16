@@ -18,10 +18,6 @@ Damit alles funktioniert, musst du vorher Tailscale einrichten und deinem Gerät
 
 [Tailscale einrichten →](/anwender/tailscale)
 
-::::tip Erste Schritte
-Starte mit der [Tailscale Anleitung](/anwender/tailscale). Danach kannst du alle anderen Services problemlos nutzen.
-::::
-
 ## Hilfe
 
 Wenn etwas nicht klappt oder du Fragen hast, melde dich bei einem Administrator.
