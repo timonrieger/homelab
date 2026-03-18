@@ -10,9 +10,6 @@ services:
         limits:
           memory: 1000M
     volumes:
-      - mealie-data:/app/data/
+      - ./data:/app/data/
     env_file:
       - .env
-
-volumes:
-  mealie-data:
