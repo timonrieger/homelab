@@ -46,3 +46,15 @@ Um mit der Administration des Servers zu beginnen:
 - Anwendungen auf neueste Versionen aktualisieren (Renovate Bot)
 - System Update (`mise run ansible:update-deps`)
 - [Backups aufräumen](/admin/backups#aufräumen)
+
+### Reboot
+
+Nach `mise run ansible:update-system` siehst du, ob ein Reboot erforderlich ist.
+
+Falls nötig, starte den Server mit:
+
+```bash
+sudo reboot
+```
+
+Die Downtime beträgt in der Regel etwa 2 Minuten. Es sind keine zusätzlichen Schritte vor oder nach dem Reboot erforderlich.
