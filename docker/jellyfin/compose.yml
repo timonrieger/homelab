@@ -11,6 +11,7 @@ services:
       - /srv/media/family/movies:/media/family/movies:ro
       - /srv/media/family/music:/media/family/music:ro
       - /srv/media/jellyfin/movies:/media/movies:ro
+      - /srv/media/jellyfin/shows:/media/shows:ro
       - /srv/media/jellyfin/music:/media/music:ro
       # Optional - extra fonts to be used during transcoding with subtitle burn-in
       # - type: bind
