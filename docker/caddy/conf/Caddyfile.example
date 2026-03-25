@@ -55,3 +55,11 @@ mealie.fam.timonrieger.de {
   reverse_proxy beelink:9925
   import cloudflare
 }
+
+########################
+# qBittorrent (Torrents)
+########################
+qbittorrent.fam.timonrieger.de {
+  reverse_proxy beelink:8701
+  import cloudflare
+}

@@ -1,0 +1,39 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun:v3.41.1@sha256:1a5bf4b4820a879cdf8d93d7ef0d2d963af56670c9ebff8981860b6804ebc8ab
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    ports:
+      - 8701:8701   # qBittorrent Web UI
+      - 6881:6881   # torrent port
+      - 6881:6881/udp
+    volumes:
+      - ./gluetun:/gluetun
+    env_file:
+      - .env
+    environment:
+      - VPN_TYPE=openvpn
+      - VPN_SERVICE_PROVIDER=protonvpn
+      - VPN_PORT_FORWARDING=on
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:5.1.4@sha256:065792d2b11f0facff340210fc1cf13623b029a94ecdf08b02d06d922205f618
+    container_name: qbittorrent
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
+    env_file:
+      - .env
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - WEBUI_PORT=8701
+      - WEBUI_ADDRESS=0.0.0.0
+      - WEBUI_EXTERNAL_ACCESS=true
+    volumes:
+      - ./qbittorrent:/config
+      - ${DATA_LOCATION}:/data
+    restart: unless-stopped
