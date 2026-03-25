@@ -4,4 +4,6 @@ credentials-file: /etc/cloudflared/b6cad4cb-bfc4-4cb0-b0e6-2073891d169b.json
 ingress:
   - hostname: immich-share.timonrieger.de
     service: http://localhost:3002   # immich-public-proxy
+  - hostname: jellyfin-tunnel.timonrieger.de
+    service: http://localhost:8096   # jellyfin
   - service: http_status:404
