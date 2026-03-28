@@ -20,6 +20,7 @@ export default defineConfig({
           { text: 'Überblick', link: '/anwender/' },
           { text: 'Tailscale', link: '/anwender/tailscale' },
           { text: 'Immich', link: '/anwender/immich' },
+          { text: 'Jellyfin', link: '/anwender/jellyfin' },
           { text: 'Samba', link: '/anwender/samba' },
         ]
       },

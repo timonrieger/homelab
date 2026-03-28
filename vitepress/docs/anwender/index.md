@@ -10,6 +10,8 @@ Wähle einfach den Dienst aus, den du verwenden möchtest:
 
 [Immich – Fotos & Videos →](/anwender/immich)
 
+[Jellyfin – Filme & Serien →](/anwender/jellyfin)
+
 [Samba – Dateifreigabe →](/anwender/samba)
 
 ## Voraussetzungen

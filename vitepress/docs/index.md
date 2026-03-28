@@ -17,6 +17,9 @@ features:
   - title: 📸 Immich
     details: Foto- und Videoverwaltung mit KI-Funktionen für die gesamte Familie.
     link: /anwender/immich
+  - title: 🎬 Jellyfin
+    details: Media-Server für Filme und Serien mit Streaming-Funktionen auf allen Geräten.
+    link: /anwender/jellyfin
   - title: 📁 Samba
     details: Dateifreigabe für gemeinsame Dateien auf allen Geräten.
     link: /anwender/samba

@@ -8,13 +8,13 @@
 Du musst mit [Tailscale verbunden](/anwender/tailscale) sein, um auf Immich zugreifen zu können.
 :::
 
-**Im Browser:**
+### Server URLs
 
 - [https://immich.fam.timonrieger.de](https://immich.fam.timonrieger.de) (empfohlen)
 - [http://beelink:2283](http://beelink:2283)
 - [http://beelink.tail12bab0.ts.net:2283](http://beelink.tail12bab0.ts.net:2283)
 
-oder nutze die [Immich App](https://immich.app/download).
+Nutze den Browser oder einen [Immich Client](https://immich.app/download) mit den obigen Server URLs.
 
 ## Anmelden
 
