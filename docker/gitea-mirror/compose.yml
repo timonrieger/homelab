@@ -11,7 +11,7 @@ services:
     image: ghcr.io/raylabshq/gitea-mirror:v3.14.0@sha256:9a68854d0a68ddfedfc7c653d9c61e95956b6dac28eed598c249b9722aa5b636
     container_name: gitea-mirror
     restart: unless-stopped
-    user: ${PUID:-1000}:${PGID:-1000}
+    user: ${PUID}:${PGID}
     ports:
       - "${PORT:-4321}:4321"
     networks:
