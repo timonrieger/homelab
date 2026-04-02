@@ -8,7 +8,7 @@
     backup_script_src: "files/backup.sh"
     rclone_config_src: "files/rclone.conf"
     backup_log: "/home/restic/backup.log"
-    backup_cron_hour: 0
+    backup_cron_hour: 3
     backup_cron_minute: 0
 
   tasks:

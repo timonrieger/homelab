@@ -19,7 +19,7 @@ Das Backup-System basiert auf drei Komponenten:
 
 **Backup-Zeitplan:**
 
-- Täglich um 00:00 Uhr (automatisch via Cron)
+- Täglich um 03:00 Uhr (automatisch via Cron)
 - Retention: unbegrenzt
 
 :::tip Restic Dokumentation
