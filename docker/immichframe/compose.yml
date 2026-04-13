@@ -2,7 +2,7 @@ name: immichframe
 services:
   immichframe:
     container_name: immichframe
-    image: ghcr.io/immichframe/immichframe:v1.0.32.0@sha256:a0b54ee307d5746cd59518bd3ff60d80bf133b5dbe3202585f8c788d9ce3f2a8
+    image: ghcr.io/immichframe/immichframe:v1.0.33.0@sha256:1680d2f63a89fa0db6e5a7c5c497bed27a47f314efe18e1f11cff1dea1910f57
     restart: unless-stopped
     env_file:
       - .env
