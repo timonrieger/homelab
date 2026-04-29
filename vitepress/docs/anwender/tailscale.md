@@ -44,6 +44,26 @@ Du kannst Tailscale jederzeit deaktivieren, wenn du keinen Zugriff auf den Serve
 Du musst Tailscale nur dann aktivieren, wenn du auf unsere Services zugreifen möchtest. Für die normale Internetnutzung ist die Verbindung nicht notwendig.
 :::
 
+## VPN on Demand (Optional)
+
+Mit VPN on Demand verbindet sich Tailscale automatisch, wenn du es brauchst. Dies ist besonders nützlich für automatische Backups mit Immich, die im Hintergrund laufen.
+
+[Mehr über VPN on Demand erfahren](https://tailscale.com/kb/1291/ios-vpn-on-demand)
+
+**Empfohlene Einstellungen für automatische Backups (iOS):**
+
+1. Öffne die Tailscale App
+2. Gehe zu **Settings** → **VPN On Demand**
+3. Setze folgende Einstellungen:
+   - **WLAN**: Wähle **Always** (Immer)
+   - **Mobilfunk**: Wähle **Always** (Immer)
+
+Mit diesen Einstellungen verbindet sich Tailscale automatisch, sodass Immich deine Fotos auch dann sichern kann, wenn du die App nicht aktiv verwendest.
+
+:::info Hinweis
+Wenn du keine automatischen Backups nutzt, ist VPN on Demand nicht notwendig. Du kannst Tailscale dann einfach manuell aktivieren, wenn du auf den Server zugreifen möchtest.
+:::
+
 ## Exit Node (Optional)
 
 Ein Exit Node routet deinen gesamten Internetverkehr über unseren Server. Das ist besonders nützlich in öffentlichen WLANs (Cafés, Flughäfen), da dein Datenverkehr dann verschlüsselt und sicher ist.
@@ -74,23 +94,3 @@ Ein Exit Node routet deinen gesamten Internetverkehr über unseren Server. Das i
 3. Optional: Aktiviere **Allow LAN access**
 
 [Mehr über Exit Nodes erfahren](https://tailscale.com/kb/1103/exit-nodes)
-
-## VPN on Demand (Optional)
-
-Mit VPN on Demand verbindet sich Tailscale automatisch, wenn du es brauchst. Dies ist besonders nützlich für automatische Backups mit Immich, die im Hintergrund laufen.
-
-[Mehr über VPN on Demand erfahren](https://tailscale.com/kb/1291/ios-vpn-on-demand)
-
-**Empfohlene Einstellungen für automatische Backups (iOS):**
-
-1. Öffne die Tailscale App
-2. Gehe zu **Settings** → **VPN On Demand**
-3. Setze folgende Einstellungen:
-   - **WLAN**: Wähle **Always** (Immer)
-   - **Mobilfunk**: Wähle **Always** (Immer)
-
-Mit diesen Einstellungen verbindet sich Tailscale automatisch, sodass Immich deine Fotos auch dann sichern kann, wenn du die App nicht aktiv verwendest.
-
-:::info Hinweis
-Wenn du keine automatischen Backups nutzt, ist VPN on Demand nicht notwendig. Du kannst Tailscale dann einfach manuell aktivieren, wenn du auf den Server zugreifen möchtest.
-:::

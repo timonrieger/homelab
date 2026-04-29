@@ -35,7 +35,7 @@ Die mobile App kann automatisch alle deine Fotos und Videos auf den Server hochl
 :::tip Tipp für iOS
 Damit das Backup zuverlässig im Hintergrund läuft, solltest du zwei Einstellungen aktivieren:
 
-1. **Tailscale VPN on Demand** aktivieren (siehe [Tailscale VPN on Demand](/anwender/tailscale#vpn-on-demand-optional)), damit Tailscale sich automatisch verbindet
+1. **[Tailscale VPN on Demand](/anwender/tailscale#vpn-on-demand-optional)** aktivieren, damit Tailscale sich automatisch verbindet
 2. **Hintergrundaktualisierung** für Immich aktivieren:
    - Gehe zu **iOS Einstellungen** → **Immich** → **Hintergrundaktualisierung**
    - Wähle **WLAN & Mobile Daten** (oder nur **WLAN**)
@@ -46,11 +46,11 @@ Mit diesen Einstellungen werden deine Fotos automatisch gesichert, ohne dass du 
 ## Tipps & Tricks
 
 :::warning Hinweis zu geteilten Bibliotheken
-Die Teilung von Bibliotheken ist noch nicht vollständig implementiert ([#12614](https://github.com/immich-app/immich/issues/12614)). Daher nutzen wir ein separates Konto für die Familie. Logge dich mit deinem separaten Konto ein, um auf die geteilten Bibliotheken zuzugreifen.
+Die Teilung von Bibliotheken ist noch nicht vollständig implementiert ([#12614](https://github.com/immich-app/immich/issues/12614)). Daher nutzen wir ein separates Konto für die Familie. Für volle Funktionalität logge dich mit diesem Konto ein, ansonsten mit deinem separaten Konto, um Fotos einzusehen.
 :::
 
 :::tip Speicherplatz sparen
-Nachdem deine Fotos auf den Server hochgeladen wurden, kannst du sie vom Smartphone löschen, um Speicherplatz zu sparen. Sie bleiben auf dem Server gespeichert und sind jederzeit abrufbar. Dafür wähle alle Fotos in der Timeline aus und wähle "Vom Gerät löschen" aus.
+Nachdem deine Fotos auf den Server hochgeladen wurden, kannst du sie vom Smartphone löschen, um Speicherplatz zu sparen. Sie bleiben auf dem Server gespeichert und sind jederzeit abrufbar. Dafür nutze das "Speicherplatz freigeben" Button in der Immich Mobile App.
 :::
 
 ## Häufige Fragen

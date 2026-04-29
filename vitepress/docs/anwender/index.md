@@ -2,7 +2,13 @@
 
 Hier findest du kurze Anleitungen, wie du die Dienste unseres Familienservers nutzt.
 
-Den aktuellen Status des Servers findest du unter [Server Status](https://status.fam.timonrieger.de). Dort sind auch Links zu den einzelnen Anwendungen.
+Du kannst jederzeit den [aktuellen Status des Servers](https://status.fam.timonrieger.de) einsehen. Dort sind auch Links zu den einzelnen Anwendungen.
+
+## Voraussetzungen
+
+Damit alles funktioniert, musst du vorher Tailscale einrichten und deinem Gerät Zugriff auf unser Netzwerk geben.
+
+[Tailscale einrichten →](/anwender/tailscale)
 
 ## Guides
 
@@ -13,12 +19,6 @@ Wähle einfach den Dienst aus, den du verwenden möchtest:
 [Jellyfin – Filme & Serien →](/anwender/jellyfin)
 
 [Samba – Dateifreigabe →](/anwender/samba)
-
-## Voraussetzungen
-
-Damit alles funktioniert, musst du vorher Tailscale einrichten und deinem Gerät Zugriff auf unser Netzwerk geben.
-
-[Tailscale einrichten →](/anwender/tailscale)
 
 ## Hilfe
 
