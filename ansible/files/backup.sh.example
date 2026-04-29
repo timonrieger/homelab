@@ -1,7 +1,5 @@
 #!/usr/bin/env fish
 
-cd /home/restic
-
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Running restic backup..."
 set -x RESTIC_PASSWORD REPLACE-ME
 # run backup directly as restic (no sudo)
