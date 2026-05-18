@@ -20,7 +20,7 @@ services:
       - VPN_PORT_FORWARDING=on
 
   qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:5.2.0@sha256:2e0148428b6769e2ee1eb6781246b6fca4b70cd680edfcb16e7113d9d6cb1631
+    image: lscr.io/linuxserver/qbittorrent:5.2.0@sha256:eeea9f8a8cdde23555186843d26e8ded1222421f31f98a5cc1b50c2882ebcf4e
     container_name: qbittorrent
     network_mode: "service:gluetun"
     depends_on:
