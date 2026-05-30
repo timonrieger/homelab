@@ -1,6 +1,6 @@
 services:
   server:
-    image: docker.gitea.com/gitea:1.26.1@sha256:d8667667b4ccbd1f67b86a376bffcc0a17b16cf71309ed04e3918231776d47dd
+    image: docker.gitea.com/gitea:1.26.2@sha256:0b35a8706dd0171866ca4b787b53b272a519fff5ba7520ef4bddbe58121411f9
     container_name: gitea
     restart: unless-stopped
     networks:
