@@ -54,10 +54,13 @@
         creates: /etc/apt/trusted.gpg.d/shells_fish_release_4.gpg
 
     - name: Add Fish Shell repository
-      ansible.builtin.apt_repository:
-        repo: "deb http://download.opensuse.org/repositories/shells:/fish:/release:/4/Debian_13/ /"
+      ansible.builtin.deb822_repository:
+        name: shells-fish-release-4
+        types: deb
+        uris: http://download.opensuse.org/repositories/shells:/fish:/release:/4/Debian_13/
+        suites: "/"
+        signed_by: /etc/apt/trusted.gpg.d/shells_fish_release_4.gpg
         state: present
-        filename: shells:fish:release:4
 
     - name: Install Fish Shell
       ansible.builtin.apt:
@@ -96,10 +99,14 @@
       when: cloudflared_check.rc != 0
 
     - name: Add Cloudflared apt repository
-      ansible.builtin.apt_repository:
-        repo: "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main"
+      ansible.builtin.deb822_repository:
+        name: cloudflared
+        types: deb
+        uris: https://pkg.cloudflare.com/cloudflared
+        suites: any
+        components: main
+        signed_by: /usr/share/keyrings/cloudflare-main.gpg
         state: present
-        filename: cloudflared
 
     - name: Install cloudflared
       ansible.builtin.apt:
