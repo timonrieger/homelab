@@ -5,12 +5,35 @@
       "Access-Control-Allow-Origin":  "*"
     },
     "downloadOriginalPhoto": true,
-    "downloadedFilename": 2,
+    "downloadedFilename": 0,
     "allowDownloadAll": 1,
     "allowSlugLinks": true,
     "showHomePage": true,
     "showMetadata": {
-      "description": true
+      "description": {
+        "caption": false,
+        "sidebar": false
+      },
+      "exif": {
+        "dateTimeOriginal": true,
+        "fileName": true,
+        "dimensions": true,
+        "fileSize": true,
+        "make": true,
+        "model": true,
+        "lensModel": true,
+        "exposureTime": true,
+        "iso": true,
+        "fNumber": true,
+        "focalLength": true
+      },
+      "location": {
+        "city": true,
+        "state": true,
+        "country": true,
+        "gps": true,
+        "webLink": true
+      }
     },
     "customInvalidResponse": false,
     "gallery": {
@@ -23,7 +46,8 @@
     "lightbox": {
       "showArrows": true,
       "showDownload": true,
-      "mobileArrows": false
+      "mobileArrows": false,
+      "autoPlayVideos": false
     }
   }
 }
