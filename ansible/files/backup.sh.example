@@ -1,6 +1,6 @@
 #!/usr/bin/env fish
 
-echo "["(date "+%Y-%m-%d %H:%M:%S")"] Running restic backup..."
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Running restic backup…"
 set -x RESTIC_PASSWORD REPLACE-ME
 # run backup directly as restic (no sudo)
 timeout 5h restic -r rclone:storj:beelink-backup backup /srv /home \
@@ -24,7 +24,7 @@ else
     set MSG "Backup failed (code $EXIT_CODE)"
 end
 
-echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Uptime Kuma..."
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Uptime Kuma…"
 set MSG_ENCODED (string escape --style url "$MSG")
 curl -m 10 --retry 5 "http://beelink:3001/api/push/REPLACE-ME?status=$STATUS&msg=$MSG_ENCODED&ping="
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Heartbeat sent."

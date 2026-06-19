@@ -33,7 +33,7 @@ Die Immich-Daten sind wie folgt organisiert:
     └── library/
         ├── user1/   # Persönlicher Ordner User 1 (via Samba zugänglich)
         ├── user2/   # Persönlicher Ordner User 2 (via Samba zugänglich)
-        └── ...
+        └── …
 ```
 
 - Die Ordner unter `/srv/media/family/photos` werden als [External Library](https://immich.app/docs/features/libraries) in Immich eingebunden
