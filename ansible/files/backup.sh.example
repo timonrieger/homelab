@@ -2,9 +2,7 @@
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Running restic backup…"
 set -x RESTIC_PASSWORD REPLACE-ME
-# run backup directly as restic (no sudo)
-timeout 5h restic -r rclone:storj:beelink-backup backup /srv /home \
-  --exclude "/srv/media/jellyfin/**" \
+  --exclude "/srv/media/**" \
   --exclude "/srv/docker/jellyfin/cache/**" \
   --exclude "/srv/docker/jellyfin/config/log/**" \
   --pack-size=60

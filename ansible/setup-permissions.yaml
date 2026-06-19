@@ -22,13 +22,13 @@
       - birgit
 
     # Base path for immich media
-    immich_base: /srv/media/immich
+    immich_base: /srv/originals/immich
 
     # Base path for Jellyfin media
-    jellyfin_base: /srv/media/jellyfin
+    jellyfin_base: /srv/media
 
     # Shared folder path
-    family_share: /srv/media/family
+    family_share: /srv/originals/family
 
   tasks:
     - name: Ensure 'family' group exists
@@ -94,7 +94,7 @@
 
     - name: Ensure each Immich user folder exists and is private, except family
       ansible.builtin.file:
-        path: "{{ immich_base }}/library/library/{{ item }}"
+        path: "{{ immich_base }}/library/{{ item }}"
         state: directory
         owner: "{{ item if item != 'family' else 'timon' }}"
         group: "{{ item if item != 'family' else 'family' }}"
@@ -103,7 +103,7 @@
 
     - name: Ensure default ACLs on user folders
       ansible.builtin.command: >
-        setfacl -d -m u:{{ item }}:rwx,g::---,m::rwx,o::--- "{{ immich_base }}/library/library/{{ item }}"
+        setfacl -d -m u:{{ item }}:rwx,g::---,m::rwx,o::--- "{{ immich_base }}/library/{{ item }}"
       loop: "{{ immich_users }}"
       when: item != 'family'
 
