@@ -2,6 +2,7 @@
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Running restic backup…"
 set -x RESTIC_PASSWORD REPLACE-ME
+timeout 3h restic -r rclone:storj:beelink-backup backup /srv /home \
   --exclude "/srv/media/**" \
   --exclude "/srv/docker/jellyfin/cache/**" \
   --exclude "/srv/docker/jellyfin/config/log/**" \
@@ -24,7 +25,7 @@ end
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Uptime Kuma…"
 set MSG_ENCODED (string escape --style url "$MSG")
-curl -m 10 --retry 5 "http://beelink:3001/api/push/REPLACE-ME?status=$STATUS&msg=$MSG_ENCODED&ping="
+curl -m 10 --retry 5 "http://beelink:3001/api/push/<BACKUP_HEARTBEAT_TOKEN>?status=$STATUS&msg=$MSG_ENCODED&ping="
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Heartbeat sent."
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Pruning historical backups…"

@@ -1,0 +1,20 @@
+#!/usr/bin/env fish
+
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Running originals mirror…"
+timeout 30m rsync -a --delete /mnt/hdd/originals/ /mnt/hdd2/originals/
+set EXIT_CODE $status
+
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Mirror finished with exit code $EXIT_CODE."
+
+if test $EXIT_CODE -eq 0
+    set STATUS "up"
+    set MSG "Mirror completed successfully"
+else
+    set STATUS "down"
+    set MSG "Mirror failed (code $EXIT_CODE)"
+end
+
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Uptime Kuma…"
+set MSG_ENCODED (string escape --style url "$MSG")
+curl -m 10 --retry 5 "http://beelink:3001/api/push/<MIRROR_HEARTBEAT_TOKEN>?status=$STATUS&msg=$MSG_ENCODED&ping="
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Heartbeat sent."

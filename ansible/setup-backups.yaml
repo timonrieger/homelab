@@ -6,10 +6,14 @@
     restic_user: restic
     restic_home: "/home/restic"
     backup_script_src: "files/backup.sh"
+    mirror_script_src: "files/mirror.sh"
     rclone_config_src: "files/rclone.conf"
     backup_log: "/home/restic/backup.log"
-    backup_cron_hour: 3
+    mirror_log: "/home/restic/mirror.log"
+    backup_cron_hour: 2
     backup_cron_minute: 0
+    mirror_cron_hour: 5
+    mirror_cron_minute: 5
 
   tasks:
     - name: Ensure prerequisite apt packages are present
@@ -99,3 +103,27 @@
         minute: "{{ backup_cron_minute }}"
         hour: "{{ backup_cron_hour }}"
         job: "sudo -u {{ restic_user }} {{ restic_home }}/backup.sh >> {{ backup_log }} 2>&1"
+
+    - name: Copy mirror script
+      ansible.builtin.copy:
+        src: "{{ mirror_script_src }}"
+        dest: "{{ restic_home }}/mirror.sh"
+        owner: "{{ restic_user }}"
+        group: "{{ restic_user }}"
+        mode: '0700'
+
+    - name: Ensure mirror log file exists
+      ansible.builtin.file:
+        path: "{{ mirror_log }}"
+        state: touch
+        owner: "{{ restic_user }}"
+        group: "{{ restic_user }}"
+        mode: '0644'
+
+    - name: Set cronjob for secondary HDD mirror
+      ansible.builtin.cron:
+        name: "mirror originals to secondary hdd"
+        user: root
+        minute: "{{ mirror_cron_minute }}"
+        hour: "{{ mirror_cron_hour }}"
+        job: "sudo -u {{ restic_user }} {{ restic_home }}/mirror.sh >> {{ mirror_log }} 2>&1"
