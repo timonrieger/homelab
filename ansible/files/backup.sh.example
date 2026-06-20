@@ -29,6 +29,8 @@ curl -m 10 --retry 5 "http://beelink:3001/api/push/<BACKUP_HEARTBEAT_TOKEN>?stat
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Heartbeat sent."
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Pruning historical backups…"
+# Drop stale locks left behind by an interrupted/timed-out backup.
+restic -r rclone:storj:beelink-backup unlock
 restic -r rclone:storj:beelink-backup forget --keep-daily 7 \
   --keep-weekly 4 --keep-monthly 6 --keep-yearly 2 --prune
 set EXIT_CODE $status
