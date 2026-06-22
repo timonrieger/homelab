@@ -8,14 +8,13 @@ Für Installation, Bibliotheken, Benutzer-Verwaltung, Plugins und Troubleshootin
 
 ## Verzeichnisstruktur
 
-Die Jellyfin-Medien sind wie folgt organisiert:
+Jellyfin bindet seine Bibliotheken aus mehreren Pfaden ein:
 
-```txt
-/srv/media/family/
-├── movies/          # Filme
-├── series/          # Serien
-└── music/           # Musik (optional)
-```
+- `/srv/originals/family/movies`, `/srv/originals/family/music` – Familieninhalte (gesichert)
+- `/srv/originals/music` – persönliche Musik (gesichert)
+- `/srv/media/movies`, `/srv/media/shows` – Filme und Serien (ersetzbar, nicht gesichert)
+
+Die vollständige Verteilung auf die Datenträger ist unter [Speicherstruktur](/admin/speicher) dokumentiert.
 
 **Dateinamen-Konventionen:**
 

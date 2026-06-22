@@ -14,7 +14,7 @@ Du musst mit [Tailscale verbunden](/anwender/tailscale) sein, um auf die Dateifr
 
 Nach der Verbindung siehst du die verfügbaren Freigaben:
 
-- **media** - Gemeinsame Medienbibliothek für Fotos, Videos, Musik, etc.
+- **family** - Gemeinsame Medienbibliothek für Familienfotos, -videos, -musik, etc.
 - **_username_** - Dein persönlicher Ordner für deine Dateien
 
 :::info Berechtigungen

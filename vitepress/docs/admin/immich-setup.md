@@ -24,18 +24,27 @@ Dies organisiert Uploads nach Jahr/Monat/Tag und erleichtert die Verwaltung.
 
 ## Verzeichnisstruktur
 
-Die Immich-Daten sind wie folgt organisiert:
+Die Immich-Daten sind auf zwei Datenträger aufgeteilt: unersetzliche Originale auf der HDD unter
+`/srv/originals/immich`, regenerierbare Derivate und die Postgres-Datenbank auf der SSD unter
+`/srv/docker/immich`. Hintergrund dazu unter [Speicherstruktur](/admin/speicher).
 
 ```txt
-/srv/media/immich/
-├── upload/          # Immich Standard-Upload-Verzeichnis
+/srv/originals/immich/        # Originale (HDD, gesichert)
+├── upload/                   # Immich Standard-Upload-Verzeichnis
 └── library/
-    └── library/
-        ├── user1/   # Persönlicher Ordner User 1 (via Samba zugänglich)
-        ├── user2/   # Persönlicher Ordner User 2 (via Samba zugänglich)
-        └── …
+    ├── timon/                # Persönlicher Ordner (via Samba zugänglich)
+    ├── linus/
+    ├── …
+    └── family/               # Gemeinsamer Familien-Ordner
+
+/srv/docker/immich/           # Regenerierbare Daten + DB (SSD, nicht gespiegelt)
+├── postgres/                 # Postgres-Datenbank
+├── thumbs/                   # Thumbnails
+├── encoded-video/            # Transcodierte Videos
+├── profile/                  # Profilbilder
+└── backups/                  # Immich Datenbank-Dumps
 ```
 
-- Die Ordner unter `/srv/media/family/photos` werden als [External Library](https://immich.app/docs/features/libraries) in Immich eingebunden
+- Die Ordner unter `/srv/originals/family/photos` und `/srv/originals/family/clips` werden als [External Library](https://immich.app/docs/features/libraries) in Immich eingebunden
 - Jeder Benutzer hat **Lesezugriff** auf die Bibliotheken über Samba
 - **Fotos können nur über die Immich-UI hochgeladen werden** - Samba ist read-only konfiguriert

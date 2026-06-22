@@ -8,19 +8,40 @@ Das Backup-System basiert auf drei Komponenten:
 
 ## Übersicht
 
+Die Backup-Richtlinie folgt einer einzigen Regel: Alles unter `/srv` und `/home` wird gesichert, **außer**
+den ersetzbaren Inhalten unter `/srv/media/`. Diese Trennung ist Teil der [Speicherstruktur](/admin/speicher).
+
 **Was wird gesichert:**
 
-- /srv/ (Medien und Docker-Konfigurationsdateien)
-- /home/ (Benutzerdaten)
+- `/srv/originals/` (unersetzliche Originale: Immich-Fotos, Familienmedien, persönliche Musik)
+- `/srv/docker/` (Docker-Konfigurationen und App-Daten, inkl. Immich Postgres)
+- `/home/` (Benutzerdaten)
 
 **Was wird NICHT gesichert:**
 
+- `/srv/media/` (ersetzbare Inhalte: Jellyfin Filme/Serien, qBittorrent Downloads)
+- App Caches und Logs
 - System-Dateien - bei Bedarf neu aufsetzen
 
 **Backup-Zeitplan:**
 
-- Täglich um 03:00 Uhr (automatisch via Cron)
-- Retention: unbegrenzt
+- Täglich um 02:00 Uhr (automatisch via Cron)
+- Retention: `--keep-daily 7 --keep-weekly 4 --keep-monthly 6 --keep-yearly 2`
+
+## 3-2-1 Strategie
+
+Die unersetzlichen Daten existieren in drei Kopien auf zwei Medientypen, davon eine außerhalb des Hauses:
+
+|Kopie|Ort|Zweck|
+|---|---|---|
+|1|`/mnt/hdd/originals`|Live-Daten (primäre HDD)|
+|2|`/mnt/hdd2/originals`|Lokaler Mirror, schnelle Wiederherstellung bei HDD-Ausfall|
+|3|Storj (restic)|Offsite Disaster Recovery|
+
+:::info Keine Netzwerklast
+Beide HDDs sind physisch am Beelink angeschlossen. Der Mirror liest von einem Blockgerät und schreibt auf das
+andere - reine lokale I/O, kein WLAN- oder LAN-Verkehr. Nur die Storj-Kopie nutzt die Internetverbindung.
+:::
 
 :::tip Restic Dokumentation
 Für detaillierte Restic-Befehle siehe die [offizielle Restic-Dokumentation](https://restic.readthedocs.io/). Diese Seite enthält nur serverspezifische Konfigurationen.
@@ -55,10 +76,18 @@ sudo -u restic restic -r rclone:storj:beelink-backup init
 
 Das Passwort wird abgefragt und sollte sicher im Password Manager gespeichert werden.
 
+## Sekundärer HDD-Mirror
+
+Zusätzlich zum restic-Backup spiegelt ein nächtlicher rsync-Befehl die Originale auf die sekundäre HDD.
+
 ## Überwachung
 
 ```bash
+# restic-Backup
 sudo -u restic tail -f /home/restic/backup.log
+
+# Sekundärer HDD-Mirror
+sudo tail -f /root/mirror.log
 ```
 
 ## Wiederherstellung
@@ -77,14 +106,8 @@ Falls der Server komplett neu aufgesetzt werden muss oder einzelne Daten wiederh
 **Bei Datenverlust oder Korruption:**
 
 1. Betroffenen Container stoppen
-2. Mit Restic spezifische Pfade wiederherstellen (z.B. `/srv/media/immich` oder `/srv/docker`)
+2. Mit Restic spezifische Pfade wiederherstellen (z.B. `/srv/originals/immich` oder `/srv/docker`)
 3. Berechtigungen prüfen/korrigieren
 4. Container neu starten
 
 Detaillierte Restic-Befehle für Restore-Operationen: [Restic Restore Dokumentation](https://restic.readthedocs.io/en/latest/050_restore.html)
-
-## Aufräumen
-
-```bash
-sudo -u restic restic -r rclone:storj:beelink-backup forget --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --keep-yearly 2 --prune
-```

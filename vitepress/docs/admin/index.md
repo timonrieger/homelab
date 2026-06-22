@@ -9,7 +9,7 @@ Diese Sektion dokumentiert die technische Infrastruktur, Einrichtung und Adminis
 - **Netzwerk:** [Tailscale](https://tailscale.com/)
 - **Virtualisierung:** [Docker](https://www.docker.com/)
 - **Backups:** [Restic](https://restic.net/) (Backup Software) + [Rclone](https://rclone.org/) (Cloud Schnittstelle) + [Storj](https://storj.io/) (Cloud Provider)
-- **Speicher:** [WD RED HDD 4TB](https://www.westerndigital.com/products/internal-drives/wd-red-plus-sata-3-5-hdd?sku=WD40EFZZ)
+- **Speicher:** [WD RED HDD 4TB](https://www.westerndigital.com/products/internal-drives/wd-red-plus-sata-3-5-hdd?sku=WD40EFZZ) (primär) + 1 TB HDD (lokaler Mirror)
 - **Monitoring:** [Uptime Kuma](https://uptime.kuma.pet/)
 - **Reverse Proxy:** [Caddy](https://caddyserver.com/)
 - **DNS:** [Cloudflare](https://cloudflare.com)

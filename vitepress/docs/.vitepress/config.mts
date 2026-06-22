@@ -29,6 +29,7 @@ export default defineConfig({
         items: [
           { text: 'Überblick', link: '/admin/' },
           { text: 'Server Einrichtung', link: '/admin/server-einrichtung' },
+          { text: 'Speicherstruktur', link: '/admin/speicher' },
           { text: 'Zugriffskontrolle', link: '/admin/zugriffskontrolle' },
           { text: 'Backups', link: '/admin/backups' },
           { text: 'Tailscale Setup', link: '/admin/tailscale' },

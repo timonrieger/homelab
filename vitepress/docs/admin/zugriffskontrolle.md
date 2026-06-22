@@ -9,25 +9,17 @@ Zugriffskontrolle bedeutet, dass nur bestimmte Personen auf bestimmte Ressourcen
 
 |**Folder**|**Reason for its mode**|**Eigentümer**|**Gruppe**|**Beschränkungen**|
 |---|---|---|---|---|
-|/srv/media/family|Gemeinsam genutzte Dateien, voller Lesezugriff für Familie|timon|family|750|
-|/srv/media/immich|Immich and backup group need full control; not world-readable|timon|immich|750|
+|/srv/originals/family|Gemeinsam genutzte Dateien, voller Lesezugriff für Familie|timon|family|750|
+|/srv/originals/immich|Immich and backup group need full control; not world-readable|timon|immich|750|
 |/srv/docker|Besitzer kann Container verwalten, Gruppe kann nur Konfiguration lesen|timon|timon|750|
 |/usr/bin/restic|Nur root und Benutzer der Gruppe restic können Backups durchführen|root|restic|750|
 
 Die erste Ziffer bezieht sich auf dein Eigentümer, die zweite auf die Gruppe und die dritte auf den Rest. Die Ziffer setzt sich aus der Summe der einzelnen Aktionen zusammen.
 
+Wo diese Verzeichnisse physisch liegen, ist unter [Speicherstruktur](/admin/speicher) dokumentiert.
+
 :::info Beispiel
 770 bedeuted, dass der Eigentümer und die Gruppe des Verzeichnisses, vollen Zugriff haben, alle anderen haben gar keinen Zugriff
-:::
-
-:::info Drive Structure
-The following directories are on the HDD at `/mnt/hdd/`:
-
-- /srv/media/family/
-- /srv/media/jellyfin/
-- /srv/media/immich/library/library/
-
-All other directories are on the SSD.
 :::
 
 ## Berechtigungen
