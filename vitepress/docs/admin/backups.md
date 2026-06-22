@@ -54,7 +54,7 @@ Für detaillierte Restic-Befehle siehe die [offizielle Restic-Dokumentation](htt
 Die Rclone-Konfiguration liegt unter:
 
 - Auf dem Server: `~/.config/rclone/rclone.conf`
-- Im Repository: `ansible/files/rclone.conf`
+- Im Repository: `playbooks/files/rclone.conf`
 
 **Storj Access Grant erstellen:**
 
@@ -97,7 +97,7 @@ Falls der Server komplett neu aufgesetzt werden muss oder einzelne Daten wiederh
 ### Komplette Wiederherstellung
 
 1. Neuen [Server einrichten](/admin/server-einrichtung)
-2. Rclone konfigurieren (aus `ansible/files/rclone.conf`)
+2. Rclone konfigurieren (aus `playbooks/files/rclone.conf`)
 3. Mit Restic das Repository verbinden und Daten wiederherstellen
 4. Docker Container starten
 

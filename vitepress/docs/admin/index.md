@@ -42,14 +42,14 @@ Um mit der Administration des Servers zu beginnen:
 
 - Speicherplatz prüfen (`df -h`)
 - [Backup-Integrität](./backups#überwachung) testen
-- Docker Clean up (`mise run ansible:cleanup-docker`)
+- Docker Clean up (`mise run cleanup-docker`)
 - Anwendungen auf neueste Versionen aktualisieren (Renovate Bot)
-- System Update (`mise run ansible:update-system`)
+- System Update (`mise run update-system`)
 - [Backups aufräumen](/admin/backups#aufräumen)
 
 ### Reboot
 
-Nach `mise run ansible:update-system` siehst du, ob ein Reboot erforderlich ist.
+Nach `mise run update-system` siehst du, ob ein Reboot erforderlich ist.
 
 Falls nötig, starte den Server mit:
 

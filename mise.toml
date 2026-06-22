@@ -15,37 +15,37 @@ dir = "vitepress"
 run = ["pnpm install", "pnpm dev"]
 description = "Start the development server for the documentation"
 
-[tasks."ansible:ping"]
-dir = "ansible"
+[tasks."ping"]
+dir = "playbooks"
 run = ["ansible beelink -m ping -i inventory.ini"]
 description = "Ping the server"
 
-[tasks."ansible:setup-server"]
-dir = "ansible"
+[tasks."setup-server"]
+dir = "playbooks"
 run = ["ansible-playbook -i inventory.ini setup-server.yaml --ask-become-pass"]
 description = "Setup the server"
 
-[tasks."ansible:setup-backups"]
-dir = "ansible"
+[tasks."setup-backups"]
+dir = "playbooks"
 run = ["ansible-playbook -i inventory.ini setup-backups.yaml --ask-become-pass"]
 description = "Setup the backups"
 
-[tasks."ansible:setup-permissions"]
-dir = "ansible"
+[tasks."setup-permissions"]
+dir = "playbooks"
 run = ["ansible-playbook -i inventory.ini setup-permissions.yaml --ask-become-pass"]
 description = "Setup the permissions"
 
-[tasks."ansible:restart-containers"]
-dir = "ansible"
+[tasks."restart-containers"]
+dir = "playbooks"
 run = ["ansible-playbook -i inventory.ini restart-containers.yaml --ask-become-pass"]
 description = "Restart docker containers"
 
-[tasks."ansible:update-system"]
-dir = "ansible"
+[tasks."update-system"]
+dir = "playbooks"
 run = ["ansible-playbook -i inventory.ini update-system.yaml --ask-become-pass"]
 description = "Update system"
 
-[tasks."ansible:cleanup-docker"]
-dir = "ansible"
+[tasks."cleanup-docker"]
+dir = "playbooks"
 run = ["ansible-playbook -i inventory.ini cleanup-docker.yaml --ask-become-pass"]
 description = "Clean up Docker system (docker system prune -a -f)"

@@ -103,25 +103,25 @@ beelink ansible_user=<dein-username>
 ### 6. Verbindung testen
 
 ```bash
-mise run ansible:ping
+mise run ping
 ```
 
 ### 7. Server einrichten
 
 ```bash
-mise run ansible:setup-server
+mise run setup-server
 ```
 
 ### 8. Backups konfigurieren
 
 ```bash
-mise run ansible:setup-backups
+mise run setup-backups
 ```
 
 ### 9. Berechtigungen einrichten
 
 ```bash
-mise run ansible:setup-permissions
+mise run setup-permissions
 ```
 
 Mehr Details: [Zugriffskontrolle](/admin/zugriffskontrolle)
