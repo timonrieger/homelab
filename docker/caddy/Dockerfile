@@ -5,6 +5,6 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     xcaddy build \
     --with github.com/caddy-dns/cloudflare
 
-FROM caddy:2@sha256:cfeb0b281bc44a5a51fecde39e9e577c60d863c0b6196e6bbdf58fd00960887f
+FROM caddy:2@sha256:1557580dffd3f309e30bd76b23a26aa3970d98bff11313cfa3a63b735ac8d04a
 
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
