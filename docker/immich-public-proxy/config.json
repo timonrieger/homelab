@@ -4,9 +4,9 @@
       "Cache-Control": "public, max-age=2592000",
       "Access-Control-Allow-Origin":  "*"
     },
-    "downloadOriginalPhoto": true,
+    "maxDownloadQuality": "original",
     "downloadedFilename": 0,
-    "allowDownloadAll": 1,
+    "allowDownload": 1,
     "allowSlugLinks": true,
     "showHomePage": true,
     "showMetadata": {
