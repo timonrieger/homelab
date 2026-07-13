@@ -45,7 +45,6 @@ Um mit der Administration des Servers zu beginnen:
 - Docker Clean up (`mise run cleanup-docker`)
 - Anwendungen auf neueste Versionen aktualisieren (Renovate Bot)
 - System Update (`mise run update-system`)
-- [Backups aufräumen](/admin/backups#aufräumen)
 
 ### Reboot
 

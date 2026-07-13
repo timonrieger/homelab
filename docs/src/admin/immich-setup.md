@@ -42,9 +42,13 @@ Die Immich-Daten sind auf zwei Datenträger aufgeteilt: unersetzliche Originale 
 ├── thumbs/                   # Thumbnails
 ├── encoded-video/            # Transcodierte Videos
 ├── profile/                  # Profilbilder
+├── model-cache/              # ML-Modelle
 └── backups/                  # Immich Datenbank-Dumps
 ```
 
-- Die Ordner unter `/srv/originals/family/photos` und `/srv/originals/family/clips` werden als [External Library](https://immich.app/docs/features/libraries) in Immich eingebunden
-- Jeder Benutzer hat **Lesezugriff** auf die Bibliotheken über Samba
+Der gesamte Baum gehört dem System-Benutzer `immich` (UID 2000); die Container laufen als dieser Benutzer.
+Details unter [Zugriffskontrolle](/admin/zugriffskontrolle).
+
+- Die Ordner unter `/srv/originals/family/photos` und `/srv/originals/family/clips` werden als [External Library](https://immich.app/docs/features/libraries) in Immich eingebunden (read-only, Zugriff über die Gruppe `family`)
+- Jeder Benutzer hat **Lesezugriff** auf seine Bibliothek über Samba
 - **Fotos können nur über die Immich-UI hochgeladen werden** - Samba ist read-only konfiguriert

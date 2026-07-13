@@ -2,6 +2,12 @@ services:
   jellyfin:
     image: jellyfin/jellyfin:10.11.11@sha256:aefb67e6a7ff1debdd154a78a7bbb780fd0c873d8639210a7f6a2016ad2b35db
     container_name: jellyfin
+    user: ${PUID}:${PGID}
+    group_add:
+      # family group: read access to the family media mounts below
+      - "${FAMILY_GID}"
+    env_file:
+      - .env
     ports:
       - 8096:8096/tcp
       - 7359:7359/udp

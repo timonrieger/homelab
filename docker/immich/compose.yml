@@ -16,6 +16,10 @@ services:
     # extends:
     #   file: hwaccel.transcoding.yml
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
+    user: ${PUID}:${PGID}
+    group_add:
+      # family group: read access to the external libraries below
+      - "${FAMILY_GID}"
     volumes:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
       - ${UPLOAD_LOCATION}:/data
@@ -24,8 +28,8 @@ services:
       - ${PROFILE_LOCATION}:/data/profile
       - ${BACKUP_LOCATION}:/data/backups
       - /etc/localtime:/etc/localtime:ro
-      - /srv/originals/family/photos:/srv/originals/family/photos
-      - /srv/originals/family/clips:/srv/originals/family/clips
+      - /srv/originals/family/photos:/srv/originals/family/photos:ro
+      - /srv/originals/family/clips:/srv/originals/family/clips:ro
     env_file:
       - .env
     ports:
@@ -45,8 +49,12 @@ services:
     # extends: # uncomment this section for hardware acceleration - see https://docs.immich.app/features/ml-hardware-acceleration
     #   file: hwaccel.ml.yml
     #   service: cpu # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] for accelerated inference - use the `-wsl` version for WSL2 where applicable
+    user: ${PUID}:${PGID}
     volumes:
-      - model-cache:/cache
+      - ${MODEL_CACHE_LOCATION}:/cache
+      # Required writable paths for non-root, per https://docs.immich.app/FAQ
+      - ${ML_CONFIG_LOCATION}:/.config
+      - ${ML_CACHE_LOCATION}:/.cache
     env_file:
       - .env
     restart: unless-stopped
@@ -75,6 +83,3 @@ services:
       - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
     shm_size: 128mb
     restart: unless-stopped
-
-volumes:
-  model-cache:

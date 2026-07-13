@@ -1,40 +1,107 @@
 ---
-- name: Configure user folders and shared media access
+- name: Configure users, groups, and directory permissions
   hosts: all
   become: true
   vars:
-    # List of Immich users
-    immich_users:
-      - timon
-      - linus
-      - martin
-      - birgit
-      - family
-
-    # List of login users (can log in with shell)
+    # Human users
     login_users:
       - timon
 
-    # List of service users (system accounts, no login)
+    # Samba-only users (no shell login)
     service_users:
       - linus
       - martin
       - birgit
 
-    # Base path for immich media
+    # One system user per app
+    app_users:
+      - { name: immich, uid: 2000, groups: ["family"] } # reads external libraries in the family share
+      - { name: jellyfin, uid: 2001, groups: ["family"] } # reads family movies/music
+      - { name: gitea, uid: 2002, groups: [] }
+      - { name: mealie, uid: 2003, groups: [] }
+      - { name: qbittorrent, uid: 2004, groups: [] }
+      - { name: uptime-kuma, uid: 2005, groups: [] }
+      - { name: gitea-mirror, uid: 2006, groups: [] }
+
+    # Fixed GID so containers can join the group via group_add (FAMILY_GID in .env)
+    family_gid: 1002
+
+    # Users with a private Immich library
+    immich_library_users:
+      - timon
+      - linus
+      - martin
+      - birgit
+
     immich_base: /srv/originals/immich
-
-    # Base path for Jellyfin media
-    jellyfin_base: /srv/media
-
-    # Shared folder path
     family_share: /srv/originals/family
 
+    # Every host directory used as volume. Docker must never auto-create a bind-mount source.
+    app_dirs:
+      # Config layer (deployed from the repo)
+      - { path: /srv/docker, owner: timon, group: timon, mode: "0750" }
+      - { path: /srv/docker/immich, owner: timon, group: timon, mode: "0750" }
+      - { path: /srv/docker/jellyfin, owner: timon, group: timon, mode: "0750" }
+      - { path: /srv/docker/gitea, owner: timon, group: timon, mode: "0750" }
+      - { path: /srv/docker/gitea-mirror, owner: timon, group: timon, mode: "0750" }
+      - { path: /srv/docker/mealie, owner: timon, group: timon, mode: "0750" }
+      - { path: /srv/docker/qbittorrent, owner: timon, group: timon, mode: "0750" }
+      - { path: /srv/docker/uptime-kuma, owner: timon, group: timon, mode: "0750" }
+      - { path: /srv/docker/caddy, owner: timon, group: timon, mode: "0750" }
+      - { path: /srv/docker/caddy/conf, owner: timon, group: timon, mode: "0750" }
+      - { path: /srv/docker/immichframe, owner: timon, group: timon, mode: "0750" }
+      - { path: /srv/docker/immich-public-proxy, owner: timon, group: timon, mode: "0750" }
+      # Data layer (owned by the app users)
+      - { path: /srv/docker/immich/thumbs, owner: immich, group: immich, mode: "0750", recurse: true }
+      - { path: /srv/docker/immich/encoded-video, owner: immich, group: immich, mode: "0750", recurse: true }
+      - { path: /srv/docker/immich/profile, owner: immich, group: immich, mode: "0750", recurse: true }
+      - { path: /srv/docker/immich/backups, owner: immich, group: immich, mode: "0750", recurse: true }
+      - { path: /srv/docker/immich/model-cache, owner: immich, group: immich, mode: "0750", recurse: true }
+      - { path: /srv/docker/immich/ml-config, owner: immich, group: immich, mode: "0750", recurse: true }
+      - { path: /srv/docker/immich/ml-cache, owner: immich, group: immich, mode: "0750", recurse: true }
+      # Exception: the postgres entrypoint chowns its data dir to its internal UID
+      - { path: /srv/docker/immich/postgres }
+      - { path: /srv/docker/jellyfin/config, owner: jellyfin, group: jellyfin, mode: "0750", recurse: true }
+      - { path: /srv/docker/jellyfin/cache, owner: jellyfin, group: jellyfin, mode: "0750", recurse: true }
+      - { path: /srv/docker/gitea/data, owner: gitea, group: gitea, mode: "0750", recurse: true }
+      - { path: /srv/docker/gitea-mirror/data, owner: gitea-mirror, group: gitea-mirror, mode: "0750", recurse: true }
+      - { path: /srv/docker/mealie/data, owner: mealie, group: mealie, mode: "0750", recurse: true }
+      - { path: /srv/docker/qbittorrent/qbittorrent, owner: qbittorrent, group: qbittorrent, mode: "0750", recurse: true }
+      # Exception: gluetun runs as root (needs NET_ADMIN)
+      - { path: /srv/docker/qbittorrent/gluetun, owner: root, group: root, mode: "0750" }
+      - { path: /srv/docker/uptime-kuma/data, owner: uptime-kuma, group: uptime-kuma, mode: "0750", recurse: true }
+      - { path: /srv/media/downloads, owner: qbittorrent, group: qbittorrent, mode: "0750", recurse: true }
+
+    # Family-shared media
+    shared_dirs:
+      - { path: "{{ family_share }}" }
+      - { path: "{{ family_share }}/photos" }
+      - { path: "{{ family_share }}/clips" }
+      - { path: "{{ family_share }}/movies" }
+      - { path: "{{ family_share }}/music" }
+      - { path: /srv/originals/music }
+      - { path: /srv/media/movies }
+      - { path: /srv/media/shows }
+
+    # Default ACL entries for new files in the shared media dirs
+    shared_default_acls:
+      - { etype: user, entity: timon, perms: rwx }
+      - { etype: group, entity: family, perms: rX }
+
   tasks:
-    - name: Ensure 'family' group exists
+    - name: Ensure 'family' group exists with fixed GID
       ansible.builtin.group:
         name: family
+        gid: "{{ family_gid }}"
         state: present
+
+    - name: Create app groups (GID = app UID)
+      ansible.builtin.group:
+        name: "{{ item.name }}"
+        gid: "{{ item.uid }}"
+        system: true
+        state: present
+      loop: "{{ app_users }}"
 
     - name: Create login users
       ansible.builtin.user:
@@ -56,68 +123,97 @@
         state: present
       loop: "{{ service_users }}"
 
-    - name: Ensure /srv directory ownership and permissions
-      ansible.builtin.file:
-        path: /srv
-        state: directory
-        owner: timon
-        group: timon
-        mode: '0750'
+    - name: Create app users
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        uid: "{{ item.uid }}"
+        group: "{{ item.name }}"
+        groups: "{{ item.groups }}"
+        append: true
+        shell: /usr/sbin/nologin
+        system: true
+        create_home: false
+        state: present
+      loop: "{{ app_users }}"
 
-    - name: Ensure /srv/docker directory ownership and permissions
+    - name: Ensure structure directories (nothing lives here directly)
       ansible.builtin.file:
-        path: /srv/docker
-        state: directory
-        owner: timon
-        group: timon
-        mode: '0750'
-
-    - name: Ensure Immich base directory exists
-      ansible.builtin.file:
-        path: "{{ immich_base }}"
+        path: "{{ item }}"
         state: directory
         owner: root
         group: root
-        mode: '0755'
+        mode: "0755"
+      loop:
+        - /srv
+        - /srv/media
+        - /srv/originals
 
-    - name: Ensure Jellyfin base directory exists
+    - name: Ensure app data directories
       ansible.builtin.file:
-        path: "{{ jellyfin_base }}"
+        path: "{{ item.path }}"
+        state: directory
+        owner: "{{ item.owner | default(omit) }}"
+        group: "{{ item.group | default(omit) }}"
+        mode: "{{ item.mode | default(omit) }}"
+      loop: "{{ app_dirs }}"
+
+    - name: Ensure apps own all existing files in their data directories
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: directory
+        owner: "{{ item.owner }}"
+        group: "{{ item.group }}"
+        recurse: true
+      loop: "{{ app_dirs }}"
+      when: item.recurse | default(false)
+
+    - name: Ensure family-shared media directories
+      ansible.builtin.file:
+        path: "{{ item.path }}"
         state: directory
         owner: timon
         group: family
-        mode: '2750'
+        mode: "2750"
+      loop: "{{ shared_dirs }}"
 
-    - name: Set default ACLs on Jellyfin base directory
-      ansible.builtin.command: >
-        setfacl -d -m u:timon:rwx,g:family:rx,m::rx,o::--- "{{ jellyfin_base }}"
+    - name: Set default ACLs on family-shared media directories
+      ansible.posix.acl:
+        path: "{{ item.0.path }}"
+        etype: "{{ item.1.etype }}"
+        entity: "{{ item.1.entity }}"
+        permissions: "{{ item.1.perms }}"
+        default: true
+        state: present
+      loop: "{{ shared_dirs | product(shared_default_acls) | list }}"
 
-    - name: Ensure each Immich user folder exists and is private, except family
+    - name: Ensure the family group can read all existing shared media
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: directory
+        group: family
+        mode: "g+rX,o-rwx"
+        recurse: true
+      loop: "{{ shared_dirs }}"
+
+    - name: Ensure Immich owns all existing files in its tree
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: immich
+        group: immich
+        recurse: true
+      loop:
+        - "{{ immich_base }}/upload"
+        - "{{ immich_base }}/library"
+
+    - name: Ensure per-user and family Immich library folders
       ansible.builtin.file:
         path: "{{ immich_base }}/library/{{ item }}"
         state: directory
-        owner: "{{ item if item != 'family' else 'timon' }}"
-        group: "{{ item if item != 'family' else 'family' }}"
-        mode: "{{ '0700' if item != 'family' else '2750' }}"
-      loop: "{{ immich_users }}"
-
-    - name: Ensure default ACLs on user folders
-      ansible.builtin.command: >
-        setfacl -d -m u:{{ item }}:rwx,g::---,m::rwx,o::--- "{{ immich_base }}/library/{{ item }}"
-      loop: "{{ immich_users }}"
-      when: item != 'family'
-
-    - name: Ensure shared family folder exists
-      ansible.builtin.file:
-        path: "{{ family_share }}"
-        state: directory
-        owner: timon
-        group: family
-        mode: '2750'
-
-    - name: Set default ACLs on shared family folder
-      ansible.builtin.command: >
-        setfacl -d -m u:timon:rwx,g:family:rx,m::rx,o::--- "{{ family_share }}"
+        owner: immich
+        group: immich
+        mode: "0750"
+      loop: "{{ immich_library_users + ['family'] }}"
 
     - name: Copy Samba configuration file
       ansible.builtin.copy:
@@ -125,7 +221,7 @@
         dest: /etc/samba/smb.conf
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
         backup: yes
       notify: Restart Samba
 

@@ -3,6 +3,11 @@ services:
     image: gitea/gitea:1.26.4@sha256:ebe815a4e594bb9a180dc7b3a7946e11cb7389f8ae2daa2beb31287416c94849
     container_name: gitea
     restart: unless-stopped
+    environment:
+      # Exception to the non-root rule: the image's init needs root, but the
+      # internal git user is mapped to the gitea system user (setup-permissions.yaml)
+      - USER_UID=2002
+      - USER_GID=2002
     networks:
       - gitea
     volumes:

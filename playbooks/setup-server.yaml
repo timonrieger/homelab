@@ -255,9 +255,19 @@
         group: "{{ user }}"
         force: true
 
+    # Ownership must match setup-permissions.yaml (structure dir, root-owned)
     - name: Ensure /srv directory exists
       ansible.builtin.file:
         path: /srv
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    # timon deploys the repo's docker/ tree here (see synchronize task below)
+    - name: Ensure /srv/docker directory exists
+      ansible.builtin.file:
+        path: /srv/docker
         state: directory
         owner: "{{ user }}"
         group: "{{ user }}"
@@ -277,6 +287,9 @@
       ansible.builtin.command: mount -a
       when: fstab_copy_result.changed
 
+    # Runs as timon: the config layer (/srv/docker/<app>) is timon-owned, while
+    # app DATA dirs belong to the app users and are excluded — ownership there
+    # is managed exclusively by setup-permissions.yaml (never chown recursively).
     - name: Synchronize Docker configurations to /srv/docker
       ansible.posix.synchronize:
         src: ../docker/
@@ -288,15 +301,6 @@
           - "--exclude=jellyfin/cache/"
           - "--exclude=jellyfin/config/"
       become: false
-
-    - name: Set /srv/docker ownership and permissions
-      ansible.builtin.file:
-        path: /srv/docker
-        state: directory
-        owner: "{{ user }}"
-        group: "{{ user }}"
-        mode: "0750"
-        recurse: yes
 
   handlers:
     - name: Reload systemd and restart cloudflared

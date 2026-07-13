@@ -3,24 +3,60 @@ outline: deep
 ---
 # Zugriffskontrolle
 
-Zugriffskontrolle bedeutet, dass nur bestimmte Personen auf bestimmte Ressourcen zugreifen können. Dies ist wichtig, um Datenschutz und Sicherheit zu gewährleisten. Allerdings ist es auch wichtig, dass die Familie gemeinsam auf die Ressourcen zugreifen kann und keine Abhängigkeit von bestimmten Personen besteht.
+Zugriffskontrolle bedeutet, dass nur bestimmte Personen und Dienste auf bestimmte Ressourcen zugreifen können. Das gesamte System folgt fünf Regeln, die in einem Satz zusammengefasst sind:
+
+> Jede App ist ein eigener Benutzer, dem ihre eigenen Datenverzeichnisse gehören; Familieninhalte werden nur lesend über die Gruppe `family` geteilt, private Immich-Bibliotheken über personalisierte Samba-Freigaben; Ansible erstellt jedes Verzeichnis; timon administriert mit sudo.
+
+## Die fünf Regeln
+
+1. **Jede App läuft als eigener System-Benutzer, deklariert in der Konfiguration.** Ein Benutzer pro App, ohne Login-Shell, mit fester UID. Jede Compose-Datei deklariert ihn explizit mit den Werten aus der `.env`. Es wird sich **nie** auf den Standard-Benutzer eines Images verlassen.
+2. **Jeder App gehören ihre Daten; niemand sonst darf hineinschreiben.** Die Daten-Verzeichnisse gehören der App. Die Konfigurations-Ebene gehört dagegen timon.
+3. **Geteilt wird nur über genau zwei Mechanismen:** *Gruppen-Lesezugriff* über `family` für Familieninhalte, und *personalisierte Samba-Freigaben* für die privaten Immich-Bibliotheken.
+4. **Ansible ist der einzige Ersteller jedes Bind-Mount-Verzeichnisses.** Kein Host-Verzeichnis darf von Docker automatisch oder von Hand erstellt werden.
+5. **Admin-Zugriff ist sudo, nicht Gruppenmitgliedschaft.** timon gehört keinen App-Gruppen an und besitzt keine App-Daten. Root liest für Backups ohnehin alles.
+
+## Benutzer
+
+|**Benutzer**|**UID**|**Führt aus**|**Gruppen**|
+|---|---|---|---|
+|timon|1000|Mensch, Admin (sudo)|family|
+|linus, martin, birgit|1001+|nur Samba, kein Login|family|
+|immich|2000|immich-server, immich-ml|family (liest externe Bibliotheken)|
+|jellyfin|2001|jellyfin|family (liest Familien-Medien)|
+|gitea|2002|gitea|—|
+|mealie|2003|mealie|—|
+|qbittorrent|2004|qbittorrent|—|
+|uptime-kuma|2005|uptime-kuma|—|
+|gitea-mirror|2006|gitea-mirror|—|
+
+Die Gruppe `family` hat die feste GID **1002**. Zustandslose API-Clients bekommen keinen Benutzer und keine Host-Mounts, sie halten einen API-Key, keine Dateien.
 
 ## Dateistruktur
 
-|**Folder**|**Reason for its mode**|**Eigentümer**|**Gruppe**|**Beschränkungen**|
-|---|---|---|---|---|
-|/srv/originals/family|Gemeinsam genutzte Dateien, voller Lesezugriff für Familie|timon|family|750|
-|/srv/originals/immich|Immich and backup group need full control; not world-readable|timon|immich|750|
-|/srv/docker|Besitzer kann Container verwalten, Gruppe kann nur Konfiguration lesen|timon|timon|750|
-|/usr/bin/restic|Nur root und Benutzer der Gruppe restic können Backups durchführen|root|restic|750|
-
-Die erste Ziffer bezieht sich auf dein Eigentümer, die zweite auf die Gruppe und die dritte auf den Rest. Die Ziffer setzt sich aus der Summe der einzelnen Aktionen zusammen.
+|**Pfad**|**Eigentümer**|**Modus**|**Grund**|
+|---|---|---|---|
+|/srv, /srv/media, /srv/originals|root:root|0755|reine Struktur, hier liegt nichts direkt|
+|/srv/docker/\<app\>|timon:timon|0750|Konfigurations-Ebene|
+|/srv/docker/\<app\>/\<data\>|app:app|0750|Daten-Ebene|
+|/srv/originals/immich/**|immich:immich|0750|Immich-Medien; Lesezugriff nur über die Samba-Freigaben|
+|/srv/originals/family/**|timon:family|2750|Familien-Medien; immich und jellyfin lesen über die Gruppe|
+|/srv/originals/music|timon:family|2750|jellyfin liest über die Gruppe|
+|/srv/media/{movies,shows}|timon:family|2750|ersetzbare Medien, jellyfin liest|
+|/srv/media/downloads|qbittorrent:qbittorrent|0750|qbittorrent schreibt|
+|/usr/bin/restic|root:restic|0750|nur root und die Gruppe restic führen Backups aus|
 
 Wo diese Verzeichnisse physisch liegen, ist unter [Speicherstruktur](/admin/speicher) dokumentiert.
 
-:::info Beispiel
-770 bedeuted, dass der Eigentümer und die Gruppe des Verzeichnisses, vollen Zugriff haben, alle anderen haben gar keinen Zugriff
-:::
+## Ausnahmen
+
+Bewusst kurz gehalten — alles andere folgt den Regeln ohne Sonderfälle:
+
+|**App**|**Ausnahme**|**Grund**|
+|---|---|---|
+|caddy|läuft als Image-Standard (root)|bindet :80/:443 im Container; Daten liegen in Named Volumes, kein Host-Baum betroffen|
+|immich postgres|Postgres-UID des Images besitzt `/srv/docker/immich/postgres`|Datenbank-Images verwalten ihren Benutzer selbst|
+|gitea|Image-Init benötigt root|der interne git-Benutzer wird über `USER_UID=2002` auf den gitea-Benutzer gemappt|
+|gluetun|läuft als root|benötigt `NET_ADMIN` für das VPN|
 
 ## Berechtigungen
 
@@ -30,59 +66,16 @@ Wo diese Verzeichnisse physisch liegen, ist unter [Speicherstruktur](/admin/spei
 |Schreiben (w)|2|kann ändern/hinzufügen/entfernen|
 |Ausführen (x)|1|kann Verzeichnis betreten oder Dateien ausführen|
 
-:::info
-Verwende root:root, wenn das Verzeichnis Teil der Systemstruktur ist, die Sie abschalten wollen.
-Verwende timon:timon, wenn timon den Inhalt aktiv verwalten oder besitzen soll.
+Die erste Ziffer bezieht sich auf den Eigentümer, die zweite auf die Gruppe und die dritte auf den Rest. Eine führende `2` (z. B. `2750`) ist das setgid-Bit: neue Dateien erben die Gruppe des Verzeichnisses.
 
-Die Standardberechtigung für den neu erstellten Ordner ist `0777 - 0022 (unmask) = 0755`
+:::info Beispiel
+750 bedeutet: der Eigentümer hat vollen Zugriff, die Gruppe darf lesen und das Verzeichnis betreten, alle anderen haben gar keinen Zugriff.
 :::
 
-## Einrichtung der Freigaben
+## Einrichtung
 
-Alle Einstellungen für Dateifreigaben werden in der `setup-permissions.yaml` Datei gespeichert. Diese Datei wird von Ansible ausgeführt, um die Berechtigungen und Freigaben zu konfigurieren. Dabei werden auch Nutzerprofile für Samba erstellt.
+Alle Benutzer, Gruppen, Verzeichnisse, ACLs und Samba-Freigaben werden von `setup-permissions.yaml` konfiguriert. Die PUID/PGID-Werte in den `.env.example`-Dateien der Apps müssen mit den UIDs aus dem Playbook übereinstimmen.
 
 :::info
-Die Berechtigungen werden in der [Server Einrichtung](server-einrichtung.md#8-berechtigungen-einrichten) ausgeführt.
+Die Berechtigungen werden in der [Server Einrichtung](server-einrichtung.md#9-berechtigungen-einrichten) ausgeführt.
 :::
-
-## FAQ
-
-### Was bestimmt die Standardberechtigungen für einen neuen Ordner?
-
-Die `umask` des Prozesses bestimmt den Standardmodus; die Berechtigungen für übergeordnete Ordner werden nicht automatisch übertragen.
-
-### Gewährt das Root-Eigentum an einem Ordner Zugriff auf alle Kinder?
-
-Nein, bestehende oder neue Unterordner behalten ihre eigenen Rechte, sofern sie nicht explizit geändert werden.
-
-### Was ist der Unterschied zwischen root:root und einem sudo-Benutzer für den Besitz eines Ordners?
-
-Root:root sperrt den Ordner auf der Systemebene; sudo-Benutzer können ihn ändern, wenn sie eskalieren. Verwende sudo-Benutzer als Eigentümer, wenn dieser Benutzer den Inhalt aktiv verwaltet.
-
-### Kann Docker in einen Host-Ordner schreiben, der Root gehört?
-
-Ja, wenn der Container im Inneren als root läuft. Wenn er als Nicht-Root läuft, muss die UID innerhalb des Containers mit dem Host-Eigentum übereinstimmen oder Schreibrechte haben.
-
-### Was ist der Zweck von `append: true` bei der Benutzererstellung in Ansible?
-
-Es fügt den Benutzer zu den angegebenen Gruppen hinzu, ohne bestehende Gruppenmitgliedschaften zu entfernen.
-
-### Wie kann ich einen Ordner für eine Gruppe freigeben, aber für andere privat machen?
-
-Setze die Gruppe des Ordners auf die gewünschte Gruppe und den Modus auf 0750 (oder 0770 für Gruppenschreiben). Setze optional das setgid-Bit, damit neue Dateien die Gruppe erben.
-
-### Wie erstelle ich ein Benutzerkonto ohne Login?
-
-Setze die Shell beim Anlegen des Benutzers auf `/usr/sbin/nologin`.
-
-### Kann ich die Anmeldung für einen nologin-Benutzer später aktivieren?
-
-Ja, ändern Sie die Shell auf `/bin/bash` und entsperre das Passwort.
-
-### Wie erzwinge ich den Datenschutz pro Benutzer in einem gemeinsamen Verzeichnis?
-
-Lege für jeden Benutzer einen eigenen Ordner an, der dem jeweiligen Benutzer mit dem Modus 0700 gehört.
-
-### Beeinflusst der Docker-Compose-Ordner den Container-Zugriff auf gemountete Volumes?
-
-Nein, der Zugriff wird durch die Eigentümerschaft/Berechtigungen des Host-Ordners und die UID/GID innerhalb des Containers bestimmt, nicht dadurch, wo sich die Compose-Datei befindet.
