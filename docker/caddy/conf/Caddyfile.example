@@ -1,5 +1,6 @@
 (cloudflare) {
   tls {
+    # see https://github.com/caddy-dns/cloudflare
     dns cloudflare REPLACE-ME
   }
 }
