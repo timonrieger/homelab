@@ -34,8 +34,7 @@ Die Immich-Daten sind auf zwei Datenträger aufgeteilt: unersetzliche Originale 
 └── library/
     ├── timon/                # Persönlicher Ordner (via Samba zugänglich)
     ├── linus/
-    ├── …
-    └── family/               # Gemeinsamer Familien-Ordner
+    └── …
 
 /srv/docker/immich/           # Regenerierbare Daten + DB (SSD, nicht gespiegelt)
 ├── postgres/                 # Postgres-Datenbank

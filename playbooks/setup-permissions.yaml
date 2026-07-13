@@ -206,14 +206,16 @@
         - "{{ immich_base }}/upload"
         - "{{ immich_base }}/library"
 
-    - name: Ensure per-user and family Immich library folders
+    # The family account has no library folder: it uses external libraries
+    # only, which are reachable via the [family] Samba share.
+    - name: Ensure per-user Immich library folders
       ansible.builtin.file:
         path: "{{ immich_base }}/library/{{ item }}"
         state: directory
         owner: immich
         group: immich
         mode: "0750"
-      loop: "{{ immich_library_users + ['family'] }}"
+      loop: "{{ immich_library_users }}"
 
     - name: Copy Samba configuration file
       ansible.builtin.copy:
