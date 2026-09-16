@@ -25,6 +25,7 @@ aufgeräumten `/srv`-Pfad erreichbar.
 ```txt
 /srv/originals/              # Unersetzlich – immer gesichert (HDD)
 ├── music/                   # Persönliche Musik (Jellyfin)
+├── books/                   # Hörbücher, Bücher & Kurs-Audios (Jellyfin)
 ├── family/                  # Familienmedien (Samba-Freigabe „family")
 │   ├── photos/              # Immich External Library
 │   ├── clips/               # Immich External Library

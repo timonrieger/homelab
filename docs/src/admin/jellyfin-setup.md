@@ -12,6 +12,7 @@ Jellyfin bindet seine Bibliotheken aus mehreren Pfaden ein:
 
 - `/srv/originals/family/movies`, `/srv/originals/family/music` – Familieninhalte (gesichert)
 - `/srv/originals/music` – persönliche Musik (gesichert)
+- `/srv/originals/books` – Hörbücher, Bücher und Kurs-Audios (gesichert)
 - `/srv/media/movies`, `/srv/media/shows` – Filme und Serien (ersetzbar, nicht gesichert)
 
 Die vollständige Verteilung auf die Datenträger ist unter [Speicherstruktur](/admin/speicher) dokumentiert.
@@ -23,3 +24,4 @@ Für optimale Metadaten-Erkennung folge den Jellyfin Naming Conventions:
 - [Filme](https://jellyfin.org/docs/general/server/media/movies)
 - [Serien](https://jellyfin.org/docs/general/server/media/shows)
 - [Musik](https://jellyfin.org/docs/general/server/media/music)
+- [Bücher](https://jellyfin.org/docs/general/server/media/books)
