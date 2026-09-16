@@ -4,5 +4,20 @@
     "config:best-practices",
     "schedule:monthly"
   ],
-  "minimumReleaseAge": "3 days"
+  "minimumReleaseAge": "3 days",
+  "pre-commit": {
+    "enabled": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "extends": ["schedule:monthly"]
+  },
+  "packageRules": [
+    {
+      "description": "update Caddy in both the Dockerfile and compose config",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["caddy"],
+      "groupName": "caddy"
+    }
+  ]
 }
