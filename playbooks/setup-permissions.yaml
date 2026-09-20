@@ -79,9 +79,11 @@
       - { path: "{{ family_share }}/clips" }
       - { path: "{{ family_share }}/movies" }
       - { path: "{{ family_share }}/music" }
-      - { path: /srv/originals/music }
-      - { path: /srv/originals/books }
-      - { path: /srv/originals/movies }
+      # Personal media per login user; jellyfin reads via the family group
+      - { path: /srv/originals/users/timon }
+      - { path: /srv/originals/users/timon/movies }
+      - { path: /srv/originals/users/timon/music }
+      - { path: /srv/originals/users/timon/books }
       - { path: /srv/media/movies }
       - { path: /srv/media/shows }
 
@@ -155,6 +157,7 @@
         - /srv
         - /srv/media
         - /srv/originals
+        - /srv/originals/users
 
     - name: Ensure app data directories
       ansible.builtin.file:

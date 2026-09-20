@@ -3,7 +3,7 @@
 Die gesamte Datenablage folgt einer einzigen Regel, die sowohl Backups als auch die Verteilung auf die
 Datenträger bestimmt:
 
-- **`/srv/originals/`** – unersetzliche Daten (Fotos, Familienvideos, persönliche Musik) → **immer gesichert**
+- **`/srv/originals/`** – unersetzliche Daten (Fotos, Familienvideos, persönliche Medien) → **immer gesichert**
 - **`/srv/media/`** – ersetzbare Inhalte (Jellyfin Filme/Serien, Downloads, neu beschaffbar) → **nicht gesichert**
 
 ## Datenträger
@@ -24,9 +24,11 @@ aufgeräumten `/srv`-Pfad erreichbar.
 
 ```txt
 /srv/originals/              # Unersetzlich – immer gesichert (HDD)
-├── music/                   # Persönliche Musik (Jellyfin)
-├── books/                   # Hörbücher, Bücher & Kurs-Audios (Jellyfin)
-├── movies/                  # Persönliche Filme (Jellyfin)
+├── users/                   # Persönliche Medien je Benutzer (Jellyfin)
+│   └── timon/
+│       ├── movies/
+│       ├── music/
+│       └── books/           # Hörbücher, Bücher & Kurs-Audios
 ├── family/                  # Familienmedien (Samba-Freigabe „family")
 │   ├── photos/              # Immich External Library
 │   ├── clips/               # Immich External Library

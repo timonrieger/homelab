@@ -13,7 +13,7 @@ den ersetzbaren Inhalten unter `/srv/media/`. Diese Trennung ist Teil der [Speic
 
 **Was wird gesichert:**
 
-- `/srv/originals/` (unersetzliche Originale: Immich-Fotos, Familienmedien, persönliche Musik)
+- `/srv/originals/` (unersetzliche Originale: Immich-Fotos, Familienmedien, persönliche Medien)
 - `/srv/docker/` (Docker-Konfigurationen und App-Daten, inkl. Immich Postgres)
 - `/home/` (Benutzerdaten)
 

@@ -4,7 +4,7 @@ services:
     container_name: jellyfin
     user: ${PUID}:${PGID}
     group_add:
-      # family group: read access to the family media mounts below
+      # family group: read access to the family and per-user media mounts below
       - "${FAMILY_GID}"
     env_file:
       - .env
@@ -18,9 +18,7 @@ services:
       - /srv/originals/family/music:/media/family/music:ro
       - /srv/media/movies:/media/movies:ro
       - /srv/media/shows:/media/shows:ro
-      - /srv/originals/music:/media/music:ro
-      - /srv/originals/books:/media/books:ro
-      - /srv/originals/movies:/media/originals/movies:ro
+      - /srv/originals/users:/media/users:ro
       # Optional - extra fonts to be used during transcoding with subtitle burn-in
       # - type: bind
       #   source: /path/to/fonts
