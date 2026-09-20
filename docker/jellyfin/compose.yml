@@ -14,11 +14,9 @@ services:
     volumes:
       - ./config:/config
       - ./cache:/cache
-      - /srv/originals/family/movies:/media/family/movies:ro
-      - /srv/originals/family/music:/media/family/music:ro
-      - /srv/media/movies:/media/movies:ro
-      - /srv/media/shows:/media/shows:ro
-      - /srv/originals/users:/media/users:ro
+      - /srv/originals/family:/srv/originals/family:ro
+      - /srv/originals/users:/srv/originals/users:ro
+      - /srv/media:/srv/media:ro
       # Optional - extra fonts to be used during transcoding with subtitle burn-in
       # - type: bind
       #   source: /path/to/fonts

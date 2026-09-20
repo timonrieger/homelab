@@ -10,9 +10,9 @@ Für Installation, Bibliotheken, Benutzer-Verwaltung, Plugins und Troubleshootin
 
 Jellyfin bindet seine Bibliotheken aus mehreren Pfaden ein:
 
-- `/srv/originals/family/movies`, `/srv/originals/family/music` – Familieninhalte (gesichert)
-- `/srv/originals/users/<user>/{movies,music,books}` – persönliche Filme, Musik, Hörbücher und Bücher je Benutzer (gesichert), im Container unter `/media/users/<user>/…`
-- `/srv/media/movies`, `/srv/media/shows` – Filme und Serien (ersetzbar, nicht gesichert)
+- `/srv/originals/family/{movies,music}` – Familieninhalte (gesichert)
+- `/srv/originals/users/<user>/{movies,music,books}` – persönliche Filme, Musik, Hörbücher und Bücher je Benutzer (gesichert)
+- `/srv/media/{movies,shows}` – Filme und Serien (ersetzbar, nicht gesichert)
 
 Die vollständige Verteilung auf die Datenträger ist unter [Speicherstruktur](/admin/speicher) dokumentiert.
 
