@@ -81,6 +81,7 @@
       - { path: "{{ family_share }}/music" }
       - { path: /srv/originals/music }
       - { path: /srv/originals/books }
+      - { path: /srv/originals/movies }
       - { path: /srv/media/movies }
       - { path: /srv/media/shows }
 

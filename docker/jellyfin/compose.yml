@@ -20,6 +20,7 @@ services:
       - /srv/media/shows:/media/shows:ro
       - /srv/originals/music:/media/music:ro
       - /srv/originals/books:/media/books:ro
+      - /srv/originals/movies:/media/originals/movies:ro
       # Optional - extra fonts to be used during transcoding with subtitle burn-in
       # - type: bind
       #   source: /path/to/fonts

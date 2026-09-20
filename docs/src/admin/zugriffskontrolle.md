@@ -42,6 +42,7 @@ Die Gruppe `family` hat die feste GID **1002**. Zustandslose API-Clients bekomme
 |/srv/originals/family/**|timon:family|2750|Familien-Medien; immich und jellyfin lesen über die Gruppe|
 |/srv/originals/music|timon:family|2750|jellyfin liest über die Gruppe|
 |/srv/originals/books|timon:family|2750|jellyfin liest über die Gruppe|
+|/srv/originals/movies|timon:family|2750|jellyfin liest über die Gruppe|
 |/srv/media/{movies,shows}|timon:family|2750|ersetzbare Medien, jellyfin liest|
 |/srv/media/downloads|qbittorrent:qbittorrent|0750|qbittorrent schreibt|
 |/usr/bin/restic|root:restic|0750|nur root und die Gruppe restic führen Backups aus|
