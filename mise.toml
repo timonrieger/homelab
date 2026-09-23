@@ -35,6 +35,11 @@ dir = "playbooks"
 run = ["ansible-playbook -i inventory.ini setup-permissions.yaml --ask-become-pass"]
 description = "Setup the permissions"
 
+[tasks."setup-networks"]
+dir = "playbooks"
+run = ["ansible beelink -i inventory.ini -m ansible.builtin.shell -a 'docker network inspect gitea >/dev/null 2>&1 || docker network create gitea'"]
+description = "Create the external Docker networks shared between compose projects"
+
 [tasks."restart-containers"]
 dir = "playbooks"
 run = ["ansible-playbook -i inventory.ini restart-containers.yaml --ask-become-pass"]
