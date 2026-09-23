@@ -12,6 +12,7 @@
           - curl
           - gnupg
           - neovim
+          - samba
         state: present
         update_cache: true
         cache_valid_time: 3600
