@@ -4,6 +4,8 @@
   vars:
     user: timon
     cloudflared_tunnel_id: b6cad4cb-bfc4-4cb0-b0e6-2073891d169b
+    hdd_primary_uuid: 36b494ae-3765-43e1-9f45-9169f6720f51
+    hdd_secondary_uuid: d297d64b-ba4c-4d33-835e-69f42e4289a9
   tasks:
     - name: Ensure base apt packages are present
       ansible.builtin.apt:
@@ -175,8 +177,6 @@
         group: "{{ user }}"
         force: true
 
-    # timon deploys the repo's docker/ tree here (see synchronize task below).
-    # All other /srv ownership is managed exclusively by setup-permissions.yaml.
     - name: Ensure /srv/docker directory exists
       ansible.builtin.file:
         path: /srv/docker
@@ -185,23 +185,22 @@
         group: "{{ user }}"
         mode: "0750"
 
-    - name: Copy fstab to /etc/fstab
-      ansible.builtin.copy:
-        src: files/fstab
-        dest: /etc/fstab
-        owner: root
-        group: root
-        mode: "0644"
-        backup: true
-      register: fstab_copy_result
+    - name: Ensure data disks and bind mounts are present
+      ansible.posix.mount:
+        src: "{{ item.src }}"
+        path: "{{ item.path }}"
+        fstype: "{{ item.fstype }}"
+        opts: "{{ item.opts }}"
+        passno: "{{ item.passno | default('0') }}"
+        state: mounted
+      loop:
+        - { src: "UUID={{ hdd_primary_uuid }}", path: /mnt/hdd, fstype: ext4, opts: defaults, passno: "2" }
+        - { src: "UUID={{ hdd_secondary_uuid }}", path: /mnt/hdd2, fstype: ext4, opts: defaults, passno: "2" }
+        - { src: /mnt/hdd/originals, path: /srv/originals, fstype: none, opts: bind }
+        - { src: /mnt/hdd/media, path: /srv/media, fstype: none, opts: bind }
+      loop_control:
+        label: "{{ item.path }}"
 
-    - name: Apply fstab mounts
-      ansible.builtin.command: mount -a
-      when: fstab_copy_result is changed
-
-    # Runs as timon: the config layer (/srv/docker/<app>) is timon-owned, while
-    # app DATA dirs belong to the app users and are excluded — ownership there
-    # is managed exclusively by setup-permissions.yaml (never chown recursively).
     - name: Synchronize Docker configurations to /srv/docker
       ansible.posix.synchronize:
         src: ../docker/
