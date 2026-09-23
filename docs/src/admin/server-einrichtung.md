@@ -89,13 +89,13 @@ Passe alle `REPLACE-ME` Platzhalter in den kopierten Dateien mit den richtigen W
 
 ### 4. Datenträger-UUIDs eintragen
 
-UUIDs auf dem Server ermitteln:
+UUIDs der Datenträger auf dem Server ermitteln:
 
 ```bash
 sudo blkid
 ```
 
-Und in den `vars`-Block von `playbooks/setup-server.yaml` eintragen:
+Und in `setup-server.yaml` eintragen:
 
 ```yaml
 hdd_primary_uuid: <uuid-primaere-hdd>
@@ -106,14 +106,10 @@ Daraus entsteht die [Speicherstruktur](/admin/speicher).
 
 ### 5. Cloudflare Tunnel vorbereiten
 
-`playbooks/files/cloudflare.config.yml` referenziert eine Credentials-Datei unter
-`/etc/cloudflared/<tunnel-id>.json`. Das Playbook legt sie aus
-`playbooks/files/cloudflare.credentials.json` an - diese Datei musst du einmalig befüllen.
-
 Die Credentials bekommst beim Erstellen eines neuen Tunnels im
-[Cloudflare Zero Trust Dashboard](https://one.dash.cloudflare.com/):
+[Cloudflare Zero Trust Dashboard](https://one.dash.cloudflare.com/). Lege die Credentials JSON Datei als `cloudflare.credentials.json` ab.
 
-Lege die Credentials JSON Datei als `cloudflare.credentials.json` ab. `TunnelID` muss mit `tunnel:` in `cloudflare.config.yml` und mit `cloudflared_tunnel_id` in `setup-server.yaml` übereinstimmen:
+`TunnelID` muss mit `tunnel:` in `cloudflare.config.yml` und mit `cloudflared_tunnel_id` in `setup-server.yaml` übereinstimmen.
 
 ### 6. Tailscale einrichten
 
