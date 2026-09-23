@@ -3,11 +3,11 @@ uv = "0.12.15"
 ansible-base = { version = "2.21.4", uvx = true, postinstall = "ansible-galaxy collection install -U ansible.posix" }
 
 [tasks.lint]
-run = "uvx pre-commit run --all-files"
-description = "Run pre-commit hooks"
+run = "uvx prek run --all-files"
+description = "Run prek hooks"
 
 [tasks.setup]
-run = ["mise install", "uvx pre-commit install"]
+run = ["mise install", "uvx prek install -f"]
 description = "Setup the project"
 
 [tasks.docs]
