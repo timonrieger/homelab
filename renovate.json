@@ -18,6 +18,11 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["caddy"],
       "groupName": "caddy"
+    },
+    {
+      "description": "pre-commit hooks and mise tools",
+      "matchManagers": ["pre-commit", "mise"],
+      "groupName": "dev tooling"
     }
   ]
 }
