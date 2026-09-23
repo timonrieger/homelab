@@ -67,6 +67,10 @@ Ja, in der Web-Version kannst du über den **Upload-Button** Fotos von deinem Co
 
 Der Speicherplatz wird gemeinsam genutzt. Bei Fragen zum verfügbaren Speicher wende dich an einen Administrator.
 
+### Kann ich Fotos mit Leuten außerhalb der Familie teilen?
+
+Ja. Immich erzeugt standardmäßig Freigabelinks für Alben und einzelne Fotos, die ohne Tailscale funktionieren. Das heißt die Empfänger brauchen weder einen Account noch eine VPN-Verbindung.
+
 ### Was passiert, wenn ich nicht mit Tailscale verbunden bin?
 
 Ohne Tailscale-Verbindung kannst du nicht auf Immich zugreifen. Deine Fotos werden dann nicht automatisch gesichert.

@@ -44,7 +44,7 @@ aufgeräumten `/srv`-Pfad erreichbar.
 └── downloads/               # qBittorrent
 
 /srv/docker/                 # App-Konfiguration & -Daten (SSD)
-└── immich/                  # postgres, thumbs, encoded-video, profile, backups
+└── immich/                  # postgres, thumbs, encoded-video, profile, backups, …
 ```
 
 Regenerierbare Daten (Thumbnails, Transcodes, Datenbank) liegen bewusst auf der SSD unter `/srv/docker/` –

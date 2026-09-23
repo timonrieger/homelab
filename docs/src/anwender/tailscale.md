@@ -3,7 +3,9 @@
 [Tailscale](https://tailscale.com/) ermöglicht dir den sicheren Zugriff auf unseren Familienserver von überall auf der Welt. Du kannst dir Tailscale wie ein privates VPN-Netzwerk vorstellen, das nur für unsere Familie zugänglich ist.
 
 :::warning Wichtig
-Du kannst nur auf den Server und alle darauf liegenden Services (Immich, Jellyfin, Samba) zugreifen, wenn du mit Tailscale verbunden bist.
+Tailscale ist der normale Weg auf den Server. Ohne Tailscale erreichst du Immich, Jellyfin und Samba nicht.
+
+Einzelne Dienste können auf Anfrage auch von außerhalb freigeschaltet werden. Wende dich dafür an einen Administrator.
 :::
 
 ## Installation

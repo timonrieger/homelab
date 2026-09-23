@@ -7,22 +7,37 @@ Diese Sektion dokumentiert die technische Infrastruktur, Einrichtung und Adminis
 - **Hardware:** [Beelink S12 Mini-PC](https://amzn.eu/d/fh4H9aP)
 - **Betriebssystem:** Linux mit Debian 13 (Trixie)
 - **Netzwerk:** [Tailscale](https://tailscale.com/)
+- **Shell:** [Fish](https://fishshell.com/)
 - **Virtualisierung:** [Docker](https://www.docker.com/)
 - **Backups:** [Restic](https://restic.net/) (Backup Software) + [Rclone](https://rclone.org/) (Cloud Schnittstelle) + [Storj](https://storj.io/) (Cloud Provider)
 - **Speicher:** [WD RED HDD 4TB](https://www.westerndigital.com/products/internal-drives/wd-red-plus-sata-3-5-hdd?sku=WD40EFZZ) (primär) + 1 TB HDD (lokaler Mirror)
 - **Monitoring:** [Uptime Kuma](https://uptime.kuma.pet/)
 - **Reverse Proxy:** [Caddy](https://caddyserver.com/)
 - **DNS:** [Cloudflare](https://cloudflare.com)
+- **Öffentlicher Zugang:** [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) (`cloudflared`)
 - **Server Konfiguration:** [Ansible](https://www.ansible.com/)
+- **Abhängigkeiten:** [Renovate](https://docs.renovatebot.com/)
 - **Dateifreigabe:** [Samba](https://www.samba.org/)
 - **Anwendungen:**
   - [Immich](https://immich.app/) (Fotos)
   - [Immich Frame](https://github.com/immich-app/immich-frame) (Fotos Slideshow)
+  - [Immich Public Proxy](https://github.com/alangrainger/immich-public-proxy) (öffentliche Immich-Freigabelinks)
   - [Jellyfin](https://jellyfin.org/) (Filme, Serien, Musik)
   - [Gitea](https://gitea.com) (Code Hosting)
   - [Gitea Mirror](https://github.com/RayLabsHQ/gitea-mirror) (Git Repository Mirror Tool)
   - [Mealie](https://docs.mealie.io/) (Rezepte)
   - [Uptime Kuma](https://uptime.kuma.pet/) (Statusseite)
+  - [qBittorrent](https://www.qbittorrent.org/) hinter [Gluetun](https://github.com/qdm12/gluetun)
+
+## Netzwerkzugänge
+
+Es gibt drei Wege auf die Dienste, mit klar getrennten Aufgaben:
+
+|Weg|Reichweite|Wofür|
+|---|---|---|
+|Tailscale + MagicDNS|nur Familiengeräte im Tailnet|Standardweg über `beelink:<port>`|
+|Caddy auf Subdomain|nur im Tailnet|schöne URLs mit gültigem TLS|
+|Cloudflare Tunnel|offenes Internet|bewusst veröffentlichte Endpunkte|
 
 ## Schnellstart
 
@@ -41,7 +56,7 @@ Um mit der Administration des Servers zu beginnen:
 **Monatlich:**
 
 - Speicherplatz prüfen (`df -h`)
-- [Backup-Integrität](./backups#überwachung) testen
+- [Backup-Integrität](./backups#uberwachung) testen
 - Docker Clean up (`mise run cleanup-docker`)
 - Anwendungen auf neueste Versionen aktualisieren (Renovate Bot)
 - System Update (`mise run update-system`)

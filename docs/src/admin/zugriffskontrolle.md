@@ -20,7 +20,7 @@ Zugriffskontrolle bedeutet, dass nur bestimmte Personen und Dienste auf bestimmt
 |**Benutzer**|**UID**|**Führt aus**|**Gruppen**|
 |---|---|---|---|
 |timon|1000|Mensch, Admin (sudo)|family|
-|linus, martin, birgit|1001+|nur Samba, kein Login|family|
+|linus, martin, birgit|system (<1000)|nur Samba, kein Login|family|
 |immich|2000|immich-server, immich-ml|family (liest externe Bibliotheken)|
 |jellyfin|2001|jellyfin|family (liest Familien-Medien)|
 |gitea|2002|gitea|—|
@@ -58,6 +58,8 @@ Bewusst kurz gehalten — alles andere folgt den Regeln ohne Sonderfälle:
 |immich postgres|Postgres-UID des Images besitzt `/srv/docker/immich/postgres`|Datenbank-Images verwalten ihren Benutzer selbst|
 |gitea|Image-Init benötigt root|der interne git-Benutzer wird über `USER_UID=2002` auf den gitea-Benutzer gemappt|
 |gluetun|läuft als root|benötigt `NET_ADMIN` für das VPN|
+|immichframe|läuft als Image-Standard|zustandsloser API-Client: hält nur einen Immich API-Key, kein Host-Mount|
+|immich-public-proxy|läuft als Image-Standard|zustandslos: einziger Mount ist die read-only `config.json` aus der Konfigurations-Ebene|
 
 ## Berechtigungen
 
@@ -78,5 +80,5 @@ Die erste Ziffer bezieht sich auf den Eigentümer, die zweite auf die Gruppe und
 Alle Benutzer, Gruppen, Verzeichnisse, ACLs und Samba-Freigaben werden von `setup-permissions.yaml` konfiguriert. Die PUID/PGID-Werte in den `.env.example`-Dateien der Apps müssen mit den UIDs aus dem Playbook übereinstimmen.
 
 :::info
-Die Berechtigungen werden in der [Server Einrichtung](server-einrichtung.md#9-berechtigungen-einrichten) ausgeführt.
+Die Berechtigungen werden in der [Server Einrichtung](server-einrichtung.md#_11-berechtigungen-einrichten) ausgeführt.
 :::

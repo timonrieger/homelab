@@ -11,7 +11,7 @@ Für Konfiguration, Freigaben, Berechtigungen und Troubleshooting siehe die [off
 Die Samba-Konfiguration liegt unter `/etc/samba/smb.conf` und wird automatisch durch das Ansible Playbook verwaltet:
 
 :::info
-Die Samba-Konfiguration wird in der [Server Einrichtung](server-einrichtung.md#8-berechtigungen-einrichten) ausgeführt.
+Die Samba-Konfiguration wird in der [Server Einrichtung](server-einrichtung.md#_11-berechtigungen-einrichten) ausgeführt.
 :::
 
 ## Benutzer-Verwaltung

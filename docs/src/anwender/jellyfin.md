@@ -5,7 +5,7 @@
 ## Zugriff auf Jellyfin
 
 :::warning Voraussetzung
-Du musst mit [Tailscale verbunden](/anwender/tailscale) sein, um auf Jellyfin zugreifen zu können. Wende dich an einen Administrator, um Jellyfin ohne Tailscale nutzen zu können.
+Du musst mit [Tailscale verbunden](/anwender/tailscale) sein, um auf Jellyfin zugreifen zu können. Ein Zugang von außerhalb ist möglich, wende dich dafür an einen Administrator.
 :::
 
 ### Server URLs
@@ -50,4 +50,4 @@ Nein, dein Wiedergabeverlauf und deine Favoriten sind privat und nur für dich s
 
 ### Kann ich Jellyfin ohne Tailscale nutzen?
 
-Ja, du kannst Jellyfin ohne Tailscale nutzen. Wende dich hierfür an einen Administrator.
+Ja. Es gibt einen Zugang von außerhalb, der ohne Tailscale funktioniert. Die Adresse dafür bekommst du von einem Administrator.

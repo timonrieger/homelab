@@ -25,8 +25,14 @@ den ersetzbaren Inhalten unter `/srv/media/`. Diese Trennung ist Teil der [Speic
 
 **Backup-Zeitplan:**
 
-- Täglich um 02:00 Uhr (automatisch via Cron)
+|Job|Zeit|Timeout|Skript|
+|---|---|---|---|
+|restic Backup nach Storj|täglich 02:00|`3h`|`/home/restic/backup.sh`|
+|rsync-Mirror auf die zweite HDD|täglich 05:05|`30m`|`/root/mirror.sh`|
+
 - Retention: `--keep-daily 7 --keep-weekly 4 --keep-monthly 6 --keep-yearly 2`
+
+Beide Cronjobs werden von `setup-backups.yaml` als root-Cronjobs angelegt.
 
 ## 3-2-1 Strategie
 
@@ -82,6 +88,8 @@ Zusätzlich zum restic-Backup spiegelt ein nächtlicher rsync-Befehl die Origina
 
 ## Überwachung
 
+Beide Skripte melden ihr Ergebnis per Push-Heartbeat an [Uptime Kuma](https://status.fam.timonrieger.de). Ein fehlgeschlagener oder in den Timeout gelaufener Lauf schlägt Alarm, Logs sind für die Detailanalyse.
+
 ```bash
 # restic-Backup
 sudo -u restic tail /home/restic/backup.log -n 200
@@ -89,6 +97,14 @@ sudo -u restic tail /home/restic/backup.log -n 200
 # Sekundärer HDD-Mirror
 sudo tail /root/mirror.log -n 200
 ```
+
+:::info Verhalten bei Fehlern
+
+- Nach **jedem** Lauf führt das Skript `restic unlock` aus, damit ein abgebrochener oder abgelaufener
+  Lauf keine Stale Locks im Repository hinterlässt.
+- `forget --prune` läuft **nur nach einem erfolgreichen Backup**. Nach einem Fehlschlag bleiben alte
+  Snapshots also erhalten.
+:::
 
 ## Wiederherstellung
 

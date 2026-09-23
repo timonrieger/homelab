@@ -87,11 +87,39 @@ done
 
 Passe alle `REPLACE-ME` Platzhalter in den kopierten Dateien mit den richtigen Werten an.
 
-### 4. Tailscale einrichten
+### 4. Datenträger-UUIDs eintragen
+
+UUIDs auf dem Server ermitteln:
+
+```bash
+sudo blkid
+```
+
+Und in den `vars`-Block von `playbooks/setup-server.yaml` eintragen:
+
+```yaml
+hdd_primary_uuid: <uuid-primaere-hdd>
+hdd_secondary_uuid: <uuid-sekundaere-hdd>
+```
+
+Daraus entsteht die [Speicherstruktur](/admin/speicher).
+
+### 5. Cloudflare Tunnel vorbereiten
+
+`playbooks/files/cloudflare.config.yml` referenziert eine Credentials-Datei unter
+`/etc/cloudflared/<tunnel-id>.json`. Das Playbook legt sie aus
+`playbooks/files/cloudflare.credentials.json` an - diese Datei musst du einmalig befüllen.
+
+Die Credentials bekommst beim Erstellen eines neuen Tunnels im
+[Cloudflare Zero Trust Dashboard](https://one.dash.cloudflare.com/):
+
+Lege die Credentials JSON Datei als `cloudflare.credentials.json` ab. `TunnelID` muss mit `tunnel:` in `cloudflare.config.yml` und mit `cloudflared_tunnel_id` in `setup-server.yaml` übereinstimmen:
+
+### 6. Tailscale einrichten
 
 Richte [Tailscale auf dem Server](/admin/tailscale) ein, sodass du über Tailscale SSH auf den Server zugreifen kannst.
 
-### 5. Inventory konfigurieren
+### 7. Inventory konfigurieren
 
 Passe die `inventory.ini` Datei mit deinem eingerichteten Benutzernamen an:
 
@@ -100,28 +128,48 @@ Passe die `inventory.ini` Datei mit deinem eingerichteten Benutzernamen an:
 beelink ansible_user=<dein-username>
 ```
 
-### 6. Verbindung testen
+### 8. Verbindung testen
 
 ```bash
 mise run ping
 ```
 
-### 7. Server einrichten
+### 9. Server einrichten
 
 ```bash
 mise run setup-server
 ```
 
-### 8. Backups konfigurieren
+### 10. Backups konfigurieren
 
 ```bash
 mise run setup-backups
 ```
 
-### 9. Berechtigungen einrichten
+### 11. Berechtigungen einrichten
 
 ```bash
 mise run setup-permissions
 ```
 
 Mehr Details: [Zugriffskontrolle](/admin/zugriffskontrolle)
+
+### 12. Docker-Netzwerk anlegen
+
+```bash
+mise run setup-networks
+```
+
+### 13. Container starten
+
+```bash
+mise run restart-containers
+```
+
+### 14. Samba-Passwörter setzen
+
+```bash
+sudo smbpasswd -a <username>
+```
+
+Mehr Details: [Samba Setup](/admin/samba-setup)

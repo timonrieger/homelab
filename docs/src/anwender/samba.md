@@ -15,7 +15,12 @@ Du musst mit [Tailscale verbunden](/anwender/tailscale) sein, um auf die Dateifr
 Nach der Verbindung siehst du die verfügbaren Freigaben:
 
 - **family** - Gemeinsame Medienbibliothek für Familienfotos, -videos, -musik, etc.
+- **immich** - Deine persönliche Immich-Bibliothek (nur lesend)
 - **_username_** - Dein persönlicher Ordner für deine Dateien
+
+:::info Immich-Freigabe
+Die Freigabe `immich` zeigt dir nur deine eigene Immich-Bibliothek. Sie ist schreibgeschützt - neue Fotos und Videos lädst du über die [Immich-Oberfläche](/anwender/immich) hoch.
+:::
 
 :::info Berechtigungen
 Du hast nur Zugriff auf die Freigaben, für die du berechtigt bist. Falls du zusätzliche Berechtigungen benötigst, wende dich an einen Administrator.
