@@ -4,3 +4,4 @@ files/rclone.conf
 files/backup.sh
 files/mirror.sh
 files/fstab
+files/cloudflare.credentials.json

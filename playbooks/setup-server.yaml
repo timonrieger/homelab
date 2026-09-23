@@ -101,6 +101,15 @@
         force: true
       notify: Reload systemd and restart cloudflared
 
+    - name: Copy cloudflared tunnel credentials to /etc/cloudflared
+      ansible.builtin.copy:
+        src: files/cloudflare.credentials.json
+        dest: "/etc/cloudflared/{{ cloudflared_tunnel_id }}.json"
+        owner: root
+        group: root
+        mode: "0600"
+      notify: Reload systemd and restart cloudflared
+
     - name: Install cloudflared systemd service (cloudflared service install)
       ansible.builtin.command: cloudflared service install
       args:
