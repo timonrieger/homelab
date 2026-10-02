@@ -28,6 +28,7 @@ Zugriffskontrolle bedeutet, dass nur bestimmte Personen und Dienste auf bestimmt
 |qbittorrent|2004|qbittorrent|—|
 |uptime-kuma|2005|uptime-kuma|—|
 |gitea-mirror|2006|gitea-mirror|—|
+|immich-event|2007|immich-event|— (bewusst kein Zugriff auf Familien-Medien)|
 
 Die Gruppe `family` hat die feste GID **1002**. Zustandslose API-Clients bekommen keinen Benutzer und keine Host-Mounts, sie halten einen API-Key, keine Dateien.
 

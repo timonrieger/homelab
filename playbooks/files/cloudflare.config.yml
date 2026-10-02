@@ -6,4 +6,6 @@ ingress:
     service: http://localhost:3002   # immich-public-proxy
   - hostname: jellypub.timonrieger.de
     service: http://localhost:8096   # jellyfin
+  - hostname: immevent.timonrieger.de
+    service: http://localhost:2284   # immich-event
   - service: http_status:404

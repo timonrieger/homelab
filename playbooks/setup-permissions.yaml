@@ -22,6 +22,7 @@
       - { name: qbittorrent, uid: 2004, groups: [] }
       - { name: uptime-kuma, uid: 2005, groups: [] }
       - { name: gitea-mirror, uid: 2006, groups: [] }
+      - { name: immich-event, uid: 2007, groups: [] } # public event instance; deliberately no family access
 
     # Fixed GID so containers can join the group via group_add (FAMILY_GID in .env)
     family_gid: 1002
@@ -51,6 +52,7 @@
       - { path: /srv/docker/caddy/conf, owner: timon, group: timon, mode: "0750" }
       - { path: /srv/docker/immichframe, owner: timon, group: timon, mode: "0750" }
       - { path: /srv/docker/immich-public-proxy, owner: timon, group: timon, mode: "0750" }
+      - { path: /srv/docker/immich-event, owner: timon, group: timon, mode: "0750" }
       # Data layer (owned by the app users)
       - { path: /srv/docker/immich/thumbs, owner: immich, group: immich, mode: "0750", recurse: true }
       - { path: /srv/docker/immich/encoded-video, owner: immich, group: immich, mode: "0750", recurse: true }
@@ -71,6 +73,8 @@
       - { path: /srv/docker/qbittorrent/gluetun, owner: root, group: root, mode: "0750" }
       - { path: /srv/docker/uptime-kuma/data, owner: uptime-kuma, group: uptime-kuma, mode: "0750", recurse: true }
       - { path: /srv/media/downloads, owner: qbittorrent, group: qbittorrent, mode: "0750", recurse: true }
+      - { path: /srv/docker/immich-event/library, owner: immich-event, group: immich-event, mode: "0750", recurse: true }
+      - { path: /srv/docker/immich-event/postgres }
 
     # Family-shared media
     shared_dirs:
