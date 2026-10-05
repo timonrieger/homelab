@@ -8,6 +8,13 @@ timeout 3h restic -r rclone:storj:beelink-backup backup /srv /home \
   --exclude "/srv/media/**" \
   --exclude "/srv/docker/jellyfin/cache/**" \
   --exclude "/srv/docker/jellyfin/config/log/**" \
+  --exclude "/srv/docker/immich/thumbs/**" \
+  --exclude "/srv/docker/immich/encoded-video/**" \
+  --exclude "/srv/docker/immich/model-cache/**" \
+  --exclude "/srv/docker/immich/ml-cache/**" \
+  --exclude "/srv/docker/immich/ml-config/**" \
+  --exclude "/srv/docker/immich-event/library/thumbs/**" \
+  --exclude "/srv/docker/immich-event/library/encoded-video/**" \
   --pack-size=60
 set EXIT_CODE $status
 
