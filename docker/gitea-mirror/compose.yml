@@ -8,7 +8,7 @@ networks:
 
 services:
   gitea-mirror:
-    image: ghcr.io/raylabshq/gitea-mirror:v3.21.0@sha256:ef101da58f0e8d4e1eab96e37ef8f90cf756a8c6d68ab977f8ce7e4b69cb1318
+    image: ghcr.io/raylabshq/gitea-mirror:v3.40.3@sha256:786b193599c60138a3fa04b8d7abc45faef9748af030d49da802c5a478314154
     container_name: gitea-mirror
     restart: unless-stopped
     user: ${PUID}:${PGID}
