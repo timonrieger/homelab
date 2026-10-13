@@ -1,6 +1,6 @@
 [tools]
-uv = "0.12.15"
-ansible-base = { version = "2.21.4", uvx = true, postinstall = "ansible-galaxy collection install -U ansible.posix" }
+uv = "0.13.0"
+ansible-base = { version = "2.21.5", uvx = true, postinstall = "ansible-galaxy collection install -U ansible.posix" }
 
 [tasks.lint]
 run = "uvx prek run --all-files"
