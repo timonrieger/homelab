@@ -29,6 +29,7 @@ Zugriffskontrolle bedeutet, dass nur bestimmte Personen und Dienste auf bestimmt
 |uptime-kuma|2005|uptime-kuma|—|
 |gitea-mirror|2006|gitea-mirror|—|
 |immich-event|2007|immich-event|— (bewusst kein Zugriff auf Familien-Medien)|
+|immichframe|2008|immichframe|—|
 
 Die Gruppe `family` hat die feste GID **1002**. Zustandslose API-Clients bekommen keinen Benutzer und keine Host-Mounts, sie halten einen API-Key, keine Dateien.
 
@@ -59,7 +60,6 @@ Bewusst kurz gehalten — alles andere folgt den Regeln ohne Sonderfälle:
 |immich postgres|Postgres-UID des Images besitzt `/srv/docker/immich/postgres`|Datenbank-Images verwalten ihren Benutzer selbst|
 |gitea|Image-Init benötigt root|der interne git-Benutzer wird über `USER_UID=2002` auf den gitea-Benutzer gemappt|
 |gluetun|läuft als root|benötigt `NET_ADMIN` für das VPN|
-|immichframe|läuft als Image-Standard|zustandsloser API-Client: hält nur einen Immich API-Key, kein Host-Mount|
 |immich-public-proxy|läuft als Image-Standard|zustandslos: einziger Mount ist die read-only `config.json` aus der Konfigurations-Ebene|
 
 ## Berechtigungen

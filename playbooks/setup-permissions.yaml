@@ -23,6 +23,7 @@
       - { name: uptime-kuma, uid: 2005, groups: [] }
       - { name: gitea-mirror, uid: 2006, groups: [] }
       - { name: immich-event, uid: 2007, groups: [] } # public event instance; deliberately no family access
+      - { name: immichframe, uid: 2008, groups: [] }
 
     # Fixed GID so containers can join the group via group_add (FAMILY_GID in .env)
     family_gid: 1002
@@ -72,6 +73,7 @@
       # Exception: gluetun runs as root (needs NET_ADMIN)
       - { path: /srv/docker/qbittorrent/gluetun, owner: root, group: root, mode: "0750" }
       - { path: /srv/docker/uptime-kuma/data, owner: uptime-kuma, group: uptime-kuma, mode: "0750", recurse: true }
+      - { path: /srv/docker/immichframe/config, owner: immichframe, group: immichframe, mode: "0750", recurse: true }
       - { path: /srv/media/downloads, owner: qbittorrent, group: qbittorrent, mode: "0750", recurse: true }
       - { path: /srv/docker/immich-event/library, owner: immich-event, group: immich-event, mode: "0750", recurse: true }
       - { path: /srv/docker/immich-event/postgres }
