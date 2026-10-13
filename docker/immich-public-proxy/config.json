@@ -8,7 +8,6 @@
     "maxZoomQuality": "preview",
     "downloadedFilename": 0,
     "allowDownload": 1,
-    "downloadFromImmichConcurrencyLimit": 20,
     "allowSlugLinks": true,
     "showHomePage": true,
     "showMetadata": {
