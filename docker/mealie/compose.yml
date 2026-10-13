@@ -1,6 +1,6 @@
 services:
   mealie:
-    image: ghcr.io/mealie-recipes/mealie:v3.21.0@sha256:4e1e8d98b883009cb849851857e277109c21db1c2d857ae61e14de894f2169ff
+    image: ghcr.io/mealie-recipes/mealie:v3.28.0@sha256:8b02290f4d1806f02acac6f25f6d48a3c965612fda1f8e914d5af533276f8688
     container_name: mealie
     restart: unless-stopped
     user: ${PUID}:${PGID}
