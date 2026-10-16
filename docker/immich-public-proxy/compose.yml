@@ -19,3 +19,24 @@ services:
       timeout: 5s
     volumes:
       - ./config.json:/app/config.json:ro
+
+  immich-public-proxy-upload:
+    image: alangrainger/immich-public-proxy-upload:4.0.0@sha256:b006a484c2e0aa408f9001acf279baa5353d778ecef11c0e3b4e7a30117b9620
+    container_name: immich-public-proxy-upload
+    restart: unless-stopped
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges
+    ports:
+      - "3003:3000"
+    environment:
+      PUBLIC_BASE_URL: https://immpub.timonrieger.de
+      IMMICH_URL: http://beelink:2283
+    healthcheck:
+      test: curl -sf -m 4 http://localhost:3000/healthcheck -o /dev/null || exit 1
+      start_period: 10s
+      timeout: 5s
+    volumes:
+      - ./config.json:/app/config.json:ro
