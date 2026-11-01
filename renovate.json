@@ -1,31 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:best-practices",
-    "schedule:monthly",
-    "helpers:pinGitHubActionDigestsToSemver"
-  ],
-  "prHourlyLimit": 0,
-  "prConcurrentLimit": 0,
-  "minimumReleaseAge": "3 days",
-  "pre-commit": {
-    "enabled": true
-  },
-  "lockFileMaintenance": {
-    "enabled": true,
-    "extends": ["schedule:monthly"]
-  },
+  "extends": ["github>timonrieger/dotfiles//.github/renovate-base"],
   "packageRules": [
     {
       "description": "update Caddy in both the Dockerfile and compose config",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["caddy"],
       "groupName": "caddy"
-    },
-    {
-      "description": "pre-commit hooks and mise tools",
-      "matchManagers": ["pre-commit", "mise"],
-      "groupName": "dev tooling"
     }
   ]
 }
