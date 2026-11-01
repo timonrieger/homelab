@@ -212,10 +212,11 @@
         state: present
       loop: "{{ immich_external_dirs | product([false, true]) | list }}"
 
-    - name: Ensure the family group can read all existing shared media
+    - name: Ensure timon owns and the family group can read all existing shared media
       ansible.builtin.file:
         path: "{{ item.path }}"
         state: directory
+        owner: timon
         group: family
         mode: "g+rX,o-rwx"
         recurse: true
