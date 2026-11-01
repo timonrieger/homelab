@@ -8,7 +8,7 @@ Du musst mit [Tailscale verbunden](/anwender/tailscale) sein, um auf die Dateifr
 
 ## Verbindung herstellen
 
-[Frage ChatGPT](https://chat.openai.com/?q=Wie%20kann%20ich%20auf%20die%20Dateifreigaben%20des%20Servers%20zugreifen%20%C3%BCber%20das%20SMB%20Netzwerk%2C%20zum%20Beispiel%20mit%20der%20Server-URL%20smb%3A%2F%2Fbeelink%3F%20Ich%20nutze%20Windows%2C%20Android%2C%20MacOS%20und%20iOS). Als Server URL nutze `smb://beelink`.
+Verbinde dein Gerät über die Server-URL smb://beelink mit dem SMB-Netzwerk, um auf die Dateifreigaben des Servers zuzugreifen. Als Server URL nutze `smb://beelink`.
 
 ## Verfügbare Freigaben
 
@@ -16,6 +16,7 @@ Nach der Verbindung siehst du die verfügbaren Freigaben:
 
 - **family** - Gemeinsame Medienbibliothek für Familienfotos, -videos, -musik, etc.
 - **immich** - Deine persönliche Immich-Bibliothek (nur lesend)
+- **media** - Filme und Serien (ersetzbar, nicht gesichert)
 - **_username_** - Dein persönlicher Ordner für deine Dateien
 
 :::info Immich-Freigabe
