@@ -9,6 +9,7 @@
     "downloadedFilename": 0,
     "allowDownload": 1,
     "allowSlugLinks": true,
+    "shareCacheTime": 120,
     "showHomePage": true,
     "showMetadata": {
       "description": {
@@ -55,7 +56,13 @@
       "showArrows": true,
       "showDownload": true,
       "mobileArrows": false,
-      "autoPlayVideos": true
+      "autoPlayVideos": true,
+      "options": {}
+    },
+    "upload": {
+      "notice": "",
+      "askName": false,
+      "fieldSeparator": ","
     }
   }
 }
