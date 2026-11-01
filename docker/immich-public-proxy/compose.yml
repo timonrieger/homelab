@@ -21,7 +21,7 @@ services:
       - ./config.json:/app/config.json:ro
 
   immich-public-proxy-upload:
-    image: alangrainger/immich-public-proxy-upload:4.0.0@sha256:b006a484c2e0aa408f9001acf279baa5353d778ecef11c0e3b4e7a30117b9620
+    image: alangrainger/immich-public-proxy-upload:4.1.2@sha256:0ef7e90c1fe2c94a40c690cdf8a1c9e0649eeff8cca4c1cd3d277bb18ccf765a
     container_name: immich-public-proxy-upload
     restart: unless-stopped
     read_only: true
