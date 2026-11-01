@@ -7,6 +7,12 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["caddy"],
       "groupName": "caddy"
+    },
+    {
+      "description": "update both immich-public-proxy images together, they share one config",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["alangrainger/immich-public-proxy", "alangrainger/immich-public-proxy-upload"],
+      "groupName": "immich-public-proxy"
     }
   ]
 }
