@@ -1,5 +1,5 @@
 [tools]
-uv = "0.13.0"
+uv = "0.13.6"
 ansible-base = { version = "2.21.5", uvx = true, postinstall = "ansible-galaxy collection install -U ansible.posix" }
 
 [tasks.lint]
