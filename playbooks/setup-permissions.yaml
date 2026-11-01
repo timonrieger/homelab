@@ -27,12 +27,13 @@
     # Fixed GID so containers can join the group via group_add (FAMILY_GID in .env)
     family_gid: 1002
 
-    # Users with a private Immich library
+    # Immich library folders (one per Immich account)
     immich_library_users:
       - timon
       - linus
       - martin
       - birgit
+      - family
 
     immich_base: /srv/originals/immich
     family_share: /srv/originals/family
@@ -231,8 +232,6 @@
         - "{{ immich_base }}/upload"
         - "{{ immich_base }}/library"
 
-    # The family account has no library folder: it uses external libraries
-    # only, which are reachable via the [family] Samba share.
     - name: Ensure per-user Immich library folders
       ansible.builtin.file:
         path: "{{ immich_base }}/library/{{ item }}"
