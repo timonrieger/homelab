@@ -201,6 +201,21 @@
       loop_control:
         label: "{{ item.path }}"
 
+    - name: Read reserved blocks of the data disks
+      ansible.builtin.command: tune2fs -l /dev/disk/by-uuid/{{ item }}
+      loop: ["{{ hdd_primary_uuid }}", "{{ hdd_secondary_uuid }}"]
+      register: data_disk_info
+      changed_when: false
+
+    # The 5% ext4 root reserve is useless on data-only disks: it hides ~180 GB from the apps on the primary
+    # disk and makes the mirror disk look full to disk-health.sh while root still writes into it.
+    - name: Drop the root reserve on the data disks
+      ansible.builtin.command: tune2fs -m 0 /dev/disk/by-uuid/{{ item.item }}
+      loop: "{{ data_disk_info.results }}"
+      loop_control:
+        label: "{{ item.item }}"
+      when: "item.stdout is not search('^Reserved block count: +0$', multiline=True)"
+
     - name: Synchronize Docker configurations to /srv/docker
       ansible.posix.synchronize:
         src: ../docker/
