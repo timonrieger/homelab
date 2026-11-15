@@ -10,3 +10,7 @@ services:
       - ./data:/app/data
     ports:
       - "3001:3001"
+    extra_hosts:
+      # *.fam is a CNAME to the tailnet name, which MagicDNS on this host does not follow;
+      # resolve the Caddy monitor's domain to the host, where Caddy listens on 443.
+      - "immich.fam.timonrieger.de:host-gateway"
