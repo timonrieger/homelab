@@ -40,6 +40,11 @@ dir = "playbooks"
 run = ["ansible beelink -i inventory.ini -m ansible.builtin.shell -a 'docker network inspect gitea >/dev/null 2>&1 || docker network create gitea'"]
 description = "Create the external Docker networks shared between compose projects"
 
+[tasks."sync-secrets"]
+dir = "playbooks"
+run = ["ansible-playbook -i inventory.ini sync-secrets.yaml --ask-become-pass"]
+description = "Pull gitignored secrets from the server"
+
 [tasks."restart-containers"]
 dir = "playbooks"
 run = ["ansible-playbook -i inventory.ini restart-containers.yaml --ask-become-pass"]
