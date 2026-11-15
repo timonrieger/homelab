@@ -98,7 +98,7 @@
         group: "{{ restic_user }}"
         mode: '0644'
 
-    - name: Copy SQLite dump script
+    - name: Copy DB dump script
       ansible.builtin.copy:
         src: files/db-dumps.sh
         dest: "{{ db_dumps_script_dest }}"
@@ -116,7 +116,7 @@
 
     - name: Set cronjob for DB dumps
       ansible.builtin.cron:
-        name: "sqlite db dumps"
+        name: "db dumps"
         user: root
         minute: "{{ db_dumps_cron_minute }}"
         hour: "{{ db_dumps_cron_hour }}"

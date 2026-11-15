@@ -4,40 +4,36 @@ echo "["(date "+%Y-%m-%d %H:%M:%S")"] Running originals mirror…"
 # Dry run first: rsync --max-delete would still delete up to the limit, so an empty source could take files with it.
 # For an intentional large cleanup run once by hand: sudo env MAX_DELETE=100000 /root/mirror.sh
 set -q MAX_DELETE; or set MAX_DELETE 1000
+set STATUS "down"
+
 if not mountpoint -q /mnt/hdd2
     # Unmounted, rsync would fill the root SSD with a full copy of the originals.
-    set EXIT_CODE 26
+    set MSG "Mirror skipped: /mnt/hdd2 is not mounted"
 else
+    # A failed or timed-out dry run undercounts the deletions, so it cannot clear the real run.
     set DELETIONS (timeout 30m rsync -an --delete --itemize-changes /mnt/hdd/originals/ /mnt/hdd2/originals/ | string match -r "^\*deleting " | count)
-    # A timed-out dry run undercounts the deletions, so it cannot clear the real run.
-    if test $pipestatus[1] -eq 124
-        set EXIT_CODE 124
+    set DRY_RUN_CODE $pipestatus[1]
+
+    if test $DRY_RUN_CODE -eq 124
+        set MSG "Mirror skipped: dry run timed out"
+    else if test $DRY_RUN_CODE -ne 0
+        set MSG "Mirror skipped: dry run failed (code $DRY_RUN_CODE)"
     else if test $DELETIONS -gt $MAX_DELETE
-        set EXIT_CODE 25
+        set MSG "Mirror skipped: $DELETIONS deletions exceed limit of $MAX_DELETE"
     else
         timeout 30m rsync -a --delete /mnt/hdd/originals/ /mnt/hdd2/originals/
         set EXIT_CODE $status
+        if test $EXIT_CODE -eq 0
+            set STATUS "up"
+            set MSG "Mirror completed successfully"
+        else if test $EXIT_CODE -eq 124
+            set MSG "Mirror timed out"
+        else
+            set MSG "Mirror failed (code $EXIT_CODE)"
+        end
     end
-end
 
-echo "["(date "+%Y-%m-%d %H:%M:%S")"] Mirror finished with exit code $EXIT_CODE."
-
-if test $EXIT_CODE -eq 0
-    set STATUS "up"
-    set MSG "Mirror completed successfully"
-else if test $EXIT_CODE -eq 25
-    set STATUS "down"
-    set MSG "Mirror skipped: $DELETIONS deletions exceed limit of $MAX_DELETE"
-else if test $EXIT_CODE -eq 26
-    set STATUS "down"
-    set MSG "Mirror skipped: /mnt/hdd2 is not mounted"
-else
-    set STATUS "down"
-    set MSG "Mirror failed (code $EXIT_CODE)"
-end
-
-# Free blocks as root sees them (%f, not %a): the mirror runs as root and writes into the ext4 reserve.
-if test $EXIT_CODE -ne 26
+    # Free blocks as root sees them (%f, not %a): the mirror runs as root and writes into the ext4 reserve.
     set MIN_FREE_GB 15
     set FREE_GB (math -s0 (stat -f -c "%f * %S" /mnt/hdd2) / 1000000000)
     set MSG "$MSG, $FREE_GB GB free"
@@ -46,6 +42,8 @@ if test $EXIT_CODE -ne 26
         set MSG "Mirror completed, but only $FREE_GB GB free"
     end
 end
+
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] $MSG"
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Uptime Kuma…"
 set MSG_ENCODED (string escape --style url "$MSG")
