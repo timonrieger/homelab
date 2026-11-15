@@ -6,6 +6,9 @@
     cloudflared_tunnel_id: b6cad4cb-bfc4-4cb0-b0e6-2073891d169b
     hdd_primary_uuid: 36b494ae-3765-43e1-9f45-9169f6720f51
     hdd_secondary_uuid: d297d64b-ba4c-4d33-835e-69f42e4289a9
+    data_disk_reserve:
+      - { uuid: "{{ hdd_primary_uuid }}", percent: 1 }
+      - { uuid: "{{ hdd_secondary_uuid }}", percent: 0 }
   tasks:
     - name: Ensure base apt packages are present
       ansible.builtin.apt:
@@ -202,19 +205,22 @@
         label: "{{ item.path }}"
 
     - name: Read reserved blocks of the data disks
-      ansible.builtin.command: tune2fs -l /dev/disk/by-uuid/{{ item }}
-      loop: ["{{ hdd_primary_uuid }}", "{{ hdd_secondary_uuid }}"]
+      ansible.builtin.command: tune2fs -l /dev/disk/by-uuid/{{ item.uuid }}
+      loop: "{{ data_disk_reserve }}"
       register: data_disk_info
       changed_when: false
 
-    # The 5% ext4 root reserve is useless on data-only disks: it hides ~180 GB from the apps on the primary
-    # disk and makes the mirror disk look full to disk-health.sh while root still writes into it.
-    - name: Drop the root reserve on the data disks
-      ansible.builtin.command: tune2fs -m 0 /dev/disk/by-uuid/{{ item.item }}
+    # Only the mirror (root) writes to the secondary disk, so its reserve just hides free space. The primary keeps
+    # 1% as a small buffer against fragmentation should the SMR disk fill up, the rest is usable by the apps.
+    - name: Set the root reserve of the data disks
+      ansible.builtin.command: tune2fs -m {{ item.item.percent }} /dev/disk/by-uuid/{{ item.item.uuid }}
       loop: "{{ data_disk_info.results }}"
       loop_control:
-        label: "{{ item.item }}"
-      when: "item.stdout is not search('^Reserved block count: +0$', multiline=True)"
+        label: "{{ item.item.uuid }}: {{ item.item.percent }}%"
+      vars:
+        blocks: "{{ item.stdout | regex_search('^Block count: +(\\d+)$', '\\1', multiline=True) | first | int }}"
+        reserved: "{{ item.stdout | regex_search('^Reserved block count: +(\\d+)$', '\\1', multiline=True) | first | int }}"
+      when: (reserved | int * 100 / blocks | int) | round | int != item.item.percent
 
     - name: Synchronize Docker configurations to /srv/docker
       ansible.posix.synchronize:

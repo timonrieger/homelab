@@ -14,8 +14,8 @@ Datenträger bestimmt:
 |Sekundäre HDD (`/mnt/hdd2`)|`originals/` als nächtlicher rsync-Mirror von `/srv/originals`|
 |SSD|Betriebssystem und alles unter `/srv/docker/` (App-Daten inkl. Immich Postgres/Thumbnails)|
 
-`disk-health.sh` prüft täglich SMART-Werte und freien Platz aller drei Datenträger. Die beiden HDDs haben keine
-ext4-Reserve für root, da dort nur Daten liegen.
+`disk-health.sh` prüft täglich SMART-Werte und freien Platz aller drei Datenträger. Die ext4-Reserve für root ist auf
+der sekundären HDD 0 % (dort schreibt nur der Mirror als root) und auf der primären HDD 1 %.
 
 :::info Bind-Mounts
 `/srv/originals` und `/srv/media` sind keine eigenen Partitionen, sondern Bind-Mounts auf die primäre HDD
