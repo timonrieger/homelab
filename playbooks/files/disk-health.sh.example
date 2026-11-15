@@ -1,6 +1,5 @@
 #!/usr/bin/env fish
 
-# Mount point and minimum free space in GB, checked together with the SMART state of the disk behind it.
 set CHECKS "/:30" "/mnt/hdd:100" "/mnt/hdd2:15"
 
 set PROBLEMS

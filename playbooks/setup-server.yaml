@@ -211,7 +211,7 @@
       changed_when: false
 
     # Only the mirror (root) writes to the secondary disk, so its reserve just hides free space. The primary keeps
-    # 1% as a small buffer against fragmentation should the SMR disk fill up, the rest is usable by the apps.
+    # 1% as a buffer against fragmentation should the SMR disk fill up.
     - name: Set the root reserve of the data disks
       ansible.builtin.command: tune2fs -m {{ item.item.percent }} /dev/disk/by-uuid/{{ item.item.uuid }}
       loop: "{{ data_disk_info.results }}"
