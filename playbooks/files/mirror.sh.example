@@ -49,5 +49,5 @@ end
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Uptime Kuma…"
 set MSG_ENCODED (string escape --style url "$MSG")
-curl -m 10 --retry 5 "http://beelink:3001/api/push/<MIRROR_HEARTBEAT_TOKEN>?status=$STATUS&msg=$MSG_ENCODED&ping="
+curl -m 10 --retry 5 "http://beelink:3001/api/push/REPLACE-ME?status=$STATUS&msg=$MSG_ENCODED&ping="
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Heartbeat sent."
