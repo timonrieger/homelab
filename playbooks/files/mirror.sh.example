@@ -27,6 +27,16 @@ else
     set MSG "Mirror failed (code $EXIT_CODE)"
 end
 
+# Free space on the mirror disk as root sees it (the mirror runs as root and may use the ext4 reserve).
+# Added to the heartbeat message; below MIN_FREE_GB the run reports down.
+set MIN_FREE_GB 15
+set FREE_GB (math -s0 (stat -f -c "%f * %S" /mnt/hdd2) / 1000000000)
+set MSG "$MSG, $FREE_GB GB free"
+if test $STATUS = "up" -a $FREE_GB -lt $MIN_FREE_GB
+    set STATUS "down"
+    set MSG "Mirror completed, but only $FREE_GB GB free"
+end
+
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Uptime Kuma…"
 set MSG_ENCODED (string escape --style url "$MSG")
 curl -m 10 --retry 5 "http://beelink:3001/api/push/<MIRROR_HEARTBEAT_TOKEN>?status=$STATUS&msg=$MSG_ENCODED&ping="

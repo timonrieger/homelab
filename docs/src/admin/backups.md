@@ -108,6 +108,8 @@ Zusätzlich zum restic-Backup spiegelt ein nächtlicher rsync-Befehl die Origina
 
 Beide Skripte melden ihr Ergebnis per Push-Heartbeat an [Uptime Kuma](https://status.fam.timonrieger.de). Ein fehlgeschlagener oder in den Timeout gelaufener Lauf schlägt Alarm, Logs sind für die Detailanalyse.
 
+Der Mirror meldet zusätzlich den freien Platz der zweiten HDD und schlägt unter 15 GB Alarm.
+
 ```bash
 # restic-Backup
 sudo -u restic tail /home/restic/backup.log -n 200
