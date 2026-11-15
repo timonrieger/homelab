@@ -1,10 +1,7 @@
 #!/usr/bin/env fish
 
-# Consistent copies of the live databases for the restic backup, collected in one directory.
-# restic copies files one by one while the apps keep writing, so a live .db (+ -wal) can be torn.
-# The SQLite online backup API takes a consistent snapshot without stopping the container.
-# A dump only replaces the previous one once it passed its check, so the last good dump always stays.
-# backup.sh reports missing or stale dumps.
+# restic copies files while the apps write, so a live .db (+ -wal) can be torn. SQLite's online backup
+# gives a consistent copy without stopping the container. backup.sh reports missing or stale dumps.
 
 set DUMP_DIR /srv/db-dumps
 set FAILED 0
@@ -40,8 +37,8 @@ for DB in (string match -rv '^\s*(#|$)' < /etc/db-dumps.list)
     rm -f $TMP-wal $TMP-shm
 end
 
-# Immich dumps Postgres itself (01:30, Administration > Settings > Database Dump Settings). Hard-link the newest
-# dump here so it gets the same check as the others; a hard link costs no space and survives Immich's rotation.
+# Immich dumps Postgres itself at 01:30 (Administration > Settings > Database Dump Settings), before this runs.
+# Hard link, not symlink: it survives Immich's rotation and costs no space.
 set IMMICH_DUMP (ls -t /srv/docker/immich/backups/immich-db-backup-*.sql.gz 2>/dev/null)[1]
 if test -n "$IMMICH_DUMP"
     ln -f $IMMICH_DUMP $DUMP_DIR/immich.sql.gz

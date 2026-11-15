@@ -1,5 +1,4 @@
 # SQLite databases dumped nightly by db-dumps.sh and checked by backup.sh.
-# Each dump lands in /srv/db-dumps/<app>-<file name>, e.g. gitea-gitea.db.
 /srv/docker/gitea/data/gitea/gitea.db
 /srv/docker/gitea-mirror/data/gitea-mirror.db
 /srv/docker/jellyfin/config/data/jellyfin.db

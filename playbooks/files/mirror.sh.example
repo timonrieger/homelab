@@ -1,8 +1,7 @@
 #!/usr/bin/env fish
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Running originals mirror…"
-# Count deletions in a dry run and skip the whole run if there are too many, so an empty or wrong source can
-# never wipe the mirror. (rsync --max-delete would still delete up to the limit before stopping.)
+# Dry run first: rsync --max-delete would still delete up to the limit, so an empty source could take files with it.
 # For an intentional large cleanup run once by hand: sudo env MAX_DELETE=100000 /root/mirror.sh
 set -q MAX_DELETE; or set MAX_DELETE 1000
 set DELETIONS (timeout 30m rsync -an --delete --itemize-changes /mnt/hdd/originals/ /mnt/hdd2/originals/ | string match -r "^\*deleting " | count)
@@ -27,8 +26,7 @@ else
     set MSG "Mirror failed (code $EXIT_CODE)"
 end
 
-# Free space on the mirror disk as root sees it (the mirror runs as root and may use the ext4 reserve).
-# Added to the heartbeat message; below MIN_FREE_GB the run reports down.
+# Free blocks as root sees them (%f, not %a): the mirror runs as root and writes into the ext4 reserve.
 set MIN_FREE_GB 15
 set FREE_GB (math -s0 (stat -f -c "%f * %S" /mnt/hdd2) / 1000000000)
 set MSG "$MSG, $FREE_GB GB free"

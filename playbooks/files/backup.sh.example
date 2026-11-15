@@ -30,8 +30,7 @@ else
     set MSG "Backup failed (code $EXIT_CODE)"
 end
 
-# Missing or stale DB dumps (db-dumps.sh, 01:45) also mark the run as down. A failed dump keeps the previous
-# one, so it is caught by age: every dump must be from tonight.
+# A failed dump keeps the previous file, so failures only show by age (db-dumps.sh runs at 01:45).
 set DUMP_DIR /srv/db-dumps
 set DUMP_PROBLEMS 0
 set DUMPS immich.sql.gz
