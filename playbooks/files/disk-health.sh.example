@@ -1,5 +1,7 @@
 #!/usr/bin/env fish
 
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Running disk health check…"
+
 set CHECKS "/:30" "/mnt/hdd:100" "/mnt/hdd2:15"
 
 set PROBLEMS
@@ -27,13 +29,14 @@ for CHECK in $CHECKS
     end
     set DISK /dev/$DISK
 
+    # Full path: smartctl lives in /usr/sbin, which is not on the PATH of root's user crontab.
     # Bits 0-4 of smartctl's exit code: query failed, disk failing or a prefail attribute past its threshold.
-    smartctl -H $DISK >/dev/null
+    /usr/sbin/smartctl -H $DISK >/dev/null
     if test (math "bitand($status, 31)") -ne 0
         set -a PROBLEMS "$DISK SMART check failed"
     end
     # The overall verdict often still says PASSED while a disk is dying; bad sectors show up here first.
-    set BAD_SECTORS (smartctl -A $DISK | awk '$1 == 5 || $1 == 197 || $1 == 198 { sum += $10 } END { print sum + 0 }')
+    set BAD_SECTORS (/usr/sbin/smartctl -A $DISK | awk '$1 == 5 || $1 == 197 || $1 == 198 { sum += $10 } END { print sum + 0 }')
     if test $BAD_SECTORS -gt 0
         set -a PROBLEMS "$DISK has $BAD_SECTORS bad sectors"
     end
