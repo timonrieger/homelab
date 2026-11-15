@@ -32,15 +32,6 @@ else
             set MSG "Mirror failed (code $EXIT_CODE)"
         end
     end
-
-    # Free blocks as root sees them (%f, not %a): the mirror runs as root and writes into the ext4 reserve.
-    set MIN_FREE_GB 15
-    set FREE_GB (math -s0 (stat -f -c "%f * %S" /mnt/hdd2) / 1000000000)
-    set MSG "$MSG, $FREE_GB GB free"
-    if test $STATUS = "up" -a $FREE_GB -lt $MIN_FREE_GB
-        set STATUS "down"
-        set MSG "Mirror completed, but only $FREE_GB GB free"
-    end
 end
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] $MSG"

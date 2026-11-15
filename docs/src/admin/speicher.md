@@ -14,6 +14,9 @@ Datenträger bestimmt:
 |Sekundäre HDD (`/mnt/hdd2`)|`originals/` als nächtlicher rsync-Mirror von `/srv/originals`|
 |SSD|Betriebssystem und alles unter `/srv/docker/` (App-Daten inkl. Immich Postgres/Thumbnails)|
 
+`disk-health.sh` prüft täglich SMART-Werte und freien Platz aller drei Datenträger. Die beiden HDDs haben keine
+ext4-Reserve für root, da dort nur Daten liegen.
+
 :::info Bind-Mounts
 `/srv/originals` und `/srv/media` sind keine eigenen Partitionen, sondern Bind-Mounts auf die primäre HDD
 (`/mnt/hdd/originals` bzw. `/mnt/hdd/media`). So liegen die Daten physisch auf der HDD, sind aber unter dem

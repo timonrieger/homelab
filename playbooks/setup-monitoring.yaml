@@ -1,0 +1,56 @@
+---
+- name: Setup Monitoring
+  hosts: beelink
+  become: true
+  vars:
+    disk_health_script_dest: "/root/disk-health.sh"
+    disk_health_log: "/root/disk-health.log"
+    disk_health_cron_hour: 6
+    disk_health_cron_minute: 0
+    watchdog_script_dest: "/root/watchdog.sh"
+
+  tasks:
+    - name: Ensure smartmontools is present
+      ansible.builtin.apt:
+        name: smartmontools
+        state: present
+        update_cache: true
+
+    - name: Copy disk health script
+      ansible.builtin.copy:
+        src: files/disk-health.sh
+        dest: "{{ disk_health_script_dest }}"
+        owner: root
+        group: root
+        mode: '0700'
+
+    - name: Ensure disk health log file exists
+      ansible.builtin.file:
+        path: "{{ disk_health_log }}"
+        state: touch
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Set cronjob for disk health
+      ansible.builtin.cron:
+        name: "disk health"
+        user: root
+        minute: "{{ disk_health_cron_minute }}"
+        hour: "{{ disk_health_cron_hour }}"
+        job: "{{ disk_health_script_dest }} >> {{ disk_health_log }} 2>&1"
+
+    - name: Copy watchdog script
+      ansible.builtin.copy:
+        src: files/watchdog.sh
+        dest: "{{ watchdog_script_dest }}"
+        owner: root
+        group: root
+        mode: '0700'
+
+    - name: Set cronjob for watchdog
+      ansible.builtin.cron:
+        name: "healthchecks.io watchdog"
+        user: root
+        minute: "*/5"
+        job: "{{ watchdog_script_dest }} > /dev/null 2>&1"

@@ -1,0 +1,9 @@
+#!/usr/bin/env fish
+
+# Uptime Kuma runs on this server and cannot report the server itself going down, so healthchecks.io watches
+# from outside: missing pings mean server, power or internet are down; /fail means Kuma itself is down.
+if curl -fsS -m 10 -o /dev/null http://localhost:3001
+    curl -fsS -m 10 --retry 3 -o /dev/null https://hc-ping.com/REPLACE-ME
+else
+    curl -fsS -m 10 --retry 3 -o /dev/null https://hc-ping.com/REPLACE-ME/fail
+end

@@ -1,0 +1,56 @@
+#!/usr/bin/env fish
+
+# Mount point and minimum free space in GB, checked together with the SMART state of the disk behind it.
+set CHECKS "/:30" "/mnt/hdd:100" "/mnt/hdd2:15"
+
+set PROBLEMS
+set SUMMARY
+
+for CHECK in $CHECKS
+    set MOUNT (string split : $CHECK)[1]
+    set MIN_FREE_GB (string split : $CHECK)[2]
+
+    if not mountpoint -q $MOUNT
+        set -a PROBLEMS "$MOUNT not mounted"
+        continue
+    end
+
+    set FREE_GB (math -s0 (stat -f -c "%a * %S" $MOUNT) / 1000000000)
+    set -a SUMMARY "$MOUNT $FREE_GB GB"
+    if test $FREE_GB -lt $MIN_FREE_GB
+        set -a PROBLEMS "$MOUNT only $FREE_GB GB free"
+    end
+
+    set DISK (lsblk -no PKNAME (findmnt -no SOURCE $MOUNT))
+    if test -z "$DISK"
+        set -a PROBLEMS "$MOUNT disk not found"
+        continue
+    end
+    set DISK /dev/$DISK
+
+    # Bits 0-4 of smartctl's exit code: query failed, disk failing or a prefail attribute past its threshold.
+    smartctl -H $DISK >/dev/null
+    if test (math "bitand($status, 31)") -ne 0
+        set -a PROBLEMS "$DISK SMART check failed"
+    end
+    # The overall verdict often still says PASSED while a disk is dying; bad sectors show up here first.
+    set BAD_SECTORS (smartctl -A $DISK | awk '$1 == 5 || $1 == 197 || $1 == 198 { sum += $10 } END { print sum + 0 }')
+    if test $BAD_SECTORS -gt 0
+        set -a PROBLEMS "$DISK has $BAD_SECTORS bad sectors"
+    end
+end
+
+if test (count $PROBLEMS) -eq 0
+    set STATUS "up"
+    set MSG "Disks healthy, free: "(string join ", " $SUMMARY)
+else
+    set STATUS "down"
+    set MSG (string join ", " $PROBLEMS)
+end
+
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] $MSG"
+
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Uptime Kuma…"
+set MSG_ENCODED (string escape --style url "$MSG")
+curl -m 10 --retry 5 "http://beelink:3001/api/push/REPLACE-ME?status=$STATUS&msg=$MSG_ENCODED&ping="
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Heartbeat sent."

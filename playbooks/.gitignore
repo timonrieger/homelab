@@ -5,3 +5,5 @@ files/backup.sh
 files/mirror.sh
 files/cloudflare.credentials.json
 files/db-dumps.sh
+files/disk-health.sh
+files/watchdog.sh

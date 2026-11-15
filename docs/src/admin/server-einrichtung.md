@@ -142,7 +142,16 @@ mise run setup-server
 mise run setup-backups
 ```
 
-### 11. Berechtigungen einrichten
+### 11. Monitoring einrichten
+
+```bash
+mise run setup-monitoring
+```
+
+Richtet die tägliche Plattenprüfung (SMART und freier Platz) und den externen Watchdog bei healthchecks.io ein, der auch
+meldet, wenn der Server selbst ausfällt.
+
+### 12. Berechtigungen einrichten
 
 ```bash
 mise run setup-permissions
@@ -150,19 +159,19 @@ mise run setup-permissions
 
 Mehr Details: [Zugriffskontrolle](/admin/zugriffskontrolle)
 
-### 12. Docker-Netzwerk anlegen
+### 13. Docker-Netzwerk anlegen
 
 ```bash
 mise run setup-networks
 ```
 
-### 13. Container starten
+### 14. Container starten
 
 ```bash
 mise run restart-containers
 ```
 
-### 14. Samba-Passwörter setzen
+### 15. Samba-Passwörter setzen
 
 ```bash
 sudo smbpasswd -a <username>
