@@ -23,18 +23,18 @@ den ersetzbaren Inhalten unter `/srv/media/`. Diese Trennung ist Teil der [Speic
 - App Caches und Logs
 - System-Dateien - bei Bedarf neu aufsetzen
 
-**Backup-Zeitplan:**
+**Nächtliche Jobs** (in dieser Reihenfolge, Zeiten in `setup-backups.yaml`):
 
-|Job|Zeit|Timeout|Skript|
-|---|---|---|---|
-|Immich Datenbank-Dump|täglich 01:30|-|Immich: Administration > Settings > Database Dump Settings|
-|Datenbank-Dumps|täglich 01:45|-|`/root/db-dumps.sh`|
-|restic Backup nach Storj|täglich 02:00|`3h`|`/home/restic/backup.sh`|
-|rsync-Mirror auf die zweite HDD|täglich 05:05|`30m`|`/root/mirror.sh`|
+|Job|Skript|
+|---|---|
+|Immich Datenbank-Dump|Immich: Administration > Settings > Database Dump Settings|
+|Datenbank-Dumps|`/root/db-dumps.sh`|
+|restic Backup nach Storj|`/home/restic/backup.sh`|
+|rsync-Mirror auf die zweite HDD|`/root/mirror.sh`|
 
 - Retention: `--keep-daily 7 --keep-weekly 4 --keep-monthly 6 --keep-yearly 2`
 
-Beide Cronjobs werden von `setup-backups.yaml` als root-Cronjobs angelegt.
+Die Cronjobs legt `setup-backups.yaml` als root-Cronjobs an.
 
 ## 3-2-1 Strategie
 
@@ -97,7 +97,8 @@ Für einen Restore-Test reicht ein Read-only-Grant (`--readonly=true`), restic d
 ## Datenbanken
 
 `db-dumps.sh` legt neben jeder SQLite-Datenbank eine konsistente Kopie `<name>.backup.db` ab und prüft, ob Immichs
-eigener Dump von heute Nacht ist. Ein fehlgeschlagener Dump behält den vorherigen.
+eigener Dump von heute Nacht ist. Ein fehlgeschlagener Dump behält den vorherigen. Immichs Dump-Zeit muss vor dem
+Cronjob von `db-dumps.sh` liegen.
 
 ## Sekundärer HDD-Mirror
 
@@ -137,7 +138,8 @@ Falls der Server komplett neu aufgesetzt werden muss oder einzelne Daten wiederh
 1. Neuen [Server einrichten](/admin/server-einrichtung) bis einschließlich `setup-server`
 2. restic und rclone installieren, [Storj-Zugang](#storj-zugang-neu-einrichten) einrichten
 3. Als root wiederherstellen (`/srv/docker`, `/home`, bei Totalverlust auch `/srv/originals`)
-4. SQLite-Datenbanken durch ihre `.backup.db` ersetzen, Immich aus seinem Dump wiederherstellen
+4. SQLite-Datenbanken durch ihre `.backup.db` ersetzen und deren `-wal`/`-shm` löschen, Immich aus seinem Dump
+   wiederherstellen
 5. Gitignored Konfiguration lokal vs. Server vergleichen, die neuere Seite gewinnt
 6. `setup-permissions`, `setup-networks`, `restart-containers`
 7. Erst danach `setup-backups`, sonst sichern bzw. spiegeln die Cronjobs ein halbfertiges System
