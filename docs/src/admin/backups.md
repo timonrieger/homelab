@@ -27,6 +27,7 @@ den ersetzbaren Inhalten unter `/srv/media/`. Diese Trennung ist Teil der [Speic
 
 |Job|Zeit|Timeout|Skript|
 |---|---|---|---|
+|Datenbank-Dumps|täglich 01:30|-|`/root/db-dumps.sh`|
 |restic Backup nach Storj|täglich 02:00|`3h`|`/home/restic/backup.sh`|
 |rsync-Mirror auf die zweite HDD|täglich 05:05|`30m`|`/root/mirror.sh`|
 
@@ -82,6 +83,22 @@ sudo -u restic restic -r rclone:storj:beelink-backup init
 
 Das Passwort wird abgefragt und sollte sicher im Password Manager gespeichert werden.
 
+### Storj-Zugang neu einrichten
+
+Restic-Passwort und Haupt-Access-Grant liegen im Password Manager. Daraus ein Child-Grant für `rclone.conf` erzeugen:
+
+```bash
+uplink access restrict --access $PRIMARY_GRANT --readonly=false --not-after "+365d"
+```
+
+Für einen Restore-Test reicht ein Read-only-Grant (`--readonly=true`), restic dann mit `--no-lock` ausführen.
+
+## Datenbanken
+
+`db-dumps.sh` legt konsistente Kopien der SQLite-Datenbanken aus `playbooks/files/db-dumps.list` und den neuesten
+Immich-Dump unter `/srv/db-dumps/` ab. Ein fehlgeschlagener Dump behält den vorherigen. `backup.sh` meldet fehlende oder
+veraltete Dumps per Heartbeat als `down`.
+
 ## Sekundärer HDD-Mirror
 
 Zusätzlich zum restic-Backup spiegelt ein nächtlicher rsync-Befehl die Originale auf die sekundäre HDD.
@@ -112,10 +129,13 @@ Falls der Server komplett neu aufgesetzt werden muss oder einzelne Daten wiederh
 
 ### Komplette Wiederherstellung
 
-1. Neuen [Server einrichten](/admin/server-einrichtung)
-2. Rclone konfigurieren (aus `playbooks/files/rclone.conf`)
-3. Mit Restic das Repository verbinden und Daten wiederherstellen
-4. Docker Container starten
+1. Neuen [Server einrichten](/admin/server-einrichtung) bis einschließlich `setup-server`
+2. restic und rclone installieren, [Storj-Zugang](#storj-zugang-neu-einrichten) einrichten
+3. Als root wiederherstellen (`/srv/docker`, `/srv/db-dumps`, `/home`, bei Totalverlust auch `/srv/originals`)
+4. Datenbanken aus `/srv/db-dumps/` zurückspielen
+5. Gitignored Konfiguration lokal vs. Server vergleichen, die neuere Seite gewinnt
+6. `setup-permissions`, `setup-networks`, `restart-containers`
+7. Erst danach `setup-backups`, sonst sichern bzw. spiegeln die Cronjobs ein halbfertiges System
 
 ### Einzelne Services wiederherstellen
 
