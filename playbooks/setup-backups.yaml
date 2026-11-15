@@ -6,8 +6,14 @@
     restic_user: restic
     restic_home: "/home/restic"
     mirror_script_dest: "/root/mirror.sh"
+    db_dumps_script_dest: "/root/db-dumps.sh"
+    db_dumps_list: "/etc/db-dumps.list"
+    db_dumps_dir: "/srv/db-dumps"
+    db_dumps_log: "/root/db-dumps.log"
     backup_log: "/home/restic/backup.log"
     mirror_log: "/root/mirror.log"
+    db_dumps_cron_hour: 1
+    db_dumps_cron_minute: 30
     backup_cron_hour: 2
     backup_cron_minute: 0
     mirror_cron_hour: 5
@@ -18,6 +24,7 @@
       ansible.builtin.apt:
         name:
           - restic
+          - sqlite3
           - ca-certificates
           - curl
           - gnupg
@@ -92,6 +99,46 @@
         owner: "{{ restic_user }}"
         group: "{{ restic_user }}"
         mode: '0644'
+
+    - name: Copy SQLite dump script
+      ansible.builtin.copy:
+        src: files/db-dumps.sh
+        dest: "{{ db_dumps_script_dest }}"
+        owner: root
+        group: root
+        mode: '0700'
+
+    - name: Copy list of dumped databases
+      ansible.builtin.copy:
+        src: files/db-dumps.list
+        dest: "{{ db_dumps_list }}"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Ensure DB dump directory exists
+      ansible.builtin.file:
+        path: "{{ db_dumps_dir }}"
+        state: directory
+        owner: root
+        group: "{{ restic_user }}"
+        mode: '0750'
+
+    - name: Ensure DB dump log file exists
+      ansible.builtin.file:
+        path: "{{ db_dumps_log }}"
+        state: touch
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Set cronjob for DB dumps
+      ansible.builtin.cron:
+        name: "sqlite db dumps"
+        user: root
+        minute: "{{ db_dumps_cron_minute }}"
+        hour: "{{ db_dumps_cron_hour }}"
+        job: "{{ db_dumps_script_dest }} >> {{ db_dumps_log }} 2>&1"
 
     - name: Set cronjob for restic backup
       ansible.builtin.cron:
