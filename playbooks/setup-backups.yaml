@@ -13,7 +13,7 @@
     backup_log: "/home/restic/backup.log"
     mirror_log: "/root/mirror.log"
     db_dumps_cron_hour: 1
-    db_dumps_cron_minute: 30
+    db_dumps_cron_minute: 45
     backup_cron_hour: 2
     backup_cron_minute: 0
     mirror_cron_hour: 5

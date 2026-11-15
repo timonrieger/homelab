@@ -40,8 +40,8 @@ for DB in (string match -rv '^\s*(#|$)' < /etc/db-dumps.list)
     rm -f $TMP-wal $TMP-shm
 end
 
-# Immich dumps Postgres itself (01:57). Hard-link the newest one so backup.sh can check its age;
-# a hard link costs no space and keeps the file even after Immich rotates it away.
+# Immich dumps Postgres itself (01:30, Administration > Settings > Database Dump Settings). Hard-link the newest
+# dump here so it gets the same check as the others; a hard link costs no space and survives Immich's rotation.
 set IMMICH_DUMP (ls -t /srv/docker/immich/backups/immich-db-backup-*.sql.gz 2>/dev/null)[1]
 if test -n "$IMMICH_DUMP"
     ln -f $IMMICH_DUMP $DUMP_DIR/immich.sql.gz

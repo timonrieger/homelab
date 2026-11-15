@@ -27,7 +27,8 @@ den ersetzbaren Inhalten unter `/srv/media/`. Diese Trennung ist Teil der [Speic
 
 |Job|Zeit|Timeout|Skript|
 |---|---|---|---|
-|Datenbank-Dumps|täglich 01:30|-|`/root/db-dumps.sh`|
+|Immich Datenbank-Dump|täglich 01:30|-|Immich: Administration > Settings > Database Dump Settings|
+|Datenbank-Dumps|täglich 01:45|-|`/root/db-dumps.sh`|
 |restic Backup nach Storj|täglich 02:00|`3h`|`/home/restic/backup.sh`|
 |rsync-Mirror auf die zweite HDD|täglich 05:05|`30m`|`/root/mirror.sh`|
 
@@ -95,9 +96,9 @@ Für einen Restore-Test reicht ein Read-only-Grant (`--readonly=true`), restic d
 
 ## Datenbanken
 
-`db-dumps.sh` legt konsistente Kopien der SQLite-Datenbanken aus `playbooks/files/db-dumps.list` und den neuesten
-Immich-Dump unter `/srv/db-dumps/` ab. Ein fehlgeschlagener Dump behält den vorherigen. `backup.sh` meldet fehlende oder
-veraltete Dumps per Heartbeat als `down`.
+`db-dumps.sh` legt konsistente Kopien der SQLite-Datenbanken aus `playbooks/files/db-dumps.list` und einen Hardlink
+auf den neuesten Immich-Dump unter `/srv/db-dumps/` ab. Ein fehlgeschlagener Dump behält den vorherigen. `backup.sh`
+meldet fehlende oder veraltete Dumps per Heartbeat als `down`.
 
 ## Sekundärer HDD-Mirror
 

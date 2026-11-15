@@ -30,20 +30,19 @@ else
     set MSG "Backup failed (code $EXIT_CODE)"
 end
 
-# Missing or stale DB dumps (db-dumps.sh, 01:30) also mark the run as down. A failed dump keeps the previous
-# one, so it is caught by age: SQLite dumps must be from tonight, Immich's own dump from the last 30 h.
+# Missing or stale DB dumps (db-dumps.sh, 01:45) also mark the run as down. A failed dump keeps the previous
+# one, so it is caught by age: every dump must be from tonight.
 set DUMP_DIR /srv/db-dumps
 set DUMP_PROBLEMS 0
+set DUMPS immich.sql.gz
 for DB in (string match -rv '^\s*(#|$)' < /etc/db-dumps.list)
-    set DUMP $DUMP_DIR/(string split / $DB)[4]-(basename $DB)
+    set -a DUMPS (string split / $DB)[4]-(basename $DB)
+end
+for DUMP in $DUMP_DIR/$DUMPS
     if test -z "$(find $DUMP -mmin -360 2>/dev/null)"
         echo "["(date "+%Y-%m-%d %H:%M:%S")"] DB dump missing or stale: $DUMP"
         set DUMP_PROBLEMS (math $DUMP_PROBLEMS + 1)
     end
-end
-if test -z "$(find $DUMP_DIR/immich.sql.gz -mmin -1800 2>/dev/null)"
-    echo "["(date "+%Y-%m-%d %H:%M:%S")"] DB dump missing or stale: $DUMP_DIR/immich.sql.gz"
-    set DUMP_PROBLEMS (math $DUMP_PROBLEMS + 1)
 end
 if test $STATUS = "up" -a $DUMP_PROBLEMS -ne 0
     set STATUS "down"
