@@ -1,14 +1,27 @@
 #!/usr/bin/env fish
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Running originals mirror…"
-timeout 30m rsync -a --delete /mnt/hdd/originals/ /mnt/hdd2/originals/
-set EXIT_CODE $status
+# Count deletions in a dry run and skip the whole run if there are too many, so an empty or wrong source can
+# never wipe the mirror. (rsync --max-delete would still delete up to the limit before stopping.)
+# For an intentional large cleanup run once by hand: sudo env MAX_DELETE=100000 /root/mirror.sh
+set -q MAX_DELETE; or set MAX_DELETE 1000
+set DELETIONS (timeout 30m rsync -an --delete --itemize-changes /mnt/hdd/originals/ /mnt/hdd2/originals/ | string match -r "^\*deleting " | count)
+
+if test $DELETIONS -gt $MAX_DELETE
+    set EXIT_CODE 25
+else
+    timeout 30m rsync -a --delete /mnt/hdd/originals/ /mnt/hdd2/originals/
+    set EXIT_CODE $status
+end
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Mirror finished with exit code $EXIT_CODE."
 
 if test $EXIT_CODE -eq 0
     set STATUS "up"
     set MSG "Mirror completed successfully"
+else if test $EXIT_CODE -eq 25
+    set STATUS "down"
+    set MSG "Mirror skipped: $DELETIONS deletions exceed limit of $MAX_DELETE"
 else
     set STATUS "down"
     set MSG "Mirror failed (code $EXIT_CODE)"
