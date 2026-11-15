@@ -1,7 +1,0 @@
-# SQLite databases dumped nightly by db-dumps.sh and checked by backup.sh.
-/srv/docker/gitea/data/gitea/gitea.db
-/srv/docker/gitea-mirror/data/gitea-mirror.db
-/srv/docker/jellyfin/config/data/jellyfin.db
-/srv/docker/jellyfin/config/data/playback_reporting.db
-/srv/docker/mealie/data/mealie.db
-/srv/docker/uptime-kuma/data/kuma.db

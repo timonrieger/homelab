@@ -7,8 +7,6 @@
     restic_home: "/home/restic"
     mirror_script_dest: "/root/mirror.sh"
     db_dumps_script_dest: "/root/db-dumps.sh"
-    db_dumps_list: "/etc/db-dumps.list"
-    db_dumps_dir: "/srv/db-dumps"
     db_dumps_log: "/root/db-dumps.log"
     backup_log: "/home/restic/backup.log"
     mirror_log: "/root/mirror.log"
@@ -107,22 +105,6 @@
         owner: root
         group: root
         mode: '0700'
-
-    - name: Copy list of dumped databases
-      ansible.builtin.copy:
-        src: files/db-dumps.list
-        dest: "{{ db_dumps_list }}"
-        owner: root
-        group: root
-        mode: '0644'
-
-    - name: Ensure DB dump directory exists
-      ansible.builtin.file:
-        path: "{{ db_dumps_dir }}"
-        state: directory
-        owner: root
-        group: "{{ restic_user }}"
-        mode: '0750'
 
     - name: Ensure DB dump log file exists
       ansible.builtin.file:

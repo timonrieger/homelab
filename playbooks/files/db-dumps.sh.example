@@ -1,14 +1,21 @@
 #!/usr/bin/env fish
 
 # restic copies files while the apps write, so a live .db (+ -wal) can be torn. SQLite's online backup
-# gives a consistent copy without stopping the container. backup.sh reports missing or stale dumps.
+# gives a consistent copy without stopping the container.
 
-set DUMP_DIR /srv/db-dumps
+set DATABASES \
+  /srv/docker/gitea/data/gitea/gitea.db \
+  /srv/docker/gitea-mirror/data/gitea-mirror.db \
+  /srv/docker/jellyfin/config/data/jellyfin.db \
+  /srv/docker/jellyfin/config/data/playback_reporting.db \
+  /srv/docker/mealie/data/mealie.db \
+  /srv/docker/uptime-kuma/data/kuma.db
+
 set FAILED 0
 
-for DB in (string match -rv '^\s*(#|$)' < /etc/db-dumps.list)
-    set DUMP $DUMP_DIR/(string split / $DB)[4]-(basename $DB)
-    set TMP $DB.dump-tmp
+for DB in $DATABASES
+    set DUMP (string replace -r '\.db$' '.backup.db' $DB)
+    set TMP $DUMP.tmp
     echo "["(date "+%Y-%m-%d %H:%M:%S")"] Dumping $DB…"
 
     if not test -f $DB
@@ -26,8 +33,6 @@ for DB in (string match -rv '^\s*(#|$)' < /etc/db-dumps.list)
     if $RUN sqlite3 $DB ".timeout 60000" ".backup '$TMP'"
         and $RUN sqlite3 $TMP "PRAGMA journal_mode=DELETE;" >/dev/null
         and test "$($RUN sqlite3 $TMP 'PRAGMA quick_check;')" = ok
-        chown root:restic $TMP
-        chmod 0640 $TMP
         mv -f $TMP $DUMP
     else
         echo "["(date "+%Y-%m-%d %H:%M:%S")"] Dump of $DB failed, keeping the previous dump"
@@ -38,16 +43,22 @@ for DB in (string match -rv '^\s*(#|$)' < /etc/db-dumps.list)
 end
 
 # Immich dumps Postgres itself at 01:30 (Administration > Settings > Database Dump Settings), before this runs.
-# Hard link, not symlink: it survives Immich's rotation and costs no space.
-set IMMICH_DUMP (ls -t /srv/docker/immich/backups/immich-db-backup-*.sql.gz 2>/dev/null)[1]
-if test -n "$IMMICH_DUMP"
-    if not ln -f $IMMICH_DUMP $DUMP_DIR/immich.sql.gz
-        set FAILED (math $FAILED + 1)
-    end
-else
-    echo "["(date "+%Y-%m-%d %H:%M:%S")"] No Immich dump found"
+if test -z "$(find /srv/docker/immich/backups -name 'immich-db-backup-*.sql.gz' -mmin -360)"
+    echo "["(date "+%Y-%m-%d %H:%M:%S")"] No Immich dump from tonight"
     set FAILED (math $FAILED + 1)
 end
 
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] DB dumps finished, $FAILED failed."
-exit $FAILED
+
+if test $FAILED -eq 0
+    set STATUS "up"
+    set MSG "DB dumps completed successfully"
+else
+    set STATUS "down"
+    set MSG "$FAILED DB dump(s) failed"
+end
+
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Uptime Kuma…"
+set MSG_ENCODED (string escape --style url "$MSG")
+curl -m 10 --retry 5 "http://beelink:3001/api/push/<DB_DUMPS_HEARTBEAT_TOKEN>?status=$STATUS&msg=$MSG_ENCODED&ping="
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Heartbeat sent."

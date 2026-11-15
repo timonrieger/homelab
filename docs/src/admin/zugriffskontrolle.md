@@ -37,7 +37,6 @@ Die Gruppe `family` hat die feste GID **1002**. Zustandslose API-Clients bekomme
 |**Pfad**|**Eigentümer**|**Modus**|**Grund**|
 |---|---|---|---|
 |/srv, /srv/media, /srv/originals|root:root|0755|reine Struktur, hier liegt nichts direkt|
-|/srv/db-dumps|root:restic|0750|Datenbank-Dumps für das [Backup](/admin/backups#datenbanken)|
 |/srv/docker/\<app\>|timon:timon|0750|Konfigurations-Ebene|
 |/srv/docker/\<app\>/\<data\>|app:app|0750|Daten-Ebene|
 |/srv/originals/immich/**|immich:immich|0750|Immich-Medien; Lesezugriff nur über die Samba-Freigaben|

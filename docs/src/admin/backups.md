@@ -96,9 +96,8 @@ Für einen Restore-Test reicht ein Read-only-Grant (`--readonly=true`), restic d
 
 ## Datenbanken
 
-`db-dumps.sh` legt konsistente Kopien der SQLite-Datenbanken aus `playbooks/files/db-dumps.list` und einen Hardlink
-auf den neuesten Immich-Dump unter `/srv/db-dumps/` ab. Ein fehlgeschlagener Dump behält den vorherigen. `backup.sh`
-meldet fehlende oder veraltete Dumps per Heartbeat als `down`.
+`db-dumps.sh` legt neben jeder SQLite-Datenbank eine konsistente Kopie `<name>.backup.db` ab und prüft, ob Immichs
+eigener Dump von heute Nacht ist. Ein fehlgeschlagener Dump behält den vorherigen.
 
 ## Sekundärer HDD-Mirror
 
@@ -106,13 +105,16 @@ Zusätzlich zum restic-Backup spiegelt ein nächtlicher rsync-Befehl die Origina
 
 ## Überwachung
 
-Beide Skripte melden ihr Ergebnis per Push-Heartbeat an [Uptime Kuma](https://status.fam.timonrieger.de). Ein fehlgeschlagener oder in den Timeout gelaufener Lauf schlägt Alarm, Logs sind für die Detailanalyse.
+Alle drei Skripte melden ihr Ergebnis per Push-Heartbeat an [Uptime Kuma](https://status.fam.timonrieger.de). Ein fehlgeschlagener oder in den Timeout gelaufener Lauf schlägt Alarm, Logs sind für die Detailanalyse.
 
 Der Mirror meldet zusätzlich den freien Platz der zweiten HDD und schlägt unter 15 GB Alarm.
 
 ```bash
 # restic-Backup
 sudo -u restic tail /home/restic/backup.log -n 200
+
+# Datenbank-Dumps
+sudo tail /root/db-dumps.log -n 200
 
 # Sekundärer HDD-Mirror
 sudo tail /root/mirror.log -n 200
@@ -134,8 +136,8 @@ Falls der Server komplett neu aufgesetzt werden muss oder einzelne Daten wiederh
 
 1. Neuen [Server einrichten](/admin/server-einrichtung) bis einschließlich `setup-server`
 2. restic und rclone installieren, [Storj-Zugang](#storj-zugang-neu-einrichten) einrichten
-3. Als root wiederherstellen (`/srv/docker`, `/srv/db-dumps`, `/home`, bei Totalverlust auch `/srv/originals`)
-4. Datenbanken aus `/srv/db-dumps/` zurückspielen
+3. Als root wiederherstellen (`/srv/docker`, `/home`, bei Totalverlust auch `/srv/originals`)
+4. SQLite-Datenbanken durch ihre `.backup.db` ersetzen, Immich aus seinem Dump wiederherstellen
 5. Gitignored Konfiguration lokal vs. Server vergleichen, die neuere Seite gewinnt
 6. `setup-permissions`, `setup-networks`, `restart-containers`
 7. Erst danach `setup-backups`, sonst sichern bzw. spiegeln die Cronjobs ein halbfertiges System

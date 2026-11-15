@@ -30,24 +30,6 @@ else
     set MSG "Backup failed (code $EXIT_CODE)"
 end
 
-# A failed dump keeps the previous file, so failures only show by age (db-dumps.sh runs at 01:45).
-set DUMP_DIR /srv/db-dumps
-set DUMP_PROBLEMS 0
-set DUMPS immich.sql.gz
-for DB in (string match -rv '^\s*(#|$)' < /etc/db-dumps.list)
-    set -a DUMPS (string split / $DB)[4]-(basename $DB)
-end
-for DUMP in $DUMP_DIR/$DUMPS
-    if test -z "$(find $DUMP -mmin -360 2>/dev/null)"
-        echo "["(date "+%Y-%m-%d %H:%M:%S")"] DB dump missing or stale: $DUMP"
-        set DUMP_PROBLEMS (math $DUMP_PROBLEMS + 1)
-    end
-end
-if test $STATUS = "up" -a $DUMP_PROBLEMS -ne 0
-    set STATUS "down"
-    set MSG "Backup completed, but $DUMP_PROBLEMS DB dump(s) missing or stale"
-end
-
 echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Uptime Kuma…"
 set MSG_ENCODED (string escape --style url "$MSG")
 curl -m 10 --retry 5 "http://beelink:3001/api/push/<BACKUP_HEARTBEAT_TOKEN>?status=$STATUS&msg=$MSG_ENCODED&ping="
