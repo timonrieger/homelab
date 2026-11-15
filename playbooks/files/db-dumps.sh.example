@@ -1,0 +1,64 @@
+#!/usr/bin/env fish
+
+# restic copies files while the apps write, so a live .db (+ -wal) can be torn. SQLite's online backup
+# gives a consistent copy without stopping the container.
+
+set DATABASES \
+  /srv/docker/gitea/data/gitea/gitea.db \
+  /srv/docker/gitea-mirror/data/gitea-mirror.db \
+  /srv/docker/jellyfin/config/data/jellyfin.db \
+  /srv/docker/jellyfin/config/data/playback_reporting.db \
+  /srv/docker/mealie/data/mealie.db \
+  /srv/docker/uptime-kuma/data/kuma.db
+
+set FAILED 0
+
+for DB in $DATABASES
+    set DUMP (string replace -r '\.db$' '.backup.db' $DB)
+    set TMP $DUMP.tmp
+    echo "["(date "+%Y-%m-%d %H:%M:%S")"] Dumping $DB…"
+
+    if not test -f $DB
+        echo "["(date "+%Y-%m-%d %H:%M:%S")"] Missing $DB"
+        set FAILED (math $FAILED + 1)
+        continue
+    end
+
+    # Run as the file owner: opening a WAL database as root could leave root-owned -wal/-shm
+    # files behind that the app can no longer write.
+    set RUN setpriv --reuid=(stat -c %u $DB) --regid=(stat -c %g $DB) --clear-groups
+
+    rm -f $TMP
+    # The copy inherits WAL mode; switch it to a single self-contained file before checking it.
+    if $RUN sqlite3 $DB ".timeout 60000" ".backup '$TMP'"
+        and $RUN sqlite3 $TMP "PRAGMA journal_mode=DELETE;" >/dev/null
+        and test "$($RUN sqlite3 $TMP 'PRAGMA quick_check;')" = ok
+        mv -f $TMP $DUMP
+    else
+        echo "["(date "+%Y-%m-%d %H:%M:%S")"] Dump of $DB failed, keeping the previous dump"
+        rm -f $TMP
+        set FAILED (math $FAILED + 1)
+    end
+    rm -f $TMP-wal $TMP-shm
+end
+
+# Immich dumps Postgres itself at 01:30 (Administration > Settings > Database Dump Settings), before this runs.
+if test -z "$(find /srv/docker/immich/backups -name 'immich-db-backup-*.sql.gz' -mmin -360)"
+    echo "["(date "+%Y-%m-%d %H:%M:%S")"] No Immich dump from tonight"
+    set FAILED (math $FAILED + 1)
+end
+
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] DB dumps finished, $FAILED failed."
+
+if test $FAILED -eq 0
+    set STATUS "up"
+    set MSG "DB dumps completed successfully"
+else
+    set STATUS "down"
+    set MSG "$FAILED DB dump(s) failed"
+end
+
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Sending heartbeat to Uptime Kuma…"
+set MSG_ENCODED (string escape --style url "$MSG")
+curl -m 10 --retry 5 "http://beelink:3001/api/push/REPLACE-ME?status=$STATUS&msg=$MSG_ENCODED&ping="
+echo "["(date "+%Y-%m-%d %H:%M:%S")"] Heartbeat sent."

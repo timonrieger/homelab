@@ -23,16 +23,18 @@ den ersetzbaren Inhalten unter `/srv/media/`. Diese Trennung ist Teil der [Speic
 - App Caches und Logs
 - System-Dateien - bei Bedarf neu aufsetzen
 
-**Backup-Zeitplan:**
+**Nächtliche Jobs** (in dieser Reihenfolge, Zeiten in `setup-backups.yaml`):
 
-|Job|Zeit|Timeout|Skript|
-|---|---|---|---|
-|restic Backup nach Storj|täglich 02:00|`3h`|`/home/restic/backup.sh`|
-|rsync-Mirror auf die zweite HDD|täglich 05:05|`30m`|`/root/mirror.sh`|
+|Job|Skript|
+|---|---|
+|Immich Datenbank-Dump|Immich: Administration > Settings > Database Dump Settings|
+|Datenbank-Dumps|`/root/db-dumps.sh`|
+|restic Backup nach Storj|`/home/restic/backup.sh`|
+|rsync-Mirror auf die zweite HDD|`/root/mirror.sh`|
 
 - Retention: `--keep-daily 7 --keep-weekly 4 --keep-monthly 6 --keep-yearly 2`
 
-Beide Cronjobs werden von `setup-backups.yaml` als root-Cronjobs angelegt.
+Die Cronjobs legt `setup-backups.yaml` als root-Cronjobs an.
 
 ## 3-2-1 Strategie
 
@@ -82,17 +84,36 @@ sudo -u restic restic -r rclone:storj:beelink-backup init
 
 Das Passwort wird abgefragt und sollte sicher im Password Manager gespeichert werden.
 
+### Storj-Zugang neu einrichten
+
+Restic-Passwort und Haupt-Access-Grant liegen im Password Manager. Daraus ein Child-Grant für `rclone.conf` erzeugen:
+
+```bash
+uplink access restrict --access $PRIMARY_GRANT --readonly=false --not-after "+365d"
+```
+
+Für einen Restore-Test reicht ein Read-only-Grant (`--readonly=true`), restic dann mit `--no-lock` ausführen.
+
+## Datenbanken
+
+`db-dumps.sh` legt neben jeder SQLite-Datenbank eine konsistente Kopie `<name>.backup.db` ab und prüft, ob Immichs
+eigener Dump von heute Nacht ist. Ein fehlgeschlagener Dump behält den vorherigen. Immichs Dump-Zeit muss vor dem
+Cronjob von `db-dumps.sh` liegen.
+
 ## Sekundärer HDD-Mirror
 
 Zusätzlich zum restic-Backup spiegelt ein nächtlicher rsync-Befehl die Originale auf die sekundäre HDD.
 
 ## Überwachung
 
-Beide Skripte melden ihr Ergebnis per Push-Heartbeat an [Uptime Kuma](https://status.fam.timonrieger.de). Ein fehlgeschlagener oder in den Timeout gelaufener Lauf schlägt Alarm, Logs sind für die Detailanalyse.
+Alle drei Skripte melden ihr Ergebnis per Push-Heartbeat an [Uptime Kuma](https://status.fam.timonrieger.de). Ein fehlgeschlagener oder in den Timeout gelaufener Lauf schlägt Alarm, Logs sind für die Detailanalyse.
 
 ```bash
 # restic-Backup
 sudo -u restic tail /home/restic/backup.log -n 200
+
+# Datenbank-Dumps
+sudo tail /root/db-dumps.log -n 200
 
 # Sekundärer HDD-Mirror
 sudo tail /root/mirror.log -n 200
@@ -112,10 +133,14 @@ Falls der Server komplett neu aufgesetzt werden muss oder einzelne Daten wiederh
 
 ### Komplette Wiederherstellung
 
-1. Neuen [Server einrichten](/admin/server-einrichtung)
-2. Rclone konfigurieren (aus `playbooks/files/rclone.conf`)
-3. Mit Restic das Repository verbinden und Daten wiederherstellen
-4. Docker Container starten
+1. Neuen [Server einrichten](/admin/server-einrichtung) bis einschließlich `setup-server`
+2. restic und rclone installieren, [Storj-Zugang](#storj-zugang-neu-einrichten) einrichten
+3. Als root wiederherstellen (`/srv/docker`, `/home`, bei Totalverlust auch `/srv/originals`)
+4. SQLite-Datenbanken durch ihre `.backup.db` ersetzen und deren `-wal`/`-shm` löschen, Immich aus seinem Dump
+   wiederherstellen
+5. Gitignored Konfiguration lokal vs. Server vergleichen, die neuere Seite gewinnt
+6. `setup-permissions`, `setup-networks`, `restart-containers`
+7. Erst danach `setup-backups`, sonst sichern bzw. spiegeln die Cronjobs ein halbfertiges System
 
 ### Einzelne Services wiederherstellen
 

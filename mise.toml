@@ -30,6 +30,11 @@ dir = "playbooks"
 run = ["ansible-playbook -i inventory.ini setup-backups.yaml --ask-become-pass"]
 description = "Setup the backups"
 
+[tasks."setup-monitoring"]
+dir = "playbooks"
+run = ["ansible-playbook -i inventory.ini setup-monitoring.yaml --ask-become-pass"]
+description = "Setup disk health checks and the external watchdog"
+
 [tasks."setup-permissions"]
 dir = "playbooks"
 run = ["ansible-playbook -i inventory.ini setup-permissions.yaml --ask-become-pass"]
