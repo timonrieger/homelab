@@ -41,7 +41,9 @@ end
 # Hard link, not symlink: it survives Immich's rotation and costs no space.
 set IMMICH_DUMP (ls -t /srv/docker/immich/backups/immich-db-backup-*.sql.gz 2>/dev/null)[1]
 if test -n "$IMMICH_DUMP"
-    ln -f $IMMICH_DUMP $DUMP_DIR/immich.sql.gz
+    if not ln -f $IMMICH_DUMP $DUMP_DIR/immich.sql.gz
+        set FAILED (math $FAILED + 1)
+    end
 else
     echo "["(date "+%Y-%m-%d %H:%M:%S")"] No Immich dump found"
     set FAILED (math $FAILED + 1)
