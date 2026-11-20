@@ -58,8 +58,28 @@ Um mit der Administration des Servers zu beginnen:
 - Speicherplatz prüfen (`df -h`)
 - [Backup-Integrität](./backups#uberwachung) testen
 - Docker Clean up (`mise run cleanup-docker`)
-- Anwendungen auf neueste Versionen aktualisieren (Renovate Bot)
+- Anwendungen aktualisieren: Renovate-PRs mergen, dann [deployen](#deployment-und-rollback)
 - System Update (`mise run update-system`)
+
+### Deployment und Rollback
+
+Deployt wird von Hand über den GitHub-Workflow **Deploy**, vom Laptop mit:
+
+```bash
+gh workflow run deploy && gh run watch
+```
+
+|`stacks`|Deployt|
+|---|---|
+|leer|Stacks, die sich seit dem Tag `deployed` geändert haben|
+|`all`|alle Stacks (neuer Server, Wiederherstellung)|
+|`<stack>,<stack>`|genau diese, der Tag bleibt stehen|
+
+- **Secrets:** werden nie deployt, sondern auf dem Server bearbeitet und mit `mise run sync-secrets` gesichert.
+- **Rollback:** Renovate-PR reverten und erneut deployen. Hat die App ihre Datenbank schon migriert, zusätzlich
+  aus dem [Backup](./backups#wiederherstellung) wiederherstellen.
+- **Monitoring:** Keine Wartungsfenster. Uptime Kuma alarmiert erst nach mehreren Fehlversuchen, kurze Neustarts
+  bleiben still.
 
 ### Reboot
 

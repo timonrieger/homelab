@@ -50,11 +50,6 @@ dir = "playbooks"
 run = ["ansible-playbook -i inventory.ini sync-secrets.yaml --ask-become-pass"]
 description = "Pull gitignored secrets from the server"
 
-[tasks."restart-containers"]
-dir = "playbooks"
-run = ["ansible-playbook -i inventory.ini restart-containers.yaml --ask-become-pass"]
-description = "Restart docker containers"
-
 [tasks."update-system"]
 dir = "playbooks"
 run = ["ansible-playbook -i inventory.ini update-system.yaml --ask-become-pass"]

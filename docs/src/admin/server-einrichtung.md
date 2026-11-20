@@ -167,8 +167,10 @@ mise run setup-networks
 
 ### 14. Container starten
 
+Den [Deploy-Workflow](/admin/#deployment-und-rollback) mit `stacks=all` starten:
+
 ```bash
-mise run restart-containers
+gh workflow run deploy -f stacks=all && gh run watch
 ```
 
 ### 15. Samba-Passwörter setzen

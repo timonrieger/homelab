@@ -139,7 +139,7 @@ Falls der Server komplett neu aufgesetzt werden muss oder einzelne Daten wiederh
 4. SQLite-Datenbanken durch ihre `.backup.db` ersetzen und deren `-wal`/`-shm` löschen, Immich aus seinem Dump
    wiederherstellen
 5. Gitignored Konfiguration lokal vs. Server vergleichen, die neuere Seite gewinnt
-6. `setup-permissions`, `setup-networks`, `restart-containers`
+6. `setup-permissions`, `setup-networks`, dann den [Deploy-Workflow](/admin/#deployment-und-rollback) mit `stacks=all` starten
 7. Erst danach `setup-backups`, sonst sichern bzw. spiegeln die Cronjobs ein halbfertiges System
 
 ### Einzelne Services wiederherstellen

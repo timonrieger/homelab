@@ -1,0 +1,86 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      stacks:
+        description: "Empty = changed since last deploy, all, or e.g. immich,mealie"
+        required: false
+        default: ""
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      HOST: timon@beelink
+      STACKS: ${{ inputs.stacks }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: tailscale/github-action@064b10558093f38325e838ddea35486bdc6b1d5c # v4.4.0
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+          ping: beelink
+
+      - name: Pick stacks
+        run: |
+          if [ "$STACKS" = "all" ]; then
+            stacks=$(find docker -mindepth 2 -maxdepth 2 -name compose.yml | cut -d/ -f2)
+          elif [ -n "$STACKS" ]; then
+            stacks=$(echo "$STACKS" | tr ',' '\n' | tr -d ' ')
+          else
+            if ! git rev-parse -q --verify refs/tags/deployed >/dev/null; then
+              echo "::error::No deployed tag, create it once: git tag deployed origin/main && git push origin deployed"
+              exit 1
+            fi
+            stacks=$(git diff --name-only deployed HEAD -- docker/ ':!*.example' | cut -d/ -f2)
+          fi
+
+          picked=""
+          for stack in $(echo "$stacks" | sort -u); do
+            if [ -f "docker/$stack/compose.yml" ]; then
+              picked="$picked $stack"
+            else
+              echo "::warning::Skipping $stack: no compose.yml, tear down by hand"
+            fi
+          done
+          echo "Stacks to deploy:${picked:- none}"
+          echo "PICKED=$picked" >> "$GITHUB_ENV"
+
+      - name: Deploy stacks
+        if: env.PICKED != ''
+        env:
+          SSH: ssh -o StrictHostKeyChecking=accept-new
+        run: |
+          for stack in $PICKED; do
+            echo "::group::$stack"
+            # No --delete: app data, .env and Caddyfile exist only on the server
+            rsync -r -e "$SSH" --exclude='*.example' "docker/$stack/" "$HOST:/srv/docker/$stack/"
+            $SSH "$HOST" "cd /srv/docker/$stack && docker compose up -d --build --remove-orphans"
+            echo "::endgroup::"
+          done
+
+  tag:
+    # A forced redeploy of single stacks leaves other pending changes undeployed
+    if: inputs.stacks == '' || inputs.stacks == 'all'
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PATCH "repos/$GITHUB_REPOSITORY/git/refs/tags/deployed" -f sha="$GITHUB_SHA" -F force=true
