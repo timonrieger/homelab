@@ -9,6 +9,8 @@
     data_disk_reserve:
       - { uuid: "{{ hdd_primary_uuid }}", percent: 1 }
       - { uuid: "{{ hdd_secondary_uuid }}", percent: 0 }
+    docker_external_networks:
+      - gitea
   tasks:
     - name: Ensure base apt packages are present
       ansible.builtin.apt:
@@ -162,6 +164,20 @@
       ansible.builtin.file:
         path: /tmp/get-docker.sh
         state: absent
+
+    - name: Check for the external Docker networks shared between compose projects
+      ansible.builtin.command: docker network inspect {{ item }}
+      loop: "{{ docker_external_networks }}"
+      register: docker_network_check
+      failed_when: false
+      changed_when: false
+
+    - name: Create the external Docker networks shared between compose projects
+      ansible.builtin.command: docker network create {{ item.item }}
+      loop: "{{ docker_network_check.results }}"
+      loop_control:
+        label: "{{ item.item }}"
+      when: item.rc != 0
 
     - name: Ensure fish config directory exists
       ansible.builtin.file:

@@ -159,13 +159,7 @@ mise run setup-permissions
 
 Mehr Details: [Zugriffskontrolle](/admin/zugriffskontrolle)
 
-### 13. Docker-Netzwerk anlegen
-
-```bash
-mise run setup-networks
-```
-
-### 14. Container starten
+### 13. Container starten
 
 Den [Deploy-Workflow](/admin/#deployment-und-rollback) mit `stacks=all` starten:
 
@@ -173,7 +167,7 @@ Den [Deploy-Workflow](/admin/#deployment-und-rollback) mit `stacks=all` starten:
 gh workflow run deploy -f stacks=all && gh run watch
 ```
 
-### 15. Samba-Passwörter setzen
+### 14. Samba-Passwörter setzen
 
 ```bash
 sudo smbpasswd -a <username>
