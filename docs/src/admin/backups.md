@@ -57,20 +57,9 @@ Für detaillierte Restic-Befehle siehe die [offizielle Restic-Dokumentation](htt
 
 ## Konfiguration
 
-### Rclone Konfiguration
+### Storj Access Grants
 
-Die Rclone-Konfiguration liegt unter:
-
-- Auf dem Server: `~/.config/rclone/rclone.conf`
-- Im Repository: `playbooks/files/rclone.conf`
-
-**Storj Access Grant erstellen:**
-
-1. Login auf [Storj Console](https://eu1.storj.io/projects/m2OneG6KQ7-/)
-2. Navigiere zu **Access Keys**
-3. Wähle **Access Grant**
-4. Kopiere den Access Grant
-5. Füge ihn in `rclone.conf` ein
+Das Backup nutzt ein Master/Child-Modell. Der Master-Grant liegt nur im Password Manager und dient ausschließlich dazu, Child-Grants abzuleiten. Ein Child erbt die Rechte des Masters und kann sie nur weiter einschränken, nie erweitern. Auf dem Server liegt nur ein Child. Läuft es ab oder ist es kompromittiert, wird es [neu erzeugt](#storj-zugang-einrichten), ohne den Master anzutasten.
 
 ### Restic Repository
 
@@ -84,12 +73,13 @@ sudo -u restic restic -r rclone:storj:beelink-backup init
 
 Das Passwort wird abgefragt und sollte sicher im Password Manager gespeichert werden.
 
-### Storj-Zugang neu einrichten
+### Storj-Zugang einrichten
 
-Restic-Passwort und Haupt-Access-Grant liegen im Password Manager. Daraus ein Child-Grant für `rclone.conf` erzeugen:
+Restic-Passwort und Master-Grant liegen im Password Manager. Daraus ein Child-Grant erzeugen:
 
 ```bash
-uplink access restrict --access $PRIMARY_GRANT --readonly=false --not-after "+365d"
+read -s STORJ_FAMILY_MASTER
+uplink access restrict --access "$STORJ_FAMILY_MASTER" --readonly=false --not-after "+365d"
 ```
 
 Für einen Restore-Test reicht ein Read-only-Grant (`--readonly=true`), restic dann mit `--no-lock` ausführen.
@@ -134,7 +124,7 @@ Falls der Server komplett neu aufgesetzt werden muss oder einzelne Daten wiederh
 ### Komplette Wiederherstellung
 
 1. Neuen [Server einrichten](/admin/server-einrichtung) bis einschließlich `setup-server`
-2. restic und rclone installieren, [Storj-Zugang](#storj-zugang-neu-einrichten) einrichten
+2. restic und rclone installieren, [Storj-Zugang](#storj-zugang-einrichten) einrichten
 3. Als root wiederherstellen (`/srv/docker`, `/home`, bei Totalverlust auch `/srv/originals`)
 4. SQLite-Datenbanken durch ihre `.backup.db` ersetzen und deren `-wal`/`-shm` löschen, Immich aus seinem Dump
    wiederherstellen
