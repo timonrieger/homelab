@@ -40,9 +40,9 @@ Es gibt drei Wege auf die Dienste, mit klar getrennten Aufgaben:
 |Cloudflare Tunnel|offenes Internet|bewusst veröffentlichte Endpunkte|
 
 Das Heimnetz ohne Tailscale ist kein Zugangsweg. Docker veröffentlicht Ports auf allen Netzwerkschnittstellen, deshalb
-lässt die Firewall (`playbooks/files/firewall.nft`) nur Tailscale, localhost und die Docker-Netzwerke durch. Aus dem
-Heimnetz ist nur SSH erreichbar, als Notzugang mit dem Passwort von timon (`ssh timon@beelink.local`), falls Tailscale
-ausfällt. Auch zu Hause, etwa auf dem Apple TV, muss Tailscale also an sein.
+lässt die Firewall (`playbooks/files/firewall.nft`) nur Tailscale, localhost und die Docker-Netzwerke durch. Auch SSH
+ist aus dem Heimnetz gesperrt: ein Notzugang mit Passwort hilft aus der Ferne nicht und wäre für Gäste im WLAN offen.
+Auch zu Hause, etwa auf dem Apple TV, muss Tailscale also an sein.
 
 ## Schnellstart
 
