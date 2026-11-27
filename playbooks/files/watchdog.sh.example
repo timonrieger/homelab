@@ -1,7 +1,8 @@
 #!/usr/bin/env fish
 
 # Uptime Kuma runs on this server and cannot report the server itself going down; healthchecks.io watches from outside.
-if curl -fsS -m 10 -o /dev/null http://localhost:3001
+# Also fails on a missing firewall table, because the firewall fails open.
+if curl -fsS -m 10 -o /dev/null http://localhost:3001; and /usr/sbin/nft list table inet homelab > /dev/null 2>&1
     curl -fsS -m 10 --retry 3 -o /dev/null https://hc-ping.com/REPLACE-ME
 else
     curl -fsS -m 10 --retry 3 -o /dev/null https://hc-ping.com/REPLACE-ME/fail
