@@ -1,0 +1,15 @@
+[Unit]
+Description=Homelab firewall (services only via Tailscale)
+DefaultDependencies=no
+Before=network-pre.target docker.service smbd.service ssh.service
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/nft -f /etc/homelab-firewall.nft
+ExecReload=/usr/sbin/nft -f /etc/homelab-firewall.nft
+ExecStop=/usr/sbin/nft delete table inet homelab
+
+[Install]
+WantedBy=sysinit.target
