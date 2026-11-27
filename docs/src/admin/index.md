@@ -39,10 +39,8 @@ Es gibt drei Wege auf die Dienste, mit klar getrennten Aufgaben:
 |Caddy auf Subdomain|nur im Tailnet|schöne URLs mit gültigem TLS|
 |Cloudflare Tunnel|offenes Internet|bewusst veröffentlichte Endpunkte|
 
-Das Heimnetz ohne Tailscale ist kein Zugangsweg. Docker veröffentlicht Ports auf allen Netzwerkschnittstellen, deshalb
-lässt die Firewall (`playbooks/files/firewall.nft`) nur Tailscale, localhost und die Docker-Netzwerke durch. Auch SSH
-ist aus dem Heimnetz gesperrt: ein Notzugang mit Passwort hilft aus der Ferne nicht und wäre für Gäste im WLAN offen.
-Auch zu Hause, etwa auf dem Apple TV, muss Tailscale also an sein.
+Das Heimnetz ist nur zugänglich über Tailscale. Docker veröffentlicht Ports auf allen Netzwerkschnittstellen, deshalb
+lässt die Firewal nur Tailscale, localhost und die Docker-Netzwerke durch.
 
 ## Schnellstart
 
