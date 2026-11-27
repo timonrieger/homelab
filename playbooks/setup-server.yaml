@@ -188,7 +188,7 @@
         group: root
         mode: "0644"
         validate: /usr/sbin/nft -c -f %s
-      notify: Reload the firewall
+      register: firewall_rules
 
     # Own unit instead of nftables.service, whose stop runs `nft flush ruleset` and would wipe Docker's rules.
     - name: Install the firewall systemd unit
@@ -200,12 +200,46 @@
         mode: "0644"
       register: firewall_unit
 
+    # Nobody at home can fix a lockout, so a change only sticks once a fresh connection gets through it.
+    - name: Apply the firewall behind a dead man's switch
+      when: firewall_rules is changed or firewall_unit is changed
+      block:
+        - name: Clear a rollback left armed by an aborted run
+          ansible.builtin.command: systemctl stop homelab-firewall-rollback.timer
+          failed_when: false
+          changed_when: false
+
+        - name: Arm the rollback that drops the firewall in 5 minutes
+          ansible.builtin.command: >-
+            systemd-run --collect --unit=homelab-firewall-rollback --on-active=5min
+            /usr/bin/systemctl stop homelab-firewall
+
+        - name: Pick up the changed firewall unit
+          ansible.builtin.systemd:
+            daemon_reload: true
+          when: firewall_unit is changed
+
+        # Reloads in place when running, so there is no open window; starts it on the first run or after a rollback.
+        - name: Load the new firewall
+          ansible.builtin.command: systemctl reload-or-restart homelab-firewall
+
+        - name: Drop the SSH connection so the next task dials through the new rules
+          ansible.builtin.meta: reset_connection
+
+        - name: Reconnect through the new firewall
+          ansible.builtin.wait_for_connection:
+            timeout: 60
+
+        - name: Disarm the rollback
+          ansible.builtin.systemd:
+            name: homelab-firewall-rollback.timer
+            state: stopped
+
     - name: Ensure the firewall is enabled and started
       ansible.builtin.systemd:
         name: homelab-firewall
         state: started
         enabled: true
-        daemon_reload: "{{ firewall_unit is changed }}"
 
     - name: Ensure fish config directory exists
       ansible.builtin.file:
@@ -285,8 +319,3 @@
         state: restarted
         enabled: true
         daemon_reload: true
-
-    - name: Reload the firewall
-      ansible.builtin.systemd:
-        name: homelab-firewall
-        state: reloaded
