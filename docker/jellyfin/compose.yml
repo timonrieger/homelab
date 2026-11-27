@@ -10,7 +10,6 @@ services:
       - .env
     ports:
       - 8096:8096/tcp
-      - 7359:7359/udp
     volumes:
       - ./config:/config
       - ./cache:/cache

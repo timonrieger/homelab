@@ -8,8 +8,6 @@ services:
       - /dev/net/tun
     ports:
       - 8701:8701   # qBittorrent Web UI
-      - 6881:6881   # torrent port
-      - 6881:6881/udp
     volumes:
       - ./gluetun:/gluetun
     env_file:
